@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<robot name="fr5v6_single_arm" xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+    <!-- 定义参数 -->
+    <xacro:property name="arm_id" value="fr5v6" />
+
+    <!-- 引用库文件 -->
+    <xacro:include filename="$(find frcobot_description)/urdf/fr5v6_library.xacro" />
+
+    <!-- 添加虚拟根链接 -->
+    <link name="world" />
+
+    <!-- 将实际的根链接连接到虚拟根链接 -->
+    <joint name="world_joint" type="fixed">
+        <parent link="world" />
+        <child link="${arm_id}_base_link" />
+        <origin xyz="0 0 0" rpy="0 0 0" />
+    </joint>
+
+    <!-- 实例化机械臂 -->
+    <xacro:fr5v6_arm arm_id="${arm_id}" connected_to="world" xyz="0 0 0" rpy="0 0 0" />
+</robot>

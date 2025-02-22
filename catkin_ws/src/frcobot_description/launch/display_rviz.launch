@@ -1,11 +1,11 @@
 <launch>
-    <!-- <param name="robot_description" textfile="$(find frcobot_description)/urdf/fr5v6_gazebo.urdf" /> -->
-    <param name="robot_description"
-        command="$(find xacro)/xacro --inorder '$(find frcobot_description)/urdf/fr5v6.xacro'" />
+    <param name="robot_description" textfile="$(find frcobot_description)/urdf/fr5v6_single_arm.urdf" />
+    <!-- <param name="robot_description"
+        command="$(find xacro)/xacro '$(find frcobot_description)/urdf/fr5v6.xacro'" />  -->
 
 
     <!-- 定义use_gui参数，默认为false -->
-    <arg name="use_gui" default="true" />
+    <arg name="use_gui" default="false" />
 
     <!-- 根据use_gui参数的值启动不同的joint_state_publisher -->
     <group if="$(arg use_gui)">
@@ -21,6 +21,6 @@
 
     <!-- Show in Rviz -->
     <node name="rviz" pkg="rviz" type="rviz"
-        args="-d $(find frcobot_description)/config/fr5v6.rviz" required="true" />
+        args="-d $(find frcobot_description)/config/display_rviz.rviz" required="true" />
 
 </launch>

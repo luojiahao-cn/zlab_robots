@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <robot name="fr5v6" xmlns:xacro="http://www.ros.org/wiki/xacro">
-    <xacro:macro name="fr5v6_arm" params="arm_id:='fr5v6' connected_to:='' xyz:='0 0 0' rpy:='0 0 0'">
+    <xacro:macro name="fr5v6_arm" 
+        params="arm_id:='fr5v6' connected_to:='' xyz:='0 0 0' rpy:='0 0 0'">
         <xacro:unless value="${not connected_to}">
             <joint name="${arm_id}_joint_${connected_to}" type="fixed">
                 <parent link="${connected_to}" />
@@ -12,12 +13,6 @@
         <!-- 定义一些常用的属性 -->
         <xacro:property name="color" value="0.89804 0.91765 0.92941 1" />
         <xacro:property name="material_name" value="" />
-
-        <!-- <link name="world" />
-        <joint name="world" type="fixed">
-            <parent link="world" />
-            <child link="base_link" />
-        </joint> -->
 
         <xacro:macro name="link_with_inertial"
             params="name xyz rpy mass ixx ixy ixz iyy iyz izz visual_mesh collision_mesh">
@@ -206,4 +201,5 @@
             </actuator>
         </transmission>
     </xacro:macro>
+    
 </robot>

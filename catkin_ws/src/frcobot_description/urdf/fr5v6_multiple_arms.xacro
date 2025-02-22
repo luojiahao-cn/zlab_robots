@@ -11,7 +11,7 @@
     <!-- <xacro:include filename="$(find franka_description)/robots/common/franka_arm.xacro" /> -->
     <!-- <xacro:include filename="$(find franka_description)/robots/common/franka_hand.xacro" /> -->
 
-    <xacro:include filename="$(find frcobot_description)/urdf/fr5v6.xacro" />
+    <xacro:include filename="$(find frcobot_description)/urdf/fr5v6_library.xacro" />
 
     <link name="world" />
 
@@ -62,8 +62,8 @@
     <!-- <xacro:franka_hand arm_id="$(arg arm_id_2)" rpy="0 0 ${-pi/4}"
         connected_to="$(arg arm_id_2)_link8" gazebo="true" safety_distance="0.03" /> -->
 
-        <xacro:fr5v6_arm arm_id="$(arg arm_id_1)" connected_to="base" xyz="0 -0.5 1" />
-        <xacro:fr5v6_arm arm_id="$(arg arm_id_2)" connected_to="base" xyz="0 0.5 1" />
+    <xacro:fr5v6_arm arm_id="$(arg arm_id_1)" connected_to="base" xyz="0 -0.5 1" />
+    <xacro:fr5v6_arm arm_id="$(arg arm_id_2)" connected_to="base" xyz="0 0.5 1" />
 
     <!-- right arm joints control interface -->
     <xacro:gazebo-joint joint="$(arg arm_id_1)_j1" />
