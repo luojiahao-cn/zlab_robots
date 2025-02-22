@@ -10,13 +10,6 @@
     <!-- 添加虚拟根链接 -->
     <link name="world" />
 
-    <!-- 将实际的根链接连接到虚拟根链接 -->
-    <joint name="world_joint" type="fixed">
-        <parent link="world" />
-        <child link="${arm_id}_base_link" />
-        <origin xyz="0 0 0" rpy="0 0 0" />
-    </joint>
-
     <!-- 实例化机械臂 -->
     <xacro:fr5v6_arm arm_id="${arm_id}" connected_to="world" xyz="0 0 0" rpy="0 0 0" />
 </robot>

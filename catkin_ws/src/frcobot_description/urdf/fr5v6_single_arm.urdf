@@ -6,13 +6,7 @@
 <robot name="fr5v6_single_arm">
   <!-- 添加虚拟根链接 -->
   <link name="world"/>
-  <!-- 将实际的根链接连接到虚拟根链接 -->
-  <joint name="world_joint" type="fixed">
-    <parent link="world"/>
-    <child link="fr5v6_base_link"/>
-    <origin rpy="0 0 0" xyz="0 0 0"/>
-  </joint>
-  <joint name="fr5v6_joint_world" type="fixed">
+  <joint name="fr5v6_joint_base" type="fixed">
     <parent link="world"/>
     <child link="fr5v6_base_link"/>
     <origin rpy="0 0 0" xyz="0 0 0"/>

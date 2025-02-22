@@ -3,7 +3,7 @@
     <xacro:macro name="fr5v6_arm" 
         params="arm_id:='fr5v6' connected_to:='' xyz:='0 0 0' rpy:='0 0 0'">
         <xacro:unless value="${not connected_to}">
-            <joint name="${arm_id}_joint_${connected_to}" type="fixed">
+            <joint name="${arm_id}_joint_base" type="fixed">
                 <parent link="${connected_to}" />
                 <child link="${arm_id}_base_link" />
                 <origin rpy="${rpy}" xyz="${xyz}" />
