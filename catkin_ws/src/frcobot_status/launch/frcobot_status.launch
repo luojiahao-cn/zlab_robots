@@ -1,0 +1,16 @@
+<launch>
+
+    <!-- 定义参数 -->
+    <arg name="robot_id" default="fr5v6" />
+    <arg name="robot_ip" default="192.168.31.202" />
+    <arg name="robot_port" default="8083" />
+
+    <!-- frcobot status node -->
+    <node pkg="frcobot_hw" type="frcobot_status_node" name="$(arg robot_id)_status_node"
+        output="screen">
+        <param name="robot_id" value="$(arg robot_id)" />
+        <param name="robot_ip" value="$(arg robot_ip)" />
+        <param name="robot_port" value="$(arg robot_port)" />
+    </node>
+
+</launch>
