@@ -3,13 +3,11 @@
 
   <!-- GDB functionality -->
     <arg name="debug" default="false" />
-    <arg unless="$(arg debug)" name="launch_prefix" value="" />
-    <arg if="$(arg debug)" name="launch_prefix" value="gdb --ex run --args" />
+    <arg name="launch_prefix" value="" unless="$(arg debug)" />
+    <arg name="launch_prefix" value="gdb --ex run --args" if="$(arg debug)" />
 
-    <!-- Load example URDF -->
-    <param name="/robot_description" textfile="$(find frcobot_description)/urdf/fr5v6.urdf" />
-
-  <group ns="frrobot">
+        <!-- Load example URDF -->
+    <param name="robot_description" textfile="$(find frcobot_description)/urdf/fr5v6.urdf" />
 
         <!-- Load hardware interface -->
     <node name="frrobot_hardware_interface" pkg="ros_control_boilerplate" type="frrobot_hw_main"
@@ -24,7 +22,5 @@
 
         <!-- Convert joint states to /tf tranforms -->
     <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher"/>
-
-  </group>
 
 </launch>

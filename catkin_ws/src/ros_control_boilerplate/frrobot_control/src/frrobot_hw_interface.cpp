@@ -44,18 +44,18 @@ namespace frrobot_control
   FrRobotHWInterface::FrRobotHWInterface(ros::NodeHandle &nh, urdf::Model *urdf_model)
       : ros_control_boilerplate::GenericHWInterface(nh, urdf_model)
   {
-    std::string server_ip;
-    if (!nh.getParam("server_ip", server_ip))
+    std::string robot_ip;
+    if (!nh.getParam("robot_ip", robot_ip))
     {
-        ROS_ERROR("Failed to get param 'server_ip'");
-        server_ip = "192.168.31.202";
-        ROS_WARN("Param 'server_ip' not found, using default IP: %s", server_ip.c_str());
+        ROS_ERROR("Failed to get param 'robot_ip'");
+        robot_ip = "192.168.31.202";
+        ROS_WARN("Param 'robot_ip' not found, using default IP: %s", robot_ip.c_str());
     }
 
     // Set the server address and listening port through the struct sockaddr_in structure;
     memset(&serverSendAddr, 0, sizeof(serverSendAddr));
     serverSendAddr.sin_family = AF_INET;
-    serverSendAddr.sin_addr.s_addr = inet_addr(server_ip.c_str());
+    serverSendAddr.sin_addr.s_addr = inet_addr(robot_ip.c_str());
     serverSendAddr.sin_port = htons(PORT_CMD);
     sendaddr_length = sizeof(serverSendAddr);
 
@@ -66,7 +66,7 @@ namespace frrobot_control
       perror("socket() error");
       exit(1);
     }
-    ROS_INFO("Try connect to server IP: %s, port: %d", server_ip.c_str(), PORT_CMD);
+    ROS_INFO("Try connect to server IP: %s, port: %d", robot_ip.c_str(), PORT_CMD);
     if (connect(confd, (struct sockaddr *)&serverSendAddr, sizeof(serverSendAddr)) < 0)
     {
       ROS_INFO("connect() error");

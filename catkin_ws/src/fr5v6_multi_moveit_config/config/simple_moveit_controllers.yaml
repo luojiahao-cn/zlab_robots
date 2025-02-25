@@ -1,5 +1,5 @@
 controller_list:
-  - name: robot1_controller
+  - name: robot1/robot1_controller
     action_ns: follow_joint_trajectory
     type: FollowJointTrajectory
     default: True
@@ -10,7 +10,7 @@ controller_list:
       - robot1_j4
       - robot1_j5
       - robot1_j6
-  - name: robot2_controller
+  - name: robot2/robot2_controller
     action_ns: follow_joint_trajectory
     type: FollowJointTrajectory
     default: True
