@@ -62,14 +62,14 @@ namespace frrobot_control
     // Use socket() to generate a socket file descriptor;
     if ((confd = socket(AF_INET, SOCK_STREAM, 0)) < 0)
     {
-      ROS_INFO("socket() error");
+      ROS_ERROR("socket() error");
       perror("socket() error");
       exit(1);
     }
     ROS_INFO("Try connect to server IP: %s, port: %d", robot_ip.c_str(), PORT_CMD);
     if (connect(confd, (struct sockaddr *)&serverSendAddr, sizeof(serverSendAddr)) < 0)
     {
-      ROS_INFO("connect() error");
+      ROS_ERROR("connect() error");
       perror("connect() error");
       exit(1);
     }
