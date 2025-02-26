@@ -228,3 +228,34 @@ robot2:
     - BITstar
   projection_evaluator: joints(robot2_j1,robot2_j2)
   longest_valid_segment_fraction: 0.005
+multi_robots:
+  planner_configs:
+    - AnytimePathShortening
+    - SBL
+    - EST
+    - LBKPIECE
+    - BKPIECE
+    - KPIECE
+    - RRT
+    - RRTConnect
+    - RRTstar
+    - TRRT
+    - PRM
+    - PRMstar
+    - FMT
+    - BFMT
+    - PDST
+    - STRIDE
+    - BiTRRT
+    - LBTRRT
+    - BiEST
+    - ProjEST
+    - LazyPRM
+    - LazyPRMstar
+    - SPARS
+    - SPARStwo
+    - AITstar
+    - ABITstar
+    - BITstar
+  projection_evaluator: joints(robot1_j1,robot1_j2)
+  longest_valid_segment_fraction: 0.005
