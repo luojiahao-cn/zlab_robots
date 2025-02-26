@@ -5,6 +5,7 @@
     <arg name="debug" default="false" />
     <arg unless="$(arg debug)" name="launch_prefix" value="" />
     <arg if="$(arg debug)" name="launch_prefix" value="gdb --ex run --args" />
+    <arg name="use_real_robot" default="false" />
 
     <!-- Load example URDF -->
     <param name="robot_description"
@@ -15,14 +16,20 @@
     <arg name="robot1_ip" default="192.168.31.202" />
     <arg name="robot2_ip" default="192.168.31.203" />
 
-    
-    <group ns="robot1">
 
+    <group ns="robot1">
+        <param name="robot_ip" value="$(arg robot1_ip)" />
+        <param name="robot_description"
+            textfile="$(find frcobot_description)/urdf/fr5v6_multiple_arms.urdf" />
         <!-- Load hardware interface -->
-        <node name="frrobot_hardware_interface" pkg="ros_control_boilerplate" type="frrobot_hw_main"
-            output="screen" launch-prefix="$(arg launch_prefix)">
-            <param name="robot_ip" value="$(arg robot1_ip)" />
-        </node>
+
+        <node if="$(arg use_real_robot)" name="frrobot_hardware_interface"
+            pkg="ros_control_boilerplate" type="frrobot_hw_main"
+            output="screen" launch-prefix="$(arg launch_prefix)" />
+
+        <node unless="$(arg use_real_robot)" name="frrobot_hardware_interface"
+            pkg="ros_control_boilerplate" type="sim_hw_main"
+            output="screen" launch-prefix="$(arg launch_prefix)" />
 
         <!-- Load controller settings -->
         <rosparam
@@ -34,18 +41,26 @@
             type="controller_manager" respawn="false"
             output="screen" args="spawn joint_state_controller robot1_controller" />
 
+
+
         <!-- Convert joint states to /tf tranforms -->
         <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher" />
 
-    </group>    
+    </group>
 
     <group ns="robot2">
+        <param name="robot_ip" value="$(arg robot2_ip)" />
+        <param name="robot_description"
+            textfile="$(find frcobot_description)/urdf/fr5v6_multiple_arms.urdf" />
 
         <!-- Load hardware interface -->
-        <node name="frrobot_hardware_interface" pkg="ros_control_boilerplate" type="frrobot_hw_main"
-            output="screen" launch-prefix="$(arg launch_prefix)">
-            <param name="robot_ip" value="$(arg robot1_ip)" />
-        </node>
+        <node if="$(arg use_real_robot)" name="frrobot_hardware_interface"
+            pkg="ros_control_boilerplate" type="frrobot_hw_main"
+            output="screen" launch-prefix="$(arg launch_prefix)" />
+
+        <node unless="$(arg use_real_robot)" name="frrobot_hardware_interface"
+            pkg="ros_control_boilerplate" type="sim_hw_main"
+            output="screen" launch-prefix="$(arg launch_prefix)" />
 
         <!-- Load controller settings -->
         <rosparam
@@ -57,10 +72,14 @@
             type="controller_manager" respawn="false"
             output="screen" args="spawn joint_state_controller robot2_controller" />
 
+
+
         <!-- Convert joint states to /tf tranforms -->
         <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher" />
     </group>
 
-
+    <node name="joint_state_publisher" pkg="joint_state_publisher" type="joint_state_publisher">
+        <rosparam param="source_list">[/robot1/joint_states, /robot2/joint_states]</rosparam>
+    </node>
 
 </launch>

@@ -11,6 +11,8 @@
     <!-- By default, we are not in debug mode -->
     <arg name="debug" default="false" />
 
+    <!-- Define whether to use real robot or simulation -->
+    <arg name="use_real_robot" value="true" />
     <!--
   By default, hide joint_state_publisher's GUI
 
@@ -63,6 +65,8 @@
 
     <!-- start frrobot control -->
     <include file="$(find ros_control_boilerplate)/frrobot_control/launch/multi_simulation.launch">
+        <arg name="use_real_robot" value="$(arg use_real_robot)" />
+        
         launch-prefix="xterm -e"
     </include>
 
