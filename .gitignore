@@ -1,6 +1,7 @@
 # 忽略编译输出文件
 catkin_ws/build/
 catkin_ws/devel/
+doc/.~*
 
 source.sh
 .vscode/
