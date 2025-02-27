@@ -13,14 +13,6 @@
 
     <!-- Define whether to use real robot or simulation -->
     <arg name="use_real_robot" value="true" />
-    <!--
-  By default, hide joint_state_publisher's GUI
-
-  MoveIt!'s "demo" mode replaces the real robot driver with the joint_state_publisher.
-  The latter one maintains and publishes the current joint configuration of the simulated robot.
-  It also provides a GUI to move the simulated robot around "manually".
-  This corresponds to moving around the real robot without the use of MoveIt.
-  -->
     <arg name="use_gui" default="false" />
     <arg name="use_rviz" default="true" />
 
@@ -28,19 +20,6 @@
     <include file="$(find fr5v6_multi_moveit_config)/launch/planning_context.launch">
         <arg name="load_robot_description" value="true" />
     </include>
-
-    <!-- If needed, broadcast static tf for robot root -->
-
-
-    <!-- We do not have a robot connected, so publish fake joint states -->
-    <!-- <node name="joint_state_publisher" pkg="joint_state_publisher" type="joint_state_publisher">
-        <param name="use_gui" value="$(arg use_gui)" />
-        <rosparam param="source_list">[/frrobot/joint_states]</rosparam>
-    </node> -->
-
-    <!-- Given the published joint states, publish tf for the robot links -->
-    <!-- <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher"
-    respawn="true" output="screen" /> -->
 
     <!-- Run the main MoveIt! executable without trajectory execution (we do not have controllers
     configured by default) -->
@@ -66,7 +45,6 @@
     <!-- start frrobot control -->
     <include file="$(find ros_control_boilerplate)/frrobot_control/launch/multi_simulation.launch">
         <arg name="use_real_robot" value="$(arg use_real_robot)" />
-        
         launch-prefix="xterm -e"
     </include>
 

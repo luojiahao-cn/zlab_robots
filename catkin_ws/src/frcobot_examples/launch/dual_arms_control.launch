@@ -1,0 +1,10 @@
+<launch>
+  <!-- 启动 ROS master -->
+  <arg name="use_sim_time" default="true"/>
+  <param name="/use_sim_time" value="$(arg use_sim_time)"/>
+
+  <!-- 启动双机械臂控制节点 -->
+  <node name="dual_arms_control" pkg="frcobot_examples" type="dual_arms_control" output="screen">
+
+  </node>
+</launch>

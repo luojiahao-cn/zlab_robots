@@ -10,6 +10,9 @@ project(frcobot_examples)
 find_package(catkin REQUIRED COMPONENTS
   message_generation
   roscpp
+  moveit_core
+
+  moveit_ros_planning_interface
   std_msgs
 )
 
@@ -135,6 +138,8 @@ include_directories(
 ## The recommended prefix ensures that target names across packages don't collide
 # add_executable(${PROJECT_NAME}_node src/frcobot_examples_node.cpp)
 
+add_executable(dual_arms_control src/dual_arms_control.cpp)
+
 ## Rename C++ executable without prefix
 ## The above recommended prefix causes long target names, the following renames the
 ## target back to the shorter version for ease of user use
@@ -149,7 +154,7 @@ include_directories(
 # target_link_libraries(${PROJECT_NAME}_node
 #   ${catkin_LIBRARIES}
 # )
-
+target_link_libraries(dual_arms_control ${catkin_LIBRARIES})
 #############
 ## Install ##
 #############
