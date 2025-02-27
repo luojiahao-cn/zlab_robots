@@ -228,7 +228,7 @@ robot2:
     - BITstar
   projection_evaluator: joints(robot2_j1,robot2_j2)
   longest_valid_segment_fraction: 0.005
-multi_robots:
+dual_robots:
   planner_configs:
     - AnytimePathShortening
     - SBL

@@ -9,7 +9,7 @@
 
     <!-- Load example URDF -->
     <param name="robot_description"
-        textfile="$(find frcobot_description)/urdf/fr5v6_multiple_arms.urdf" />
+        textfile="$(find frcobot_description)/urdf/fr5v6_dual_arms.urdf" />
 
 
     <!-- Define robot IPs -->
@@ -20,7 +20,7 @@
     <group ns="robot1">
         <param name="robot_ip" value="$(arg robot1_ip)" />
         <param name="robot_description"
-            textfile="$(find frcobot_description)/urdf/fr5v6_multiple_arms.urdf" />
+            textfile="$(find frcobot_description)/urdf/fr5v6_dual_arms.urdf" />
         <!-- Load hardware interface -->
 
         <node if="$(arg use_real_robot)" name="frrobot_hardware_interface"
@@ -51,7 +51,7 @@
     <group ns="robot2">
         <param name="robot_ip" value="$(arg robot2_ip)" />
         <param name="robot_description"
-            textfile="$(find frcobot_description)/urdf/fr5v6_multiple_arms.urdf" />
+            textfile="$(find frcobot_description)/urdf/fr5v6_dual_arms.urdf" />
 
         <!-- Load hardware interface -->
         <node if="$(arg use_real_robot)" name="frrobot_hardware_interface"

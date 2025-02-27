@@ -1,10 +1,10 @@
 moveit_setup_assistant_config:
   URDF:
     package: frcobot_description
-    relative_path: urdf/fr5v6_multiple_arms.xacro
+    relative_path: urdf/fr5v6_dual_arms.xacro
     xacro_args: ""
   SRDF:
-    relative_path: config/fr5v6_multiple_arms.srdf
+    relative_path: config/fr5v6_dual_arms.srdf
   CONFIG:
     author_name: lawkaho
     author_email: lawkaho@example.com

@@ -17,7 +17,7 @@ controller_list:
       - robot2_j4
       - robot2_j5
       - robot2_j6
-  - name: fake_multi_robots_controller
+  - name: fake_dual_robots_controller
     type: $(arg fake_execution_type)
     joints:
       - robot1_j1
@@ -37,5 +37,5 @@ initial:  # Define initial robot poses per group
     pose: zero
   - group: robot2
     pose: zero
-  - group: multi_robots
+  - group: dual_robots
     pose: ready

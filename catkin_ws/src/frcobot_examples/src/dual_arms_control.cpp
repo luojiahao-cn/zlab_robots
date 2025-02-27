@@ -27,7 +27,7 @@ int main(int argc, char **argv)
     ros::AsyncSpinner spinner(1);
     spinner.start();
 
-    moveit::planning_interface::MoveGroupInterface group_multi("multi_robots");
+    moveit::planning_interface::MoveGroupInterface group_dual("dual_robots");
     moveit::planning_interface::MoveGroupInterface group_robot1("robot1");
     moveit::planning_interface::MoveGroupInterface group_robot2("robot2");
 
@@ -36,7 +36,7 @@ int main(int argc, char **argv)
     while (ros::ok())
     {
         // Move both arms to 'zero' state
-        moveToState(group_multi, "up");
+        moveToState(group_dual, "up");
         rate.sleep();
 
         // Move robot1 to 'up' state

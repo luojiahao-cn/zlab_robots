@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<robot name="fr5v6_multiple_arms" xmlns:xacro="http://ros.org/wiki/xacro">
+<robot name="fr5v6_dual_arms" xmlns:xacro="http://ros.org/wiki/xacro">
 
     <!-- add arms names prefixes -->
     <xacro:arg name="arm_id_1" default="robot1" />

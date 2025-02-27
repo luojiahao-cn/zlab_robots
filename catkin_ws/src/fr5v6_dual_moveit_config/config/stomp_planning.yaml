@@ -76,8 +76,8 @@ stomp/robot2:
         publish_intermediate: True
         marker_topic: stomp_trajectory
         marker_namespace: optimized
-stomp/multi_robots:
-  group_name: multi_robots
+stomp/dual_robots:
+  group_name: dual_robots
   optimization:
     num_timesteps: 60
     num_iterations: 40
