@@ -31,7 +31,7 @@ int main(int argc, char **argv)
     moveit::planning_interface::MoveGroupInterface group_robot1("robot1");
     moveit::planning_interface::MoveGroupInterface group_robot2("robot2");
 
-    ros::Rate rate(0.5); // 0.5 Hz, i.e., one cycle every 2 seconds
+    ros::Rate rate(0.3); // 0.5 Hz, i.e., one cycle every 2 seconds
 
     while (ros::ok())
     {
