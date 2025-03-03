@@ -1,0 +1,6 @@
+# 请求
+string command         # 发送给机械臂的命令
+---
+# 响应
+bool success           # 命令是否成功执行
+string message         # 返回的消息内容，成功或失败的详细信息
