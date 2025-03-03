@@ -16,7 +16,7 @@
     <link name="world" />
 
     <!-- box shaped table as base for the 2 Pandas -->
-    <link name="base">
+    <!-- <link name="base">
         <visual>
             <origin xyz="0 0 0.5" rpy="0 0 0" />
             <geometry>
@@ -38,13 +38,13 @@
             <inertia ixx="0.001" ixy="0.0" ixz="0.001" iyy="0.0" iyz="0.0" izz="0.001" />
         </inertial>
 
-    </link>
+    </link> -->
 
-    <joint name="base_to_world" type="fixed">
+    <!-- <joint name="base_to_world" type="fixed">
         <parent link="world" />
         <child link="base" />
         <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0" />
-    </joint>
+    </joint> -->
 
     <!-- right arm with gripper -->
     <!-- <xacro:fr5v6_arm arm_id="$(arg arm_id_1)" connected_to="base" xyz="0 -0.5 1" 
@@ -62,8 +62,8 @@
     <!-- <xacro:franka_hand arm_id="$(arg arm_id_2)" rpy="0 0 ${-pi/4}"
         connected_to="$(arg arm_id_2)_link8" gazebo="true" safety_distance="0.03" /> -->
 
-    <xacro:fr5v6_arm arm_id="$(arg arm_id_1)" connected_to="base" xyz="0 -0.5 1" />
-    <xacro:fr5v6_arm arm_id="$(arg arm_id_2)" connected_to="base" xyz="0 0.5 1" />
+    <xacro:fr5v6_arm arm_id="$(arg arm_id_1)" connected_to="world" xyz="0 -0.5 0" />
+    <xacro:fr5v6_arm arm_id="$(arg arm_id_2)" connected_to="world" xyz="0 0.5 0" />
 
     <!-- right arm joints control interface -->
     <xacro:gazebo-joint joint="$(arg arm_id_1)_j1" />

@@ -11,9 +11,9 @@
     <!-- <xacro:include filename="$(find franka_description)/robots/common/franka_hand.xacro" /> -->
     <link name="world" />
     <!-- box shaped table as base for the 2 Pandas -->
-    <link name="base">
+    <!-- <link name="base">
         <visual>
-            <origin rpy="0 0 0" xyz="0 0 0.5" />
+            <origin xyz="0 0 0.5" rpy="0 0 0" />
             <geometry>
                 <box size="1 2 1" />
             </geometry>
@@ -22,22 +22,23 @@
             </material>
         </visual>
         <collision>
-            <origin rpy="0 0 0" xyz="0 0 0.5" />
+            <origin xyz="0 0 0.5" rpy="0 0 0" />
             <geometry>
                 <box size="1 2 1" />
             </geometry>
         </collision>
         <inertial>
-            <origin rpy="0.0 0.0 0.0" xyz="0.0 0.0 0.0" />
+            <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0" />
             <mass value="10.0" />
             <inertia ixx="0.001" ixy="0.0" ixz="0.001" iyy="0.0" iyz="0.0" izz="0.001" />
         </inertial>
-    </link>
-    <joint name="base_to_world" type="fixed">
+
+    </link> -->
+    <!-- <joint name="base_to_world" type="fixed">
         <parent link="world" />
         <child link="base" />
-        <origin rpy="0.0 0.0 0.0" xyz="0.0 0.0 0.0" />
-    </joint>
+        <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0" />
+    </joint> -->
     <!-- right arm with gripper -->
     <!-- <xacro:fr5v6_arm arm_id="$(arg arm_id_1)" connected_to="base" xyz="0 -0.5 1" 
         gazebo="true"
@@ -53,9 +54,63 @@
     <!-- <xacro:franka_hand arm_id="$(arg arm_id_2)" rpy="0 0 ${-pi/4}"
         connected_to="$(arg arm_id_2)_link8" gazebo="true" safety_distance="0.03" /> -->
     <joint name="robot1_joint_base" type="fixed">
-        <parent link="base" />
+        <parent link="world" />
+        <child link="robot1_extra_base_link" />
+        <origin rpy="0 0 0" xyz="0 -0.5 0" />
+    </joint>
+    <link name="robot1_extra_base_link">
+        <inertial>
+            <origin rpy="0 0 0" xyz="-0.00035477 0.0011738 0.038422" />
+            <mass value="6.8715" />
+            <inertia ixx="0.11261" ixy="-2.8693e-05" ixz="-0.0017586" iyy="0.11265" iyz="0.002588" izz="0.19704" />
+        </inertial>
+        <visual>
+            <origin rpy="0 0 0" xyz="0 0 0" />
+            <geometry>
+                <mesh filename="package://frcobot_description/meshes/fr5v6/visual/extra_base_link.DAE" />
+            </geometry>
+            <material name="">
+                <color rgba="0.89804 0.91765 0.92941 1" />
+            </material>
+        </visual>
+        <collision>
+            <origin rpy="0 0 0" xyz="0 0 0" />
+            <geometry>
+                <mesh filename="package://frcobot_description/meshes/fr5v6/collision/extra_base_link.STL" />
+            </geometry>
+        </collision>
+    </link>
+    <joint name="robot1_extra_base_to_plant" type="fixed">
+        <parent link="robot1_extra_base_link" />
+        <child link="robot1_plant_link" />
+        <origin rpy="0 0 0" xyz="-0.00031408 0.00046097 0.41799" />
+    </joint>
+    <link name="robot1_plant_link">
+        <inertial>
+            <origin rpy="0 0 0" xyz="2.7756E-16 0 -0.008" />
+            <mass value="0.40503" />
+            <inertia ixx="0.0008273" ixy="-2.5374e-19" ixz="1.6905e-22" iyy="0.0008273" iyz="-2.1817e-22" izz="0.0016373" />
+        </inertial>
+        <visual>
+            <origin rpy="0 0 0" xyz="0 0 0" />
+            <geometry>
+                <mesh filename="package://frcobot_description/meshes/fr5v6/visual/plant_link.DAE" />
+            </geometry>
+            <material name="">
+                <color rgba="0.89804 0.91765 0.92941 1" />
+            </material>
+        </visual>
+        <collision>
+            <origin rpy="0 0 0" xyz="0 0 0" />
+            <geometry>
+                <mesh filename="package://frcobot_description/meshes/fr5v6/collision/plant_link.STL" />
+            </geometry>
+        </collision>
+    </link>
+    <joint name="robot1_extra_plant_to_base" type="fixed">
+        <parent link="robot1_plant_link" />
         <child link="robot1_base_link" />
-        <origin rpy="0 0 0" xyz="0 -0.5 1" />
+        <origin rpy="0 0 0" xyz="0 0 0.0001" />
     </joint>
     <link name="robot1_base_link">
         <inertial>
@@ -272,9 +327,63 @@
         <safety_controller k_position="15" k_velocity="10" soft_lower_limit="-3.0543" soft_upper_limit="3.0543" />
     </joint>
     <joint name="robot2_joint_base" type="fixed">
-        <parent link="base" />
+        <parent link="world" />
+        <child link="robot2_extra_base_link" />
+        <origin rpy="0 0 0" xyz="0 0.5 0" />
+    </joint>
+    <link name="robot2_extra_base_link">
+        <inertial>
+            <origin rpy="0 0 0" xyz="-0.00035477 0.0011738 0.038422" />
+            <mass value="6.8715" />
+            <inertia ixx="0.11261" ixy="-2.8693e-05" ixz="-0.0017586" iyy="0.11265" iyz="0.002588" izz="0.19704" />
+        </inertial>
+        <visual>
+            <origin rpy="0 0 0" xyz="0 0 0" />
+            <geometry>
+                <mesh filename="package://frcobot_description/meshes/fr5v6/visual/extra_base_link.DAE" />
+            </geometry>
+            <material name="">
+                <color rgba="0.89804 0.91765 0.92941 1" />
+            </material>
+        </visual>
+        <collision>
+            <origin rpy="0 0 0" xyz="0 0 0" />
+            <geometry>
+                <mesh filename="package://frcobot_description/meshes/fr5v6/collision/extra_base_link.STL" />
+            </geometry>
+        </collision>
+    </link>
+    <joint name="robot2_extra_base_to_plant" type="fixed">
+        <parent link="robot2_extra_base_link" />
+        <child link="robot2_plant_link" />
+        <origin rpy="0 0 0" xyz="-0.00031408 0.00046097 0.41799" />
+    </joint>
+    <link name="robot2_plant_link">
+        <inertial>
+            <origin rpy="0 0 0" xyz="2.7756E-16 0 -0.008" />
+            <mass value="0.40503" />
+            <inertia ixx="0.0008273" ixy="-2.5374e-19" ixz="1.6905e-22" iyy="0.0008273" iyz="-2.1817e-22" izz="0.0016373" />
+        </inertial>
+        <visual>
+            <origin rpy="0 0 0" xyz="0 0 0" />
+            <geometry>
+                <mesh filename="package://frcobot_description/meshes/fr5v6/visual/plant_link.DAE" />
+            </geometry>
+            <material name="">
+                <color rgba="0.89804 0.91765 0.92941 1" />
+            </material>
+        </visual>
+        <collision>
+            <origin rpy="0 0 0" xyz="0 0 0" />
+            <geometry>
+                <mesh filename="package://frcobot_description/meshes/fr5v6/collision/plant_link.STL" />
+            </geometry>
+        </collision>
+    </link>
+    <joint name="robot2_extra_plant_to_base" type="fixed">
+        <parent link="robot2_plant_link" />
         <child link="robot2_base_link" />
-        <origin rpy="0 0 0" xyz="0 0.5 1" />
+        <origin rpy="0 0 0" xyz="0 0 0.0001" />
     </joint>
     <link name="robot2_base_link">
         <inertial>
@@ -631,3 +740,4 @@
         </plugin>
     </gazebo>
 </robot>
+

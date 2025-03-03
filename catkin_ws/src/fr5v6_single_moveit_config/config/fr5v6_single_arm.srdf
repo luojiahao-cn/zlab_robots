@@ -27,12 +27,18 @@
         <joint name="fr5v6_j6" value="0"/>
     </group_state>
     <!--DISABLE COLLISIONS: By default it is assumed that any link of the robot could potentially come into collision with any other link in the robot. This tag disables collision checking between a specified pair of links. -->
+    <disable_collisions link1="fr5v6_base_link" link2="fr5v6_extra_base_link" reason="Never"/>
     <disable_collisions link1="fr5v6_base_link" link2="fr5v6_j1_Link" reason="Adjacent"/>
     <disable_collisions link1="fr5v6_base_link" link2="fr5v6_j2_Link" reason="Never"/>
+    <disable_collisions link1="fr5v6_base_link" link2="fr5v6_plant_link" reason="Adjacent"/>
+    <disable_collisions link1="fr5v6_extra_base_link" link2="fr5v6_j1_Link" reason="Never"/>
+    <disable_collisions link1="fr5v6_extra_base_link" link2="fr5v6_plant_link" reason="Adjacent"/>
     <disable_collisions link1="fr5v6_j1_Link" link2="fr5v6_j2_Link" reason="Adjacent"/>
     <disable_collisions link1="fr5v6_j1_Link" link2="fr5v6_j4_Link" reason="Never"/>
+    <disable_collisions link1="fr5v6_j1_Link" link2="fr5v6_plant_link" reason="Never"/>
     <disable_collisions link1="fr5v6_j2_Link" link2="fr5v6_j3_Link" reason="Adjacent"/>
     <disable_collisions link1="fr5v6_j2_Link" link2="fr5v6_j4_Link" reason="Never"/>
+    <disable_collisions link1="fr5v6_j2_Link" link2="fr5v6_plant_link" reason="Never"/>
     <disable_collisions link1="fr5v6_j3_Link" link2="fr5v6_j4_Link" reason="Adjacent"/>
     <disable_collisions link1="fr5v6_j4_Link" link2="fr5v6_j5_Link" reason="Adjacent"/>
     <disable_collisions link1="fr5v6_j4_Link" link2="fr5v6_j6_Link" reason="Never"/>
