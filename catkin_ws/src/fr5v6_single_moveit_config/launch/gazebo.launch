@@ -13,7 +13,7 @@
   </include>
 
   <!-- Set the robot urdf on the parameter server -->
-  <param name="robot_description" textfile="$(find fr5v6_single_moveit_config)/config/gazebo_fr5v6_single_arm.urdf" />
+  <param name="robot_description" command="xacro  '$(find frcobot_description)/urdf/fr5v6_single_arm.xacro'" />
 
   <!-- Unpause the simulation after loading the robot model -->
   <arg name="unpause" value="$(eval '' if arg('paused') else '-unpause')" />
