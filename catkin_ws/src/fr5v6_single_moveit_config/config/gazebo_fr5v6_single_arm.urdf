@@ -20,7 +20,7 @@
         <visual>
             <origin rpy="0 0 0" xyz="0 0 0" />
             <geometry>
-                <mesh filename="package://frcobot_description/meshes/fr5v6/visual/extra_base_link.DAE" />
+                <mesh filename="package://frcobot_description/meshes/fr5v6/visual/extra_base_link.DAE" scale="1 1 1" />
             </geometry>
             <material name="">
                 <color rgba="0.89804 0.91765 0.92941 1" />
@@ -29,7 +29,7 @@
         <collision>
             <origin rpy="0 0 0" xyz="0 0 0" />
             <geometry>
-                <mesh filename="package://frcobot_description/meshes/fr5v6/collision/extra_base_link.STL" />
+                <mesh filename="package://frcobot_description/meshes/fr5v6/collision/extra_base_link.STL" scale="1 1 1" />
             </geometry>
         </collision>
     </link>
@@ -47,7 +47,7 @@
         <visual>
             <origin rpy="0 0 0" xyz="0 0 0" />
             <geometry>
-                <mesh filename="package://frcobot_description/meshes/fr5v6/visual/plant_link.DAE" />
+                <mesh filename="package://frcobot_description/meshes/fr5v6/visual/plant_link.DAE" scale="1 1 1" />
             </geometry>
             <material name="">
                 <color rgba="0.89804 0.91765 0.92941 1" />
@@ -56,7 +56,7 @@
         <collision>
             <origin rpy="0 0 0" xyz="0 0 0" />
             <geometry>
-                <mesh filename="package://frcobot_description/meshes/fr5v6/collision/plant_link.STL" />
+                <mesh filename="package://frcobot_description/meshes/fr5v6/collision/plant_link.STL" scale="1 1 1" />
             </geometry>
         </collision>
     </link>
@@ -74,7 +74,7 @@
         <visual>
             <origin rpy="0 0 0" xyz="0 0 0" />
             <geometry>
-                <mesh filename="package://frcobot_description/meshes/fr5v6/visual/base_link.DAE" />
+                <mesh filename="package://frcobot_description/meshes/fr5v6/visual/base_link.DAE" scale="1 1 1" />
             </geometry>
             <material name="">
                 <color rgba="0.89804 0.91765 0.92941 1" />
@@ -83,7 +83,7 @@
         <collision>
             <origin rpy="0 0 0" xyz="0 0 0" />
             <geometry>
-                <mesh filename="package://frcobot_description/meshes/fr5v6/collision/base_link.STL" />
+                <mesh filename="package://frcobot_description/meshes/fr5v6/collision/base_link.STL" scale="1 1 1" />
             </geometry>
         </collision>
     </link>
@@ -96,7 +96,7 @@
         <visual>
             <origin rpy="0 0 0" xyz="0 0 0" />
             <geometry>
-                <mesh filename="package://frcobot_description/meshes/fr5v6/visual/j1_Link.DAE" />
+                <mesh filename="package://frcobot_description/meshes/fr5v6/visual/j1_Link.DAE" scale="1 1 1" />
             </geometry>
             <material name="">
                 <color rgba="0.89804 0.91765 0.92941 1" />
@@ -105,7 +105,7 @@
         <collision>
             <origin rpy="0 0 0" xyz="0 0 0" />
             <geometry>
-                <mesh filename="package://frcobot_description/meshes/fr5v6/collision/j1_Link.STL" />
+                <mesh filename="package://frcobot_description/meshes/fr5v6/collision/j1_Link.STL" scale="1 1 1" />
             </geometry>
         </collision>
     </link>
@@ -128,7 +128,7 @@
         <visual>
             <origin rpy="0 0 0" xyz="0 0 0" />
             <geometry>
-                <mesh filename="package://frcobot_description/meshes/fr5v6/visual/j2_Link.DAE" />
+                <mesh filename="package://frcobot_description/meshes/fr5v6/visual/j2_Link.DAE" scale="1 1 1" />
             </geometry>
             <material name="">
                 <color rgba="0.89804 0.91765 0.92941 1" />
@@ -137,7 +137,7 @@
         <collision>
             <origin rpy="0 0 0" xyz="0 0 0" />
             <geometry>
-                <mesh filename="package://frcobot_description/meshes/fr5v6/collision/j2_Link.STL" />
+                <mesh filename="package://frcobot_description/meshes/fr5v6/collision/j2_Link.STL" scale="1 1 1" />
             </geometry>
         </collision>
     </link>
@@ -160,7 +160,7 @@
         <visual>
             <origin rpy="0 0 0" xyz="0 0 0" />
             <geometry>
-                <mesh filename="package://frcobot_description/meshes/fr5v6/visual/j3_Link.DAE" />
+                <mesh filename="package://frcobot_description/meshes/fr5v6/visual/j3_Link.DAE" scale="1 1 1" />
             </geometry>
             <material name="">
                 <color rgba="0.89804 0.91765 0.92941 1" />
@@ -169,7 +169,7 @@
         <collision>
             <origin rpy="0 0 0" xyz="0 0 0" />
             <geometry>
-                <mesh filename="package://frcobot_description/meshes/fr5v6/collision/j3_Link.STL" />
+                <mesh filename="package://frcobot_description/meshes/fr5v6/collision/j3_Link.STL" scale="1 1 1" />
             </geometry>
         </collision>
     </link>
@@ -192,7 +192,7 @@
         <visual>
             <origin rpy="0 0 0" xyz="0 0 0" />
             <geometry>
-                <mesh filename="package://frcobot_description/meshes/fr5v6/visual/j4_Link.DAE" />
+                <mesh filename="package://frcobot_description/meshes/fr5v6/visual/j4_Link.DAE" scale="1 1 1" />
             </geometry>
             <material name="">
                 <color rgba="0.89804 0.91765 0.92941 1" />
@@ -201,7 +201,7 @@
         <collision>
             <origin rpy="0 0 0" xyz="0 0 0" />
             <geometry>
-                <mesh filename="package://frcobot_description/meshes/fr5v6/collision/j4_Link.STL" />
+                <mesh filename="package://frcobot_description/meshes/fr5v6/collision/j4_Link.STL" scale="1 1 1" />
             </geometry>
         </collision>
     </link>
@@ -224,7 +224,7 @@
         <visual>
             <origin rpy="0 0 0" xyz="0 0 0" />
             <geometry>
-                <mesh filename="package://frcobot_description/meshes/fr5v6/visual/j5_Link.DAE" />
+                <mesh filename="package://frcobot_description/meshes/fr5v6/visual/j5_Link.DAE" scale="1 1 1" />
             </geometry>
             <material name="">
                 <color rgba="0.89804 0.91765 0.92941 1" />
@@ -233,7 +233,7 @@
         <collision>
             <origin rpy="0 0 0" xyz="0 0 0" />
             <geometry>
-                <mesh filename="package://frcobot_description/meshes/fr5v6/collision/j5_Link.STL" />
+                <mesh filename="package://frcobot_description/meshes/fr5v6/collision/j5_Link.STL" scale="1 1 1" />
             </geometry>
         </collision>
     </link>
@@ -256,7 +256,7 @@
         <visual>
             <origin rpy="0 0 0" xyz="0 0 0" />
             <geometry>
-                <mesh filename="package://frcobot_description/meshes/fr5v6/visual/j6_Link.DAE" />
+                <mesh filename="package://frcobot_description/meshes/fr5v6/visual/j6_Link.DAE" scale="1 1 1" />
             </geometry>
             <material name="">
                 <color rgba="0.89804 0.91765 0.92941 1" />
@@ -265,7 +265,7 @@
         <collision>
             <origin rpy="0 0 0" xyz="0 0 0" />
             <geometry>
-                <mesh filename="package://frcobot_description/meshes/fr5v6/collision/j6_Link.STL" />
+                <mesh filename="package://frcobot_description/meshes/fr5v6/collision/j6_Link.STL" scale="1 1 1" />
             </geometry>
         </collision>
     </link>
@@ -278,6 +278,61 @@
         <calibration falling="0" rising="0" />
         <dynamics damping="0" friction="0" />
         <safety_controller k_position="15" k_velocity="10" soft_lower_limit="-3.0543" soft_upper_limit="3.0543" />
+    </joint>
+    <!-- Uncomment and modify the following section if you have a tool link -->
+    <link name="fr5v6_tool_Link">
+        <inertial>
+            <origin rpy="0 0 0" xyz="0.24412 0.079181 -0.126" />
+            <mass value="0" />
+            <inertia ixx="0.10666" ixy="-0.046059" ixz="0.046354" iyy="0.87967" iyz="0.0095222" izz="0.85231" />
+        </inertial>
+        <visual>
+            <origin rpy="0 0 0" xyz="0 0 0" />
+            <geometry>
+                <mesh filename="package://frcobot_description/meshes/fr5v6/visual/toolA-250mm.DAE" scale="0.001 0.001 0.001" />
+            </geometry>
+            <material name="">
+                <color rgba="0.89804 0.91765 0.92941 1" />
+            </material>
+        </visual>
+        <collision>
+            <origin rpy="0 0 0" xyz="0 0 0" />
+            <geometry>
+                <mesh filename="package://frcobot_description/meshes/fr5v6/collision/toolA-250mm.STL" scale="0.001 0.001 0.001" />
+            </geometry>
+        </collision>
+    </link>
+    <joint name="fr5v6_tool" type="fixed">
+        <origin rpy="0 0 0" xyz="0 0 0.1" />
+        <parent link="fr5v6_j6_Link" />
+        <child link="fr5v6_tool_Link" />
+        <axis xyz="0 0 1" />
+        <limit effort="0" lower="0" upper="0" velocity="0" />
+        <calibration falling="0" rising="0" />
+        <dynamics damping="0" friction="0" />
+        <safety_controller k_position="0" k_velocity="0" soft_lower_limit="0" soft_upper_limit="0" />
+    </joint>
+    <!-- 添加工具末端TCP坐标系（使用基本几何体） -->
+    <link name="fr5v6_tool_tcp_link">
+        <inertial>
+            <origin rpy="0 0 0" xyz="0 0 0" />
+            <mass value="0.001" />
+            <inertia ixx="0.0000001" ixy="0" ixz="0" iyy="0.0000001" iyz="0" izz="0.0000001" />
+        </inertial>
+        <visual>
+            <origin rpy="0 0 0" xyz="0 0 0" />
+            <geometry>
+                <sphere radius="0.005" />
+            </geometry>
+            <material name="">
+                <color rgba="1 0 0 1" />
+            </material>
+        </visual>
+    </link>
+    <joint name="fr5v6_tool_tcp_joint" type="fixed">
+        <origin rpy="0 0 0" xyz="0 0 0.25" />
+        <parent link="fr5v6_tool_Link" />
+        <child link="fr5v6_tool_tcp_link" />
     </joint>
     <transmission name="trans_fr5v6_j1">
         <type>transmission_interface/SimpleTransmission</type>

@@ -1,7 +1,7 @@
 <launch>
     <!-- <param name="robot_description" textfile="$(find frcobot_description)/urdf/fr5v6_single_arm.urdf" /> -->
     <param name="robot_description"
-        command="$(find xacro)/xacro '$(find frcobot_description)/urdf/fr5v6_dual_arms.xacro'" /> 
+        command="$(find xacro)/xacro '$(find frcobot_description)/urdf/fr5v6_single_arm.xacro'" /> 
 
 
     <!-- 定义use_gui参数，默认为false -->
@@ -17,7 +17,7 @@
     </group>
 
     <!-- Combine joint values -->
-    <!-- <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher" /> -->
+    <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher" />
 
     <!-- Show in Rviz -->
     <node name="rviz" pkg="rviz" type="rviz"
