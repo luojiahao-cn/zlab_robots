@@ -8,6 +8,10 @@ controller_list:
       - fr5v6_j4
       - fr5v6_j5
       - fr5v6_j6
+  - name: fake_tool_controller
+    type: $(arg fake_execution_type)
+    joints:
+      []
 initial:  # Define initial robot poses per group
   - group: fr5v6_arm
     pose: zero
