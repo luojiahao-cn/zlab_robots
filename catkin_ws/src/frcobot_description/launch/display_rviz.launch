@@ -1,7 +1,7 @@
 <launch>
-    <param name="robot_description" textfile="$(find frcobot_description)/urdf/fr5v6_single_arm.urdf" />
-    <!-- <param name="robot_description"
-        command="$(find xacro)/xacro '$(find frcobot_description)/urdf/fr5v6.xacro'" />  -->
+    <!-- <param name="robot_description" textfile="$(find frcobot_description)/urdf/fr5v6_single_arm.urdf" /> -->
+    <param name="robot_description"
+        command="$(find xacro)/xacro '$(find frcobot_description)/urdf/fr5v6_single_arm.xacro'" /> 
 
 
     <!-- 定义use_gui参数，默认为false -->
