@@ -212,8 +212,8 @@
 
         <xacro:link_with_inertial name="${arm_id}_tool_link" xyz="0.24412 0.079181 -0.126"
             rpy="0 0 0"
-            mass="0"
-            ixx="0.10666" ixy="-0.046059" ixz="0.046354" iyy="0.87967" iyz="0.0095222" izz="0.85231"
+            mass="0.05"
+            ixx="5.82E-7" ixy="0" ixz="0.0" iyy="1.15E-8" iyz="0.0" izz="5.82E-7"
             visual_mesh="package://frcobot_description/meshes/fr5v6/visual/toolA-250mm.DAE"
             collision_mesh="package://frcobot_description/meshes/fr5v6/collision/toolA-250mm.STL" 
             scale="0.001 0.001 0.001" />
