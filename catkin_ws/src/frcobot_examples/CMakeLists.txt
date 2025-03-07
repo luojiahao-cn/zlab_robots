@@ -139,6 +139,7 @@ include_directories(
 # add_executable(${PROJECT_NAME}_node src/frcobot_examples_node.cpp)
 
 add_executable(dual_arms_control src/dual_arms_control.cpp)
+add_executable(example_test src/example_test.cpp)
 
 ## Rename C++ executable without prefix
 ## The above recommended prefix causes long target names, the following renames the
@@ -155,6 +156,7 @@ add_executable(dual_arms_control src/dual_arms_control.cpp)
 #   ${catkin_LIBRARIES}
 # )
 target_link_libraries(dual_arms_control ${catkin_LIBRARIES})
+target_link_libraries(example_test ${catkin_LIBRARIES})
 #############
 ## Install ##
 #############
