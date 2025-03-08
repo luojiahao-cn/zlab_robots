@@ -1,26 +1,41 @@
 <?xml version="1.0"?>
 <launch>
 
-  <!-- GDB functionality -->
+    <!-- GDB functionality -->
     <arg name="debug" default="false" />
     <arg name="launch_prefix" value="" unless="$(arg debug)" />
     <arg name="launch_prefix" value="gdb --ex run --args" if="$(arg debug)" />
 
-        <!-- Load example URDF -->
+    <arg name="robot_ip" default="192.168.31.202" />
+
+    <!-- Load example URDF -->
     <param name="robot_description" textfile="$(find frcobot_description)/urdf/fr5v6.urdf" />
 
+    <group ns="frrobot">
+
+        <param name="robot_ip" value="$(arg robot_ip)" />
+
         <!-- Load hardware interface -->
-    <node name="frrobot_hardware_interface" pkg="ros_control_boilerplate" type="frrobot_hw_main"
-          output="screen" launch-prefix="$(arg launch_prefix)"/>
+        <node name="frrobot_hardware_interface" pkg="ros_control_boilerplate" type="frrobot_hw_main"
+            output="screen" launch-prefix="$(arg launch_prefix)" />
 
         <!-- Load controller settings -->
-    <rosparam file="$(find ros_control_boilerplate)/frrobot_control/config/frrobot_controllers.yaml" command="load"/>
+        <rosparam
+            file="$(find ros_control_boilerplate)/frrobot_control/config/frrobot_controllers.yaml"
+            command="load" />
 
         <!-- Load controller manager -->
-    <node name="ros_control_controller_manager" pkg="controller_manager" type="controller_manager" respawn="false"
-          output="screen" args="spawn joint_state_controller position_trajectory_controller" />
+        <node name="ros_control_controller_manager" pkg="controller_manager"
+            type="controller_manager" respawn="false"
+            output="screen" args="spawn joint_state_controller position_trajectory_controller" />
 
         <!-- Convert joint states to /tf tranforms -->
-    <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher"/>
+        <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher" />
+
+    </group>
+
+    <node name="joint_state_publisher" pkg="joint_state_publisher" type="joint_state_publisher">
+        <rosparam param="source_list">[/frrobot/joint_states]</rosparam>
+    </node>
 
 </launch>
