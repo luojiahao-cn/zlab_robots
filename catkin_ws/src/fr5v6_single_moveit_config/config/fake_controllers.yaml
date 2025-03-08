@@ -2,12 +2,12 @@ controller_list:
   - name: fake_fr5v6_arm_controller
     type: $(arg fake_execution_type)
     joints:
-      - fr5v6_j1
-      - fr5v6_j2
-      - fr5v6_j3
-      - fr5v6_j4
-      - fr5v6_j5
-      - fr5v6_j6
+      - frrobot_j1
+      - frrobot_j2
+      - frrobot_j3
+      - frrobot_j4
+      - frrobot_j5
+      - frrobot_j6
   - name: fake_tool_controller
     type: $(arg fake_execution_type)
     joints:

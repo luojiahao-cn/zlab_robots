@@ -7,12 +7,12 @@ generic_hw_control_loop:
 # Settings for ros_control hardware interface
 hardware_interface:
    joints:
-      - j1
-      - j2
-      - j3
-      - j4
-      - j5
-      - j6
+      - frrobot_j1
+      - frrobot_j2
+      - frrobot_j3
+      - frrobot_j4
+      - frrobot_j5
+      - frrobot_j6
    sim_control_mode: 0 # 0: position, 1: velocity
 
 # Publish all joint states ----------------------------------
@@ -23,35 +23,35 @@ joint_state_controller:
 
 # Joint Trajectory Controller -------------------------------
 # For detailed explanations of parameter see http://wiki.ros.org/joint_trajectory_controller
-position_trajectory_controller:
+fr5v6_arm_controller:
    type: position_controllers/JointTrajectoryController
    # These joints can likely just be copied from the hardware_interface list above
    joints:
-      - j1
-      - j2
-      - j3
-      - j4
-      - j5
-      - j6
+      - frrobot_j1
+      - frrobot_j2
+      - frrobot_j3
+      - frrobot_j4
+      - frrobot_j5
+      - frrobot_j6
    constraints:
       goal_time: 3.0
       #stopped_position_tolerance: 0.4 # Defaults to 0.01
-      j1:
+      frrobot_j1:
           trajectory: 0.60
           goal:       0.15
-      j2:
+      frrobot_j2:
           trajectory: 0.60
           goal:       0.15
-      j3:
+      frrobot_j3:
           trajectory: 0.60
           goal:       0.15
-      j4:
+      frrobot_j4:
           trajectory: 0.60
           goal:       0.15
-      j5:
+      frrobot_j5:
           trajectory: 0.60
           goal:       0.15
-      j6:
+      frrobot_j6:
           trajectory: 0.60
           goal:       0.15
    # gains:
@@ -66,27 +66,27 @@ position_trajectory_controller:
 # Allows to send individual ROS msg of Float64 to each joint separately
 joint1_position_controller:
    type: position_controllers/JointPositionController
-   joint: j1
+   joint: frrobot_j1
    pid: {p: 100.0, i: 0.01, d: 10.0}
 joint2_position_controller:
    type: position_controllers/JointPositionController
-   joint: j2
+   joint: frrobot_j2
    pid: {p: 100.0, i: 0.01, d: 10.0}
 joint3_position_controller:
    type: position_controllers/JointPositionController
-   joint: j3
+   joint: frrobot_j3
    pid: {p: 100.0, i: 0.01, d: 10.0}
 joint4_position_controller:
    type: position_controllers/JointPositionController
-   joint: j4
+   joint: frrobot_j4
    pid: {p: 100.0, i: 0.01, d: 10.0}
 joint5_position_controller:
    type: position_controllers/JointPositionController
-   joint: j5
+   joint: frrobot_j5
    pid: {p: 100.0, i: 0.01, d: 10.0}
 joint6_position_controller:
    type: position_controllers/JointPositionController
-   joint: j6
+   joint: frrobot_j6
    pid: {p: 100.0, i: 0.01, d: 10.0}
 
 # Group Position Controllers ---------------------------------------
@@ -94,9 +94,9 @@ joint6_position_controller:
 joints_position_controller:
    type: position_controllers/JointGroupPositionController
    joints:
-      - j1
-      - j2
-      - j3
-      - j4
-      - j5
-      - j6
+      - frrobot_j1
+      - frrobot_j2
+      - frrobot_j3
+      - frrobot_j4
+      - frrobot_j5
+      - frrobot_j6

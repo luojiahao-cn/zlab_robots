@@ -5,7 +5,7 @@
         <xacro:unless value="${not connected_to}">
             <joint name="${arm_id}_joint_base" type="fixed">
                 <parent link="${connected_to}" />
-                <child link="${arm_id}_extra_base_link" />
+                <child link="${arm_id}_base0_link" />
                 <origin rpy="${rpy}" xyz="${xyz}" />
             </joint>
         </xacro:unless>
@@ -26,7 +26,7 @@
                 <visual>
                     <origin xyz="0 0 0" rpy="0 0 0" />
                     <geometry>
-                        <mesh filename="${visual_mesh}" scale="${scale}"/>
+                        <mesh filename="${visual_mesh}" scale="${scale}" />
                     </geometry>
                     <material name="${material_name}">
                         <color rgba="${color}" />
@@ -35,14 +35,14 @@
                 <collision>
                     <origin xyz="0 0 0" rpy="0 0 0" />
                     <geometry>
-                        <mesh filename="${collision_mesh}" scale="${scale}"/>
+                        <mesh filename="${collision_mesh}" scale="${scale}" />
                     </geometry>
                 </collision>
             </link>
         </xacro:macro>
 
 
-        <xacro:link_with_inertial name="${arm_id}_extra_base_link"
+        <xacro:link_with_inertial name="${arm_id}_base0_link"
             xyz="-0.00035477 0.0011738 0.038422"
             rpy="0 0 0"
             mass="6.8715"
@@ -55,13 +55,7 @@
             visual_mesh="package://frcobot_description/meshes/fr5v6/visual/extra_base_link.DAE"
             collision_mesh="package://frcobot_description/meshes/fr5v6/collision/extra_base_link.STL" />
 
-        <joint name="${arm_id}_extra_base_to_plant" type="fixed">
-            <parent link="${arm_id}_extra_base_link" />
-            <child link="${arm_id}_plant_link" />
-            <origin xyz="-0.00031408 0.00046097 0.41799" rpy="0 0 0" />
-        </joint>
-
-        <xacro:link_with_inertial name="${arm_id}_plant_link" xyz="2.7756E-16 0 -0.008"
+        <xacro:link_with_inertial name="${arm_id}_base1_link" xyz="2.7756E-16 0 -0.008"
             rpy="0 0 0"
             mass="0.40503"
             ixx="0.0008273"
@@ -73,19 +67,25 @@
             visual_mesh="package://frcobot_description/meshes/fr5v6/visual/plant_link.DAE"
             collision_mesh="package://frcobot_description/meshes/fr5v6/collision/plant_link.STL" />
 
-        <joint name="${arm_id}_extra_plant_to_base" type="fixed">
-            <parent link="${arm_id}_plant_link" />
-            <child link="${arm_id}_base_link" />
-            <origin xyz="0 0 0.0001" rpy="0 0 0" />
+        <joint name="${arm_id}_base0_to_base1" type="fixed">
+            <parent link="${arm_id}_base0_link" />
+            <child link="${arm_id}_base1_link" />
+            <origin xyz="-0.00031408 0.00046097 0.41799" rpy="0 0 0" />
         </joint>
 
-        <xacro:link_with_inertial name="${arm_id}_base_link" xyz="-0.00031896 -0.00029673 0.042463"
+        <xacro:link_with_inertial name="${arm_id}_base2_link" xyz="-0.00031896 -0.00029673 0.042463"
             rpy="0 0 0"
             mass="1.6185"
             ixx="0.0030836" ixy="1.5354E-05" ixz="-1.9315E-05" iyy="0.0030825" iyz="-1.7918E-05"
             izz="0.0045209"
             visual_mesh="package://frcobot_description/meshes/fr5v6/visual/base_link.DAE"
             collision_mesh="package://frcobot_description/meshes/fr5v6/collision/base_link.STL" />
+        
+        <joint name="${arm_id}_base1_to_base2" type="fixed">
+            <parent link="${arm_id}_base1_link" />
+            <child link="${arm_id}_base2_link" />
+            <origin xyz="0 0 0.0001" rpy="0 0 0" />
+        </joint>
 
         <xacro:link_with_inertial name="${arm_id}_j1_link" xyz="5.0029E-07 -0.0040922 0.14629"
             rpy="0 0 0"
@@ -97,7 +97,7 @@
 
         <joint name="${arm_id}_j1" type="revolute">
             <origin xyz="0 0 0" rpy="0 0 0" />
-            <parent link="${arm_id}_base_link" />
+            <parent link="${arm_id}_base2_link" />
             <child link="${arm_id}_j1_link" />
             <axis xyz="0 0 1" />
             <limit lower="-3.0543" upper="3.0543" effort="150" velocity="3.15" />
@@ -218,7 +218,7 @@
             collision_mesh="package://frcobot_description/meshes/fr5v6/collision/toolA-250mm.STL" 
             scale="0.001 0.001 0.001" />
 
-        <joint name="${arm_id}_tool" type="fixed">
+        <joint name="${arm_id}_tool_joint" type="fixed">
             <origin xyz="0 0 0.1" rpy="0 0 0" />
             <parent link="${arm_id}_j6_link" />
             <child link="${arm_id}_tool_link" />
@@ -255,7 +255,7 @@
             </collision>
         </link>
 
-        <joint name="${arm_id}_tool_tcp_joint" type="fixed">
+        <joint name="${arm_id}_tcp_joint" type="fixed">
             <origin xyz="0 0 0.25" rpy="0 0 0" />
             <parent link="${arm_id}_tool_link" />
             <child link="${arm_id}_tool_tcp_link" />

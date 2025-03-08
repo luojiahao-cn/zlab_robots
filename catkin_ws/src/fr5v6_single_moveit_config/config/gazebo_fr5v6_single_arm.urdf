@@ -5,13 +5,13 @@
 <!-- =================================================================================== -->
 <robot name="fr5v6_single_arm">
     <!-- 添加虚拟根链接 -->
-    <link name="world" />
-    <joint name="fr5v6_joint_base" type="fixed">
-        <parent link="world" />
-        <child link="fr5v6_extra_base_link" />
+    <link name="robot_base" />
+    <joint name="frrobot_joint_base" type="fixed">
+        <parent link="robot_base" />
+        <child link="frrobot_base0_link" />
         <origin rpy="0 0 0" xyz="0 0 0" />
     </joint>
-    <link name="fr5v6_extra_base_link">
+    <link name="frrobot_base0_link">
         <inertial>
             <origin rpy="0 0 0" xyz="-0.00035477 0.0011738 0.038422" />
             <mass value="6.8715" />
@@ -33,12 +33,7 @@
             </geometry>
         </collision>
     </link>
-    <joint name="fr5v6_extra_base_to_plant" type="fixed">
-        <parent link="fr5v6_extra_base_link" />
-        <child link="fr5v6_plant_link" />
-        <origin rpy="0 0 0" xyz="-0.00031408 0.00046097 0.41799" />
-    </joint>
-    <link name="fr5v6_plant_link">
+    <link name="frrobot_base1_link">
         <inertial>
             <origin rpy="0 0 0" xyz="2.7756E-16 0 -0.008" />
             <mass value="0.40503" />
@@ -60,12 +55,12 @@
             </geometry>
         </collision>
     </link>
-    <joint name="fr5v6_extra_plant_to_base" type="fixed">
-        <parent link="fr5v6_plant_link" />
-        <child link="fr5v6_base_link" />
-        <origin rpy="0 0 0" xyz="0 0 0.0001" />
+    <joint name="frrobot_base0_to_base1" type="fixed">
+        <parent link="frrobot_base0_link" />
+        <child link="frrobot_base1_link" />
+        <origin rpy="0 0 0" xyz="-0.00031408 0.00046097 0.41799" />
     </joint>
-    <link name="fr5v6_base_link">
+    <link name="frrobot_base2_link">
         <inertial>
             <origin rpy="0 0 0" xyz="-0.00031896 -0.00029673 0.042463" />
             <mass value="1.6185" />
@@ -87,7 +82,12 @@
             </geometry>
         </collision>
     </link>
-    <link name="fr5v6_j1_link">
+    <joint name="frrobot_base1_to_base2" type="fixed">
+        <parent link="frrobot_base1_link" />
+        <child link="frrobot_base2_link" />
+        <origin rpy="0 0 0" xyz="0 0 0.0001" />
+    </joint>
+    <link name="frrobot_j1_link">
         <inertial>
             <origin rpy="0 0 0" xyz="5.0029E-07 -0.0040922 0.14629" />
             <mass value="4.3771" />
@@ -109,17 +109,17 @@
             </geometry>
         </collision>
     </link>
-    <joint name="fr5v6_j1" type="revolute">
+    <joint name="frrobot_j1" type="revolute">
         <origin rpy="0 0 0" xyz="0 0 0" />
-        <parent link="fr5v6_base_link" />
-        <child link="fr5v6_j1_link" />
+        <parent link="frrobot_base2_link" />
+        <child link="frrobot_j1_link" />
         <axis xyz="0 0 1" />
         <limit effort="150" lower="-3.0543" upper="3.0543" velocity="3.15" />
         <calibration falling="0" rising="0" />
         <dynamics damping="0" friction="0" />
         <safety_controller k_position="15" k_velocity="10" soft_lower_limit="-3.0543" soft_upper_limit="3.0543" />
     </joint>
-    <link name="fr5v6_j2_link">
+    <link name="frrobot_j2_link">
         <inertial>
             <origin rpy="0 0 0" xyz="-0.2125 -5.7643E-09 0.1346" />
             <mass value="14.458" />
@@ -141,17 +141,17 @@
             </geometry>
         </collision>
     </link>
-    <joint name="fr5v6_j2" type="revolute">
+    <joint name="frrobot_j2" type="revolute">
         <origin rpy="1.5708 0 0" xyz="0 0 0.152" />
-        <parent link="fr5v6_j1_link" />
-        <child link="fr5v6_j2_link" />
+        <parent link="frrobot_j1_link" />
+        <child link="frrobot_j2_link" />
         <axis xyz="0 0 1" />
         <limit effort="150" lower="-4.6251" upper="1.4835" velocity="3.15" />
         <calibration falling="0" rising="0" />
         <dynamics damping="0" friction="0" />
         <safety_controller k_position="15" k_velocity="10" soft_lower_limit="-4.6251" soft_upper_limit="1.4835" />
     </joint>
-    <link name="fr5v6_j3_link">
+    <link name="frrobot_j3_link">
         <inertial>
             <origin rpy="0 0 0" xyz="-0.18793 -8.4503E-07 0.0066357" />
             <mass value="7.6737" />
@@ -173,17 +173,17 @@
             </geometry>
         </collision>
     </link>
-    <joint name="fr5v6_j3" type="revolute">
+    <joint name="frrobot_j3" type="revolute">
         <origin rpy="0 0 0" xyz="-0.425 0 0" />
-        <parent link="fr5v6_j2_link" />
-        <child link="fr5v6_j3_link" />
+        <parent link="frrobot_j2_link" />
+        <child link="frrobot_j3_link" />
         <axis xyz="0 0 1" />
         <limit effort="150" lower="-2.8274" upper="2.8274" velocity="3.15" />
         <calibration falling="0" rising="0" />
         <dynamics damping="0" friction="0" />
         <safety_controller k_position="15" k_velocity="10" soft_lower_limit="-2.8274" soft_upper_limit="2.8274" />
     </joint>
-    <link name="fr5v6_j4_link">
+    <link name="frrobot_j4_link">
         <inertial>
             <origin rpy="0 0 0" xyz="4.98E-07 -0.003754 0.097155" />
             <mass value="1.6266" />
@@ -205,17 +205,17 @@
             </geometry>
         </collision>
     </link>
-    <joint name="fr5v6_j4" type="revolute">
+    <joint name="frrobot_j4" type="revolute">
         <origin rpy="0 0 0" xyz="-0.39501 0 0" />
-        <parent link="fr5v6_j3_link" />
-        <child link="fr5v6_j4_link" />
+        <parent link="frrobot_j3_link" />
+        <child link="frrobot_j4_link" />
         <axis xyz="0 0 1" />
         <limit effort="28" lower="-4.6251" upper="1.4835" velocity="3.2" />
         <calibration falling="0" rising="0" />
         <dynamics damping="0" friction="0" />
         <safety_controller k_position="15" k_velocity="10" soft_lower_limit="-4.6251" soft_upper_limit="1.4835" />
     </joint>
-    <link name="fr5v6_j5_link">
+    <link name="frrobot_j5_link">
         <inertial>
             <origin rpy="0 0 0" xyz="-4.5588E-07 0.0038617 0.098257" />
             <mass value="1.5812" />
@@ -237,17 +237,17 @@
             </geometry>
         </collision>
     </link>
-    <joint name="fr5v6_j5" type="revolute">
+    <joint name="frrobot_j5" type="revolute">
         <origin rpy="1.5708 0 0" xyz="0 0 0.1021" />
-        <parent link="fr5v6_j4_link" />
-        <child link="fr5v6_j5_link" />
+        <parent link="frrobot_j4_link" />
+        <child link="frrobot_j5_link" />
         <axis xyz="0 0 1" />
         <limit effort="28" lower="-3.0543" upper="3.0543" velocity="3.2" />
         <calibration falling="0" rising="0" />
         <dynamics damping="0" friction="0" />
         <safety_controller k_position="15" k_velocity="10" soft_lower_limit="-3.0543" soft_upper_limit="3.0543" />
     </joint>
-    <link name="fr5v6_j6_link">
+    <link name="frrobot_j6_link">
         <inertial>
             <origin rpy="0 0 0" xyz="7.7496E-05 1.7751E-05 0.076122" />
             <mass value="0.52542" />
@@ -269,10 +269,10 @@
             </geometry>
         </collision>
     </link>
-    <joint name="fr5v6_j6" type="revolute">
+    <joint name="frrobot_j6" type="revolute">
         <origin rpy="-1.5708 0 0" xyz="0 0 0.102" />
-        <parent link="fr5v6_j5_link" />
-        <child link="fr5v6_j6_link" />
+        <parent link="frrobot_j5_link" />
+        <child link="frrobot_j6_link" />
         <axis xyz="0 0 1" />
         <limit effort="28" lower="-3.0543" upper="3.0543" velocity="3.2" />
         <calibration falling="0" rising="0" />
@@ -280,11 +280,11 @@
         <safety_controller k_position="15" k_velocity="10" soft_lower_limit="-3.0543" soft_upper_limit="3.0543" />
     </joint>
     <!-- Uncomment and modify the following section if you have a tool link -->
-    <link name="fr5v6_tool_link">
+    <link name="frrobot_tool_link">
         <inertial>
             <origin rpy="0 0 0" xyz="0.24412 0.079181 -0.126" />
-            <mass value="0" />
-            <inertia ixx="0.10666" ixy="-0.046059" ixz="0.046354" iyy="0.87967" iyz="0.0095222" izz="0.85231" />
+            <mass value="0.05" />
+            <inertia ixx="5.82e-07" ixy="0" ixz="0.0" iyy="1.15e-08" iyz="0.0" izz="5.82e-07" />
         </inertial>
         <visual>
             <origin rpy="0 0 0" xyz="0 0 0" />
@@ -302,10 +302,10 @@
             </geometry>
         </collision>
     </link>
-    <joint name="fr5v6_tool" type="fixed">
+    <joint name="frrobot_tool_joint" type="fixed">
         <origin rpy="0 0 0" xyz="0 0 0.1" />
-        <parent link="fr5v6_j6_link" />
-        <child link="fr5v6_tool_link" />
+        <parent link="frrobot_j6_link" />
+        <child link="frrobot_tool_link" />
         <axis xyz="0 0 1" />
         <limit effort="0" lower="0" upper="0" velocity="0" />
         <calibration falling="0" rising="0" />
@@ -313,7 +313,7 @@
         <safety_controller k_position="0" k_velocity="0" soft_lower_limit="0" soft_upper_limit="0" />
     </joint>
     <!-- 添加工具末端TCP坐标系（使用基本几何体） -->
-    <link name="fr5v6_tool_tcp_link">
+    <link name="frrobot_tool_tcp_link">
         <inertial>
             <origin rpy="0 0 0" xyz="0 0 0" />
             <mass value="0.001" />
@@ -336,74 +336,76 @@
             </geometry>
         </collision>
     </link>
-    <joint name="fr5v6_tool_tcp_joint" type="fixed">
+    <joint name="frrobot_tcp_joint" type="fixed">
         <origin rpy="0 0 0" xyz="0 0 0.25" />
-        <parent link="fr5v6_tool_link" />
-        <child link="fr5v6_tool_tcp_link" />
+        <parent link="frrobot_tool_link" />
+        <child link="frrobot_tool_tcp_link" />
     </joint>
-    <transmission name="trans_fr5v6_j1">
+    <transmission name="trans_frrobot_j1">
         <type>transmission_interface/SimpleTransmission</type>
-        <joint name="fr5v6_j1">
+        <joint name="frrobot_j1">
             <hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface>
         </joint>
-        <actuator name="fr5v6_j1_motor">
+        <actuator name="frrobot_j1_motor">
             <hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface>
             <mechanicalReduction>1</mechanicalReduction>
         </actuator>
     </transmission>
-    <transmission name="trans_fr5v6_j2">
+    <transmission name="trans_frrobot_j2">
         <type>transmission_interface/SimpleTransmission</type>
-        <joint name="fr5v6_j2">
+        <joint name="frrobot_j2">
             <hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface>
         </joint>
-        <actuator name="fr5v6_j2_motor">
+        <actuator name="frrobot_j2_motor">
             <hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface>
             <mechanicalReduction>1</mechanicalReduction>
         </actuator>
     </transmission>
-    <transmission name="trans_fr5v6_j3">
+    <transmission name="trans_frrobot_j3">
         <type>transmission_interface/SimpleTransmission</type>
-        <joint name="fr5v6_j3">
+        <joint name="frrobot_j3">
             <hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface>
         </joint>
-        <actuator name="fr5v6_j3_motor">
+        <actuator name="frrobot_j3_motor">
             <hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface>
             <mechanicalReduction>1</mechanicalReduction>
         </actuator>
     </transmission>
-    <transmission name="trans_fr5v6_j4">
+    <transmission name="trans_frrobot_j4">
         <type>transmission_interface/SimpleTransmission</type>
-        <joint name="fr5v6_j4">
+        <joint name="frrobot_j4">
             <hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface>
         </joint>
-        <actuator name="fr5v6_j4_motor">
+        <actuator name="frrobot_j4_motor">
             <hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface>
             <mechanicalReduction>1</mechanicalReduction>
         </actuator>
     </transmission>
-    <transmission name="trans_fr5v6_j5">
+    <transmission name="trans_frrobot_j5">
         <type>transmission_interface/SimpleTransmission</type>
-        <joint name="fr5v6_j5">
+        <joint name="frrobot_j5">
             <hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface>
         </joint>
-        <actuator name="fr5v6_j5_motor">
+        <actuator name="frrobot_j5_motor">
             <hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface>
             <mechanicalReduction>1</mechanicalReduction>
         </actuator>
     </transmission>
-    <transmission name="trans_fr5v6_j6">
+    <transmission name="trans_frrobot_j6">
         <type>transmission_interface/SimpleTransmission</type>
-        <joint name="fr5v6_j6">
+        <joint name="frrobot_j6">
             <hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface>
         </joint>
-        <actuator name="fr5v6_j6_motor">
+        <actuator name="frrobot_j6_motor">
             <hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface>
             <mechanicalReduction>1</mechanicalReduction>
         </actuator>
     </transmission>
+    <!-- load ros_control plugin -->
     <gazebo>
-        <plugin name="gazebo_ros_control" filename="libgazebo_ros_control.so">
+        <plugin filename="libgazebo_ros_control.so" name="gazebo_ros_control">
             <robotNamespace>/</robotNamespace>
         </plugin>
     </gazebo>
 </robot>
+
