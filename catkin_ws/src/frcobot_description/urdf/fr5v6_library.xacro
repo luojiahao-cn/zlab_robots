@@ -45,7 +45,7 @@
         <xacro:link_with_inertial name="${arm_id}_base0_link"
             xyz="-0.00035477 0.0011738 0.038422"
             rpy="0 0 0"
-            mass="6.8715"
+            mass="60.8715"
             ixx="0.11261"
             ixy="-2.8693E-05"
             ixz="-0.0017586"
