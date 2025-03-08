@@ -25,8 +25,8 @@ bool moveInDirection(
     waypoints.push_back(target_pose);
     
     // 设置参考坐标系
-    group.setPoseReferenceFrame("world");
-    
+    group.setPoseReferenceFrame("robot_base");
+
     // 计算笛卡尔路径
     moveit_msgs::RobotTrajectory trajectory;
     const double jump_threshold = 0.0;
@@ -62,7 +62,7 @@ int main(int argc, char** argv)
     moveit::planning_interface::MoveGroupInterface arm_group("fr5v6_arm");
     
     // 设置规划参考坐标系
-    arm_group.setPoseReferenceFrame("world");
+    arm_group.setPoseReferenceFrame("robot_base");
     
     // 设置末端执行器
     arm_group.setEndEffectorLink(arm_group.getEndEffectorLink());

@@ -92,7 +92,7 @@ joint6_position_controller:
 # Group Position Controllers ---------------------------------------
 # Allows to send single ROS msg of Float64MultiArray to all joints
 joints_position_controller:
-   type: position_controllers/JointGroupPositionC ontroller
+   type: position_controllers/JointGroupPositionController
    joints:
       - robot2_j1
       - robot2_j2

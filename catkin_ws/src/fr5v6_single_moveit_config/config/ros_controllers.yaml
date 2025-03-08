@@ -1,5 +1,5 @@
 fr5v6_arm_controller:
-  type: effort_controllers/JointTrajectoryController
+  type: position_controllers/JointTrajectoryController
   joints:
     - frrobot_j1
     - frrobot_j2
