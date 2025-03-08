@@ -8,8 +8,7 @@
 
     <!-- Load example URDF -->
     <param name="robot_description"
-        textfile="$(find frcobot_description)/urdf/fr5v6_dual_arms.urdf" />
-
+        textfile="$(find fr5v6_dual_moveit_config)/config/gazebo_fr5v6_dual_arms.urdf" />
     <!-- Define robot IPs -->
     <arg name="robot1_ip" default="192.168.31.202" />
     <arg name="robot2_ip" default="192.168.31.203" />
@@ -17,7 +16,7 @@
     <group ns="robot1">
         <param name="robot_ip" value="$(arg robot1_ip)" />
         <param name="robot_description"
-            textfile="$(find frcobot_description)/urdf/fr5v6_dual_arms.urdf" />
+            textfile="$(find fr5v6_dual_moveit_config)/config/gazebo_fr5v6_dual_arms.urdf" />
         <!-- Load hardware interface -->
 
         <node name="frrobot_hardware_interface" pkg="ros_control_boilerplate" type="frrobot_hw_main"
@@ -42,7 +41,7 @@
     <group ns="robot2">
         <param name="robot_ip" value="$(arg robot2_ip)" />
         <param name="robot_description"
-            textfile="$(find frcobot_description)/urdf/fr5v6_dual_arms.urdf" />
+            textfile="$(find fr5v6_dual_moveit_config)/config/gazebo_fr5v6_dual_arms.urdf" />
 
         <!-- Load hardware interface -->
         <node name="frrobot_hardware_interface" pkg="ros_control_boilerplate" type="frrobot_hw_main"

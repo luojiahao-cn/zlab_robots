@@ -9,7 +9,8 @@
     <arg name="robot_ip" default="192.168.31.202" />
 
     <!-- Load example URDF -->
-    <param name="robot_description" textfile="$(find frcobot_description)/urdf/fr5v6.urdf" />
+    <param name="robot_description"
+        textfile="$(find fr5v6_single_moveit_config)/config/gazebo_fr5v6_single_arm.urdf" />
 
     <group ns="frrobot">
 
@@ -27,7 +28,7 @@
         <!-- Load controller manager -->
         <node name="ros_control_controller_manager" pkg="controller_manager"
             type="controller_manager" respawn="false"
-            output="screen" args="spawn joint_state_controller position_trajectory_controller" />
+            output="screen" args="spawn joint_state_controller fr5v6_arm_controller" />
 
         <!-- Convert joint states to /tf tranforms -->
         <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher" />

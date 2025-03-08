@@ -10,51 +10,78 @@
     <!--CHAINS: When a chain is specified, all the links along the chain (including endpoints) are included in the group. Additionally, all the joints that are parents to included links are also included. This means that joints along the chain and the parent joint of the base link are included in the group-->
     <!--SUBGROUPS: Groups can also be formed by referencing to already defined group names-->
     <group name="fr5v6_arm">
-        <joint name="fr5v6_j1"/>
-        <joint name="fr5v6_j2"/>
-        <joint name="fr5v6_j3"/>
-        <joint name="fr5v6_j4"/>
-        <joint name="fr5v6_j5"/>
-        <joint name="fr5v6_j6"/>
-        <chain base_link="fr5v6_base_link" tip_link="fr5v6_tool_tcp_link"/>
+        <link name="frrobot_j1_link"/>
+        <link name="frrobot_j2_link"/>
+        <link name="frrobot_j3_link"/>
+        <link name="frrobot_j4_link"/>
+        <link name="frrobot_j5_link"/>
+        <link name="frrobot_j6_link"/>
+        <link name="frrobot_tool_link"/>
+        <link name="frrobot_tool_tcp_link"/>
+        <joint name="frrobot_j1"/>
+        <joint name="frrobot_j2"/>
+        <joint name="frrobot_j3"/>
+        <joint name="frrobot_j4"/>
+        <joint name="frrobot_j5"/>
+        <joint name="frrobot_j6"/>
     </group>
     <group name="tool">
-        <link name="fr5v6_tool_link"/>
-        <link name="fr5v6_tool_tcp_link"/>
+        <link name="frrobot_tool_link"/>
+        <link name="frrobot_tool_tcp_link"/>
+        <joint name="frrobot_tool_joint"/>
+        <joint name="frrobot_tcp_joint"/>
     </group>
     <!--GROUP STATES: Purpose: Define a named state for a particular group, in terms of joint values. This is useful to define states like 'folded arms'-->
     <group_state name="zero" group="fr5v6_arm">
-        <joint name="fr5v6_j1" value="0"/>
-        <joint name="fr5v6_j2" value="0"/>
-        <joint name="fr5v6_j3" value="0"/>
-        <joint name="fr5v6_j4" value="0"/>
-        <joint name="fr5v6_j5" value="0"/>
-        <joint name="fr5v6_j6" value="0"/>
+        <joint name="frrobot_j1" value="0"/>
+        <joint name="frrobot_j2" value="0"/>
+        <joint name="frrobot_j3" value="0"/>
+        <joint name="frrobot_j4" value="0"/>
+        <joint name="frrobot_j5" value="0"/>
+        <joint name="frrobot_j6" value="0"/>
+    </group_state>
+    <group_state name="up" group="fr5v6_arm">
+        <joint name="frrobot_j1" value="0"/>
+        <joint name="frrobot_j2" value="-1.575"/>
+        <joint name="frrobot_j3" value="0"/>
+        <joint name="frrobot_j4" value="-1.575"/>
+        <joint name="frrobot_j5" value="0"/>
+        <joint name="frrobot_j6" value="0"/>
+    </group_state>
+    <group_state name="ready" group="fr5v6_arm">
+        <joint name="frrobot_j1" value="0"/>
+        <joint name="frrobot_j2" value="-1.4189"/>
+        <joint name="frrobot_j3" value="-1.5152"/>
+        <joint name="frrobot_j4" value="-0.0015"/>
+        <joint name="frrobot_j5" value="1.6031"/>
+        <joint name="frrobot_j6" value="0.5568"/>
     </group_state>
     <!--END EFFECTOR: Purpose: Represent information about an end effector.-->
-    <end_effector name="fr5v6_tool_tcp_link" parent_link="fr5v6_tool_tcp_link" group="tool"/>
+    <end_effector name="toolA-250mm" parent_link="frrobot_tool_tcp_link" group="tool" parent_group="fr5v6_arm"/>
+    <!--VIRTUAL JOINT: Purpose: this element defines a virtual joint between a robot link and an external frame of reference (considered fixed with respect to the robot)-->
+    <virtual_joint name="virtual_joint" type="fixed" parent_frame="world" child_link="robot_base"/>
     <!--DISABLE COLLISIONS: By default it is assumed that any link of the robot could potentially come into collision with any other link in the robot. This tag disables collision checking between a specified pair of links. -->
-    <disable_collisions link1="fr5v6_base_link" link2="fr5v6_extra_base_link" reason="Never"/>
-    <disable_collisions link1="fr5v6_base_link" link2="fr5v6_j1_link" reason="Adjacent"/>
-    <disable_collisions link1="fr5v6_base_link" link2="fr5v6_j2_link" reason="Never"/>
-    <disable_collisions link1="fr5v6_base_link" link2="fr5v6_plant_link" reason="Adjacent"/>
-    <disable_collisions link1="fr5v6_extra_base_link" link2="fr5v6_j1_link" reason="Never"/>
-    <disable_collisions link1="fr5v6_extra_base_link" link2="fr5v6_plant_link" reason="Adjacent"/>
-    <disable_collisions link1="fr5v6_j1_link" link2="fr5v6_j2_link" reason="Adjacent"/>
-    <disable_collisions link1="fr5v6_j1_link" link2="fr5v6_j4_link" reason="Never"/>
-    <disable_collisions link1="fr5v6_j1_link" link2="fr5v6_plant_link" reason="Never"/>
-    <disable_collisions link1="fr5v6_j2_link" link2="fr5v6_j3_link" reason="Adjacent"/>
-    <disable_collisions link1="fr5v6_j2_link" link2="fr5v6_j4_link" reason="Never"/>
-    <disable_collisions link1="fr5v6_j2_link" link2="fr5v6_plant_link" reason="Never"/>
-    <disable_collisions link1="fr5v6_j3_link" link2="fr5v6_j4_link" reason="Adjacent"/>
-    <disable_collisions link1="fr5v6_j4_link" link2="fr5v6_j5_link" reason="Adjacent"/>
-    <disable_collisions link1="fr5v6_j4_link" link2="fr5v6_j6_link" reason="Never"/>
-    <disable_collisions link1="fr5v6_j4_link" link2="fr5v6_tool_link" reason="Never"/>
-    <disable_collisions link1="fr5v6_j4_link" link2="fr5v6_tool_tcp_link" reason="Never"/>
-    <disable_collisions link1="fr5v6_j5_link" link2="fr5v6_j6_link" reason="Adjacent"/>
-    <disable_collisions link1="fr5v6_j5_link" link2="fr5v6_tool_link" reason="Never"/>
-    <disable_collisions link1="fr5v6_j5_link" link2="fr5v6_tool_tcp_link" reason="Never"/>
-    <disable_collisions link1="fr5v6_j6_link" link2="fr5v6_tool_link" reason="Adjacent"/>
-    <disable_collisions link1="fr5v6_j6_link" link2="fr5v6_tool_tcp_link" reason="Never"/>
-    <disable_collisions link1="fr5v6_tool_link" link2="fr5v6_tool_tcp_link" reason="Adjacent"/>
+    <disable_collisions link1="frrobot_base0_link" link2="frrobot_base1_link" reason="Adjacent"/>
+    <disable_collisions link1="frrobot_base0_link" link2="frrobot_base2_link" reason="Never"/>
+    <disable_collisions link1="frrobot_base0_link" link2="frrobot_j1_link" reason="Never"/>
+    <disable_collisions link1="frrobot_base1_link" link2="frrobot_base2_link" reason="Adjacent"/>
+    <disable_collisions link1="frrobot_base1_link" link2="frrobot_j1_link" reason="Never"/>
+    <disable_collisions link1="frrobot_base1_link" link2="frrobot_j2_link" reason="Never"/>
+    <disable_collisions link1="frrobot_base2_link" link2="frrobot_j1_link" reason="Adjacent"/>
+    <disable_collisions link1="frrobot_base2_link" link2="frrobot_j2_link" reason="Never"/>
+    <disable_collisions link1="frrobot_j1_link" link2="frrobot_j2_link" reason="Adjacent"/>
+    <disable_collisions link1="frrobot_j1_link" link2="frrobot_j4_link" reason="Never"/>
+    <disable_collisions link1="frrobot_j2_link" link2="frrobot_j3_link" reason="Adjacent"/>
+    <disable_collisions link1="frrobot_j2_link" link2="frrobot_j4_link" reason="Never"/>
+    <disable_collisions link1="frrobot_j3_link" link2="frrobot_j4_link" reason="Adjacent"/>
+    <disable_collisions link1="frrobot_j4_link" link2="frrobot_j5_link" reason="Adjacent"/>
+    <disable_collisions link1="frrobot_j4_link" link2="frrobot_j6_link" reason="Never"/>
+    <disable_collisions link1="frrobot_j4_link" link2="frrobot_tool_link" reason="Never"/>
+    <disable_collisions link1="frrobot_j4_link" link2="frrobot_tool_tcp_link" reason="Never"/>
+    <disable_collisions link1="frrobot_j5_link" link2="frrobot_j6_link" reason="Adjacent"/>
+    <disable_collisions link1="frrobot_j5_link" link2="frrobot_tool_link" reason="Never"/>
+    <disable_collisions link1="frrobot_j5_link" link2="frrobot_tool_tcp_link" reason="Never"/>
+    <disable_collisions link1="frrobot_j6_link" link2="frrobot_tool_link" reason="Adjacent"/>
+    <disable_collisions link1="frrobot_j6_link" link2="frrobot_tool_tcp_link" reason="Never"/>
+    <disable_collisions link1="frrobot_tool_link" link2="frrobot_tool_tcp_link" reason="Adjacent"/>
 </robot>
