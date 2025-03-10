@@ -67,27 +67,27 @@ fr5v6_arm_controller:
 joint1_position_controller:
    type: position_controllers/JointPositionController
    joint: frrobot_j1
-   pid: {p: 100.0, i: 0.01, d: 10.0}
+   pid: {p: 2.0, i: 0.01, d: 0.01}
 joint2_position_controller:
    type: position_controllers/JointPositionController
    joint: frrobot_j2
-   pid: {p: 100.0, i: 0.01, d: 10.0}
+   pid: {p: 2.0, i: 0.01, d: 0.01}
 joint3_position_controller:
    type: position_controllers/JointPositionController
    joint: frrobot_j3
-   pid: {p: 100.0, i: 0.01, d: 10.0}
+   pid: {p: 2.0, i: 0.01, d: 0.01}
 joint4_position_controller:
    type: position_controllers/JointPositionController
    joint: frrobot_j4
-   pid: {p: 100.0, i: 0.01, d: 10.0}
+   pid: {p: 2.0, i: 0.01, d: 0.01}
 joint5_position_controller:
    type: position_controllers/JointPositionController
    joint: frrobot_j5
-   pid: {p: 100.0, i: 0.01, d: 10.0}
+   pid: {p: 2.0, i: 0.01, d: 0.01}
 joint6_position_controller:
    type: position_controllers/JointPositionController
    joint: frrobot_j6
-   pid: {p: 100.0, i: 0.01, d: 10.0}
+   pid: {p: 2.0, i: 0.01, d: 0.01}
 
 # Group Position Controllers ---------------------------------------
 # Allows to send single ROS msg of Float64MultiArray to all joints

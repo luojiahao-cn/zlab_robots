@@ -77,29 +77,32 @@ int main(int argc, char** argv)
 
     while (ros::ok())
     {
+        // 设置起始状态为当前状态
+        arm_group.setStartStateToCurrentState();
+        
         // 示例0: 运动到ready状态
         arm_group.setNamedTarget("ready");
         arm_group.move();
-        ros::Duration(2.0).sleep();
+        // ros::Duration(2.0).sleep();
 
         // 示例1: 沿 +X 方向移动10cm，速度为最大速度的30%
         std::vector<double> direction_x = {1.0, 0.0, 0.0};
-        moveInDirection(arm_group, direction_x, 0.1, 0.3);
-        ros::Duration(2.0).sleep();
+        moveInDirection(arm_group, direction_x, 0.1, 0.2);
+        // ros::Duration(2.0).sleep();
 
         // 示例2: 沿 +Y 方向移动10cm，速度为最大速度的50%
         std::vector<double> direction_y = {0.0, 1.0, 0.0};
-        moveInDirection(arm_group, direction_y, 0.1, 0.5);
-        ros::Duration(2.0).sleep();
+        moveInDirection(arm_group, direction_y, 0.1, 0.2);
+        // ros::Duration(2.0).sleep();
 
         // 示例3: 沿 +Z 方向移动10cm，速度为最大速度的40%
         std::vector<double> direction_z = {0.0, 0.0, 1.0};
-        moveInDirection(arm_group, direction_z, 0.1, 0.4);
-        ros::Duration(2.0).sleep();
+        moveInDirection(arm_group, direction_z, 0.1, 0.2);
+        // ros::Duration(2.0).sleep();
 
         // 示例4: 沿对角线方向移动，速度为最大速度的25%
         std::vector<double> direction_diag = {0.577, 0.577, 0.577}; // 归一化的对角线方向
-        moveInDirection(arm_group, direction_diag, 0.1, 0.25);
+        moveInDirection(arm_group, direction_diag, 0.1, 0.2);
         ros::Duration(2.0).sleep();
     }
     

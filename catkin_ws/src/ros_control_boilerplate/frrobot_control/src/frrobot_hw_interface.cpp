@@ -18,7 +18,6 @@
 
 #define MAXLINE 4096
 #define PORT_CMD 8080
-// #define SERVERIP "192.168.31.203"
 
 int confd;
 int len;
@@ -90,6 +89,25 @@ namespace frrobot_control
     ROS_INFO_NAMED("frrobot_hw_interface", "FrRobotHWInterface Ready.");
   }
 
+  void FrRobotHWInterface::reconnect()
+  {
+      close(confd);
+      ROS_INFO("Reconnecting to server...");
+      if ((confd = socket(AF_INET, SOCK_STREAM, 0)) < 0)
+      {
+          ROS_ERROR("socket() error");
+          perror("socket() error");
+          exit(1);
+      }
+      if (connect(confd, (struct sockaddr *)&serverSendAddr, sizeof(serverSendAddr)) < 0)
+      {
+          ROS_ERROR("connect() error");
+          perror("connect() error");
+          exit(1);
+      }
+      ROS_INFO("Reconnected to server");
+  }
+
   void FrRobotHWInterface::write(ros::Duration &elapsed_time)
   {
     // ROS_INFO("write");
@@ -123,6 +141,7 @@ namespace frrobot_control
     if (recv_length <= 0)
     {
       perror("recv");
+      reconnect();
     }
     else
     {
@@ -154,6 +173,7 @@ namespace frrobot_control
     if (recv_length <= 0)
     {
       perror("recv");
+      reconnect();
     }
     else
     {

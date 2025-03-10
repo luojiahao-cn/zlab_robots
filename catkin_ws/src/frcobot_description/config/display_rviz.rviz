@@ -63,52 +63,62 @@ Visualization Manager:
         Expand Link Details: false
         Expand Tree: false
         Link Tree Style: Links in Alphabetic Order
-        fr5v6_base_link:
+        frrobot_base0_link:
           Alpha: 1
           Show Axes: false
           Show Trail: false
           Value: true
-        fr5v6_extra_base_link:
+        frrobot_base1_link:
           Alpha: 1
           Show Axes: false
           Show Trail: false
           Value: true
-        fr5v6_j1_Link:
+        frrobot_base2_link:
           Alpha: 1
           Show Axes: false
           Show Trail: false
           Value: true
-        fr5v6_j2_Link:
+        frrobot_j1_link:
           Alpha: 1
           Show Axes: false
           Show Trail: false
           Value: true
-        fr5v6_j3_Link:
+        frrobot_j2_link:
           Alpha: 1
           Show Axes: false
           Show Trail: false
           Value: true
-        fr5v6_j4_Link:
+        frrobot_j3_link:
           Alpha: 1
           Show Axes: false
           Show Trail: false
           Value: true
-        fr5v6_j5_Link:
+        frrobot_j4_link:
           Alpha: 1
           Show Axes: false
           Show Trail: false
           Value: true
-        fr5v6_j6_Link:
+        frrobot_j5_link:
           Alpha: 1
           Show Axes: false
           Show Trail: false
           Value: true
-        fr5v6_plant_link:
+        frrobot_j6_link:
           Alpha: 1
           Show Axes: false
           Show Trail: false
           Value: true
-        world:
+        frrobot_tool_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        frrobot_tool_tcp_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        robot_base:
           Alpha: 1
           Show Axes: false
           Show Trail: false
@@ -122,7 +132,7 @@ Visualization Manager:
   Global Options:
     Background Color: 48; 48; 48
     Default Light: true
-    Fixed Frame: world
+    Fixed Frame: robot_base
     Frame Rate: 30
   Name: root
   Tools:
@@ -146,7 +156,7 @@ Visualization Manager:
   Views:
     Current:
       Class: rviz/Orbit
-      Distance: 2.9153554439544678
+      Distance: 2.9074690341949463
       Enable Stereo Rendering:
         Stereo Eye Separation: 0.05999999865889549
         Stereo Focal Distance: 1
@@ -154,17 +164,17 @@ Visualization Manager:
         Value: false
       Field of View: 0.7853981852531433
       Focal Point:
-        X: 0
-        Y: 0
-        Z: 0
+        X: 0.12784898281097412
+        Y: -0.01621481589972973
+        Z: 0.011417346075177193
       Focal Shape Fixed Size: true
       Focal Shape Size: 0.05000000074505806
       Invert Z Axis: false
       Name: Current View
       Near Clip Distance: 0.009999999776482582
-      Pitch: 0.6247975826263428
+      Pitch: 0.3547975420951843
       Target Frame: <Fixed Frame>
-      Yaw: 1.5085772275924683
+      Yaw: 2.4485785961151123
     Saved: ~
 Window Geometry:
   Displays:
