@@ -12,7 +12,7 @@
     <arg name="debug" default="false" />
 
     <!-- Define whether to use real robot or simulation -->
-    <arg name="use_real_robot" value="true" />
+    <arg name="use_real_robot" default="true" />
     <arg name="use_gui" default="false" />
     <arg name="use_rviz" default="true" />
     <arg name="robot_ip" default="192.168.31.202" />

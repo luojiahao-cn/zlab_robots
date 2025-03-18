@@ -29,12 +29,12 @@
 
         <param name="publish_tag_detections_image" type="bool" value="true" /><!-- default: false -->
         <param name="queue_size" type="int" value="$(arg queue_size)" />
+        <param name="remove_duplicates" type="bool" value="true" /><!-- 添加此行 -->
 
         <!-- load parameters (incl. tag family, tags, etc.) -->
         <rosparam command="load" file="$(find apriltag_ros)/config/settings.yaml" />
         <rosparam command="load" file="$(find apriltag_ros)/config/tags.yaml" />
     </node>
 
-    <node name="rviz" pkg="rviz" type="rviz" 
-        required="true" />
+    <node name="rviz" pkg="rviz" type="rviz" required="true" />
 </launch>
