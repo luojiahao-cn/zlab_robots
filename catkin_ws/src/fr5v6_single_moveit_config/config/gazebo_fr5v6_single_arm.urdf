@@ -5,17 +5,17 @@
 <!-- =================================================================================== -->
 <robot name="fr5v6_single_arm">
     <!-- 添加虚拟根链接 -->
-    <link name="robot_base" />
+    <link name="world" />
     <joint name="frrobot_joint_base" type="fixed">
-        <parent link="robot_base" />
+        <parent link="world" />
         <child link="frrobot_base0_link" />
         <origin rpy="0 0 0" xyz="0 0 0" />
     </joint>
     <link name="frrobot_base0_link">
         <inertial>
-            <origin rpy="0 0 0" xyz="-0.00035477 0.0011738 0.038422" />
-            <mass value="6.8715" />
-            <inertia ixx="0.11261" ixy="-2.8693e-05" ixz="-0.0017586" iyy="0.11265" iyz="0.002588" izz="0.19704" />
+            <origin rpy="0 0 0" xyz="0.00022281 -3.2078E-06 0.11314" />
+            <mass value="50.058" />
+            <inertia ixx="0.87603" ixy="-2.9247e-05" ixz="9.7148e-05" iyy="0.87602" iyz="-1.6883e-06" izz="1.5353" />
         </inertial>
         <visual>
             <origin rpy="0 0 0" xyz="0 0 0" />
@@ -35,9 +35,9 @@
     </link>
     <link name="frrobot_base1_link">
         <inertial>
-            <origin rpy="0 0 0" xyz="2.7756E-16 0 -0.008" />
-            <mass value="0.40503" />
-            <inertia ixx="0.0008273" ixy="-2.5374e-19" ixz="1.6905e-22" iyy="0.0008273" iyz="-2.1817e-22" izz="0.0016373" />
+            <origin rpy="0 0 0" xyz="2.7756E-16 2.2204E-16 -0.008" />
+            <mass value="3.1592" />
+            <inertia ixx="0.0064529" ixy="-1.9807e-18" ixz="1.3186e-21" iyy="0.0064529" iyz="-1.7017e-21" izz="0.012771" />
         </inertial>
         <visual>
             <origin rpy="0 0 0" xyz="0 0 0" />
@@ -58,7 +58,7 @@
     <joint name="frrobot_base0_to_base1" type="fixed">
         <parent link="frrobot_base0_link" />
         <child link="frrobot_base1_link" />
-        <origin rpy="0 0 0" xyz="-0.00031408 0.00046097 0.41799" />
+        <origin rpy="0 0 0" xyz="0 0 0.487" />
     </joint>
     <link name="frrobot_base2_link">
         <inertial>
