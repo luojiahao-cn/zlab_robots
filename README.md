@@ -3,7 +3,9 @@
 ## Description
 
 Robot arm type: FR5
+
 Arm1: Ram,  Arm2: Rem
+
 Maximum weight of end-effector: 5kg
 
 ## Structure
@@ -17,7 +19,44 @@ The project is structured as follows:
   - **frcobot_description**:Contains URDF and other description files for the FR5v6 robot arms.
   - **moveit_servo**:Used for real-time servoing of the robot arms. *Note: This feature is not fully implemented.*
 - **ROS Controller**: Manages the control loops and interfaces with the hardware.
-  - **ros_control_boilerplate**
+  - **ros_control_boilerplate**：基于ServoJ指令编写的ros controller
 
+## Installation
 
+To install and set up the project, follow these steps:
 
+1. Clone the repository:
+    ```bash
+    git clone https://github.com/luojiahao-cn/zlab_robots.git
+    cd zlab_robots
+    ```
+
+2. Initialize and update submodules:
+    ```bash
+    git submodule update --init --recursive
+    ```
+
+3. Build the workspace:
+    ```bash
+    cd catkin_ws
+    catkin_make
+    ```
+
+4. Source the workspace:
+    ```bash
+    source devel/setup.bash
+    ```
+
+## Usage
+
+- To start the single arm controller, use the following command:
+
+    ```bash
+    roslaunch frcobot_examples connect_dual_arms.launch
+    ```
+
+- To start the dual-robot arm controller, use the following command:
+
+    ```bash
+    roslaunch frcobot_examples connect_dual_arms.launch
+    ```
