@@ -34,7 +34,7 @@ char recvLine[MAXLINE];
 char sendCmdLine[MAXLINE];
 char sendStaLine[MAXLINE];
 char recv_buf[MAXLINE];
-char send_buf[MAXLINE];
+char send_buf[MAXLINE-200];
 struct sockaddr_in serverSendAddr;
 
 namespace frrobot_control
@@ -136,7 +136,7 @@ namespace frrobot_control
     }
     int recv_length = 0;
     // Receive data from the server, recv();
-    recvLine[MAXLINE] = '\0';
+    recvLine[MAXLINE - 1] = '\0';
     recv_length = recv(confd, recvLine, sizeof(recvLine), 0);
     if (recv_length <= 0)
     {
@@ -158,6 +158,7 @@ namespace frrobot_control
     {
       perror("sendto() error");
       exit(1);
+
     }
     else
     {
@@ -167,7 +168,7 @@ namespace frrobot_control
     // ROS_INFO("read");
 
     int recv_length = 0;
-    recvLine[MAXLINE] = '\0';
+    recvLine[MAXLINE - 1] = '\0';
     // 接收服务器的数据，recvfrom()；
     recv_length = recv(confd, recvLine, sizeof(recvLine), 0);
     if (recv_length <= 0)
