@@ -19,7 +19,7 @@ The project is structured as follows:
   - **frcobot_description**:Contains URDF and other description files for the FR5v6 robot arms.
   - **moveit_servo**:Used for real-time servoing of the robot arms. *Note: This feature is not fully implemented.*
 - **ROS Controller**: Manages the control loops and interfaces with the hardware.
-  - **ros_control_boilerplate**：基于ServoJ指令编写的ros controller
+  - **ros_control_boilerplate**：A ROS controller based on ServoJ commands.
 
 ## Installation
 
