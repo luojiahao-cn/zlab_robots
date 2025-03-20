@@ -37,9 +37,8 @@ bool moveInDirection(
 
     // 计算笛卡尔路径
     moveit_msgs::RobotTrajectory trajectory;
-    const double jump_threshold = 0.0;
     const double eef_step = 0.01; // 1cm步长
-    double fraction = group.computeCartesianPath(waypoints, eef_step, jump_threshold, trajectory);
+    double fraction = group.computeCartesianPath(waypoints, eef_step, trajectory);
     
     if (fraction < 0.9) {
         ROS_ERROR("Path planning failed, only %.2f%% of the path was completed", fraction * 100.0);

@@ -11,30 +11,51 @@ fr5v6_arm_controller:
     frrobot_j1:
       p: 100
       d: 1
-      i: 1
+      i: 0.1
       i_clamp: 1
     frrobot_j2:
       p: 100
       d: 1
-      i: 1
+      i: 0.1
       i_clamp: 1
     frrobot_j3:
       p: 100
       d: 1
-      i: 1
+      i: 0.1
       i_clamp: 1
     frrobot_j4:
       p: 100
       d: 1
-      i: 1
+      i: 0.1
       i_clamp: 1
     frrobot_j5:
       p: 100
       d: 1
-      i: 1
+      i: 0.1
       i_clamp: 1
     frrobot_j6:
       p: 100
       d: 1
-      i: 1
+      i: 0.1
       i_clamp: 1
+  constraints:
+    goal_time: 3.0
+    stopped_velocity_tolerance: 0.01
+    frrobot_j1:
+      goal: 0.0001
+      trajectory: 0.001
+    frrobot_j2:
+      goal: 0.0001  
+      trajectory: 0.001
+    frrobot_j3:
+      goal: 0.0001
+      trajectory: 0.001
+    frrobot_j4:
+      goal: 0.0001
+      trajectory: 0.001
+    frrobot_j5:
+      goal: 0.0001
+      trajectory: 0.001
+    frrobot_j6:
+      goal: 0.0001
+      trajectory: 0.001
