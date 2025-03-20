@@ -30,7 +30,7 @@ bool moveInDirection(
     waypoints.push_back(target_pose);
     
     // 设置参考坐标系
-    group.setPoseReferenceFrame("robot_base");
+    group.setPoseReferenceFrame("world");
 
     // 设置规划时间
     group.setPlanningTime(10.0); // 设置为10秒
@@ -70,7 +70,7 @@ int main(int argc, char** argv)
     moveit::planning_interface::MoveGroupInterface arm_group("fr5v6_arm");
     
     // 设置规划参考坐标系
-    arm_group.setPoseReferenceFrame("robot_base");
+    arm_group.setPoseReferenceFrame("world");
     
     // 设置末端执行器
     arm_group.setEndEffectorLink(arm_group.getEndEffectorLink());
