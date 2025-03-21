@@ -65,7 +65,7 @@ private:
         std::istringstream iss(line);
         std::string part;
         std::getline(iss, part, ':');
-        int sensor_label = std::stoi(part.substr(1, 2)) - 1; // 解析传感器标签
+        int sensor_label = std::stoi(part.substr(1, 2)); // 解析传感器标签
         std::vector<int> raw_vector(3);
         for (int &value : raw_vector)
         {
@@ -87,7 +87,7 @@ private:
                 try
                 {
                     auto [sensor_label, raw_vector] = parseSerialLine(line); // 解析串口数据
-                    if (sensor_label >= 0 && sensor_label < sensor_N)
+                    if (sensor_label >= 1 && sensor_label <= sensor_N) 
                     {
                         // 发布磁场数据
                         magnetic_localization::MagneticData magnetic_msg;
