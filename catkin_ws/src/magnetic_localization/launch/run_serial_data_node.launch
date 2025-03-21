@@ -1,0 +1,9 @@
+<launch>
+    <node name="serial_data_node" pkg="magnetic_localization" type="serial_data_node"
+        output="screen">
+        <param name="port" value="/dev/ttyUSB0" />
+        <param name="baud_rate" value="921600" />
+        <param name="sensor_N" value="25" />
+        <param name="compensation_mode" value="individual" />
+    </node>
+</launch>
