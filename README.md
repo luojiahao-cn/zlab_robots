@@ -54,9 +54,11 @@ To install and set up the project, follow these steps:
     ```bash
     roslaunch frcobot_examples connect_single_arm.launch
     ```
+    ![connect_single_arm Image](images/connect_single_arm.png)
 
 - To start the dual-robot arm controller, use the following command:
 
     ```bash
     roslaunch frcobot_examples connect_dual_arms.launch
     ```
+    ![connect_dual_arms Image](images/connect_dual_arms.png)
