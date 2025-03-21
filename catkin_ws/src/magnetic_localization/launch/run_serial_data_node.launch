@@ -4,6 +4,5 @@
         <param name="port" value="/dev/ttyUSB0" />
         <param name="baud_rate" value="921600" />
         <param name="sensor_N" value="25" />
-        <param name="compensation_mode" value="individual" />
     </node>
 </launch>

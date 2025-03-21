@@ -1,5 +1,5 @@
 Header header
 int32 sensor_label
-float64 x
-float64 y
-float64 z
+int32 x
+int32 y
+int32 z
