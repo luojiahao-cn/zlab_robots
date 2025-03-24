@@ -84,7 +84,7 @@
         <joint name="robot2_j3" value="-1.5152"/>
         <joint name="robot2_j4" value="-0.0015"/>
         <joint name="robot2_j5" value="1.6031"/>
-        <joint name="robot2_j6" value="0.5569"/>
+        <joint name="robot2_j6" value="0"/>
     </group_state>
     <group_state name="ready" group="robot1">
         <joint name="robot1_j1" value="0"/>
@@ -92,7 +92,7 @@
         <joint name="robot1_j3" value="-1.5152"/>
         <joint name="robot1_j4" value="-0.0015"/>
         <joint name="robot1_j5" value="1.6031"/>
-        <joint name="robot1_j6" value="0.5569"/>
+        <joint name="robot1_j6" value="0"/>
     </group_state>
     <group_state name="ready" group="dual_robots">
         <joint name="robot1_j1" value="0"/>
@@ -100,13 +100,13 @@
         <joint name="robot1_j3" value="-1.5152"/>
         <joint name="robot1_j4" value="-0.0015"/>
         <joint name="robot1_j5" value="1.6031"/>
-        <joint name="robot1_j6" value="0.5569"/>
+        <joint name="robot1_j6" value="0"/>
         <joint name="robot2_j1" value="0"/>
         <joint name="robot2_j2" value="-1.4189"/>
         <joint name="robot2_j3" value="-1.5152"/>
         <joint name="robot2_j4" value="-0.0015"/>
         <joint name="robot2_j5" value="1.6031"/>
-        <joint name="robot2_j6" value="0.5569"/>
+        <joint name="robot2_j6" value="0"/>
     </group_state>
     <group_state name="up" group="dual_robots">
         <joint name="robot1_j1" value="0"/>
