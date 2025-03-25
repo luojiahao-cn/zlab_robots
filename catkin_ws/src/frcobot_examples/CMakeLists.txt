@@ -11,9 +11,10 @@ find_package(catkin REQUIRED COMPONENTS
   message_generation
   roscpp
   moveit_core
-
   moveit_ros_planning_interface
+  geometric_shapes
   std_msgs
+  moveit_visual_tools
 )
 
 ## System dependencies are found with CMake's conventions
@@ -140,6 +141,7 @@ include_directories(
 
 add_executable(dual_arms_control src/dual_arms_control.cpp)
 add_executable(example_test src/example_test.cpp)
+add_executable(environment src/environment.cpp)
 
 ## Rename C++ executable without prefix
 ## The above recommended prefix causes long target names, the following renames the
@@ -157,6 +159,7 @@ add_executable(example_test src/example_test.cpp)
 # )
 target_link_libraries(dual_arms_control ${catkin_LIBRARIES})
 target_link_libraries(example_test ${catkin_LIBRARIES})
+target_link_libraries(environment ${catkin_LIBRARIES})
 #############
 ## Install ##
 #############

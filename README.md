@@ -4,7 +4,9 @@
 
 Robot arm type: FR5
 
-Arm1: Ram,  Arm2: Rem
+Arm1: Ram&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ip:192.168.31.201
+
+Arm2: Rem&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ip:192.168.31.202
 
 Maximum weight of end-effector: 5kg
 
@@ -62,3 +64,28 @@ To install and set up the project, follow these steps:
     roslaunch frcobot_examples connect_dual_arms.launch
     ```
     ![connect_dual_arms Image](images/connect_dual_arms.png)
+
+- To start the gazebo simulation for a single arm, use the following command:
+
+    ```bash
+    roslaunch fr5v6_single_moveit_config demo_gazebo.launch
+    ```
+
+- To start the gazebo simulation for dual arms, use the following command:
+
+    ```bash
+    roslaunch fr5v6_dual_moveit_config demo_gazebo.launch
+    ```
+
+
+- To add protective boundaries around the robot workspace, use:
+
+    ```bash
+    rosrun frcobot_examples environment
+    ```
+    This will create virtual walls and a table in the planning scene to prevent the robot arm from moving beyond safe boundaries. The environment includes:
+    - Three walls (back, left, and right sides)
+    - A virtual table in front of the robot
+    
+    Press Ctrl+C to remove the boundaries when no longer needed.
+
