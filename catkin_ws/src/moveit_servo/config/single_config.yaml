@@ -1,68 +1,69 @@
 ###############################################
-# Modify all parameters related to servoing here
+# 在此处修改所有与伺服相关的参数
 ###############################################
-use_gazebo: true # Whether the robot is started in a Gazebo simulation environment
+use_gazebo: true # 机器人是否在Gazebo仿真环境中启动
 
-## Properties of incoming commands
-command_in_type: "speed_units" # "unitless"> in the range [-1:1], as if from joystick. "speed_units"> cmds are in m/s and rad/s
+## 输入命令的属性
+command_in_type: "speed_units" # "unitless"> 范围在 [-1:1] 之间，如同来自操纵杆。"speed_units"> 命令以 m/s 和 rad/s 为单位
 scale:
-  # Scale parameters are only used if command_in_type=="unitless"
-  linear:  0.6  # Max linear velocity. Meters per publish_period. Unit is [m/s]. Only used for Cartesian commands.
-  rotational:  0.3 # Max angular velocity. Rads per publish_period. Unit is [rad/s]. Only used for Cartesian commands.
-  # Max joint angular/linear velocity. Rads or Meters per publish period. Only used for joint commands on joint_command_in_topic.
+  # 仅当 command_in_type=="unitless" 时使用缩放参数
+  linear:  0.6  # 最大线速度。每个发布周期的米数。单位是 [m/s]。仅用于笛卡尔命令。
+  rotational:  0.3 # 最大角速度。每个发布周期的弧度数。单位是 [rad/s]。仅用于笛卡尔命令。
+  # 最大关节角速度/线速度。每个发布周期的弧度或米数。仅用于 joint_command_in_topic 上的关节命令。
   joint: 0.01
-low_pass_filter_coeff: 2.  # Larger --> trust the filtered data more, trust the measurements less.
+low_pass_filter_coeff: 2.  # 值越大 --> 越信任过滤后的数据，越不信任测量值。
 
-## Properties of outgoing commands
-publish_period: 0.008  # 1/Nominal publish rate [seconds]
-low_latency_mode: false  # Set this to true to publish as soon as an incoming Twist command is received (publish_period is ignored)
+## 输出命令的属性
+publish_period: 0.008  # 1/标称发布速率 [秒]
+low_latency_mode: false  # 设置为 true 以在接收到传入的 Twist 命令时立即发布（忽略 publish_period）
 
-# What type of topic does your robot driver expect?
-# Currently supported are std_msgs/Float64MultiArray (for ros_control JointGroupVelocityController or JointGroupPositionController)
-# or trajectory_msgs/JointTrajectory (for Universal Robots and other non-ros_control robots)
+# 您的机器人驱动程序期望什么类型的话题？
+# 目前支持 std_msgs/Float64MultiArray（用于 ros_control JointGroupVelocityController 或 JointGroupPositionController）
+# 或 trajectory_msgs/JointTrajectory（用于 Universal Robots 和其他非 ros_control 机器人）
 command_out_type: std_msgs/Float64MultiArray
 
-# What to publish? Can save some bandwidth as most robots only require positions or velocities
+# 发布什么？可以节省一些带宽，因为大多数机器人只需要位置或速度
 publish_joint_positions: true
 publish_joint_velocities: false
 publish_joint_accelerations: false
 
-## MoveIt properties
-move_group_name:  fr5v6_arm  # Often 'manipulator' or 'arm'
-planning_frame: world  # The MoveIt planning frame. Often 'base_link' or 'world'
+## MoveIt 属性
+move_group_name:  fr5v6_arm  # 通常为 'manipulator' 或 'arm'
+planning_frame: world  # MoveIt 规划框架。通常为 'base_link' 或 'world'
 
-## Other frames
-ee_frame_name: frrobot_tool_tcp_link  # The name of the end effector link, used to return the EE pose
-robot_link_command_frame:  world  # commands must be given in the frame of a robot link. Usually either the base or end effector
+## 其他框架
+ee_frame_name: frrobot_tool_tcp_link  # 末端执行器链接的名称，用于返回 EE 姿态
+robot_link_command_frame:  world  # 命令必须在机器人的链接框架中给出。通常为基座或末端执行器
 
-## Stopping behaviour
-incoming_command_timeout:  1  # Stop servoing if X seconds elapse without a new command
-# If 0, republish commands forever even if the robot is stationary. Otherwise, specify num. to publish.
-# Important because ROS may drop some messages and we need the robot to halt reliably.
+## 停止行为
+incoming_command_timeout:  1  # 如果 X 秒内没有新命令，则停止伺服
+# 如果为 0，即使机器人静止也会永远重新发布命令。否则，指定要发布的数量。
+# 这很重要，因为 ROS 可能会丢弃一些消息，我们需要机器人可靠地停止。
 num_outgoing_halt_msgs_to_publish: 4
 
-## Configure handling of singularities and joint limits
-lower_singularity_threshold:  17  # Start decelerating when the condition number hits this (close to singularity)
-hard_stop_singularity_threshold: 30 # Stop when the condition number hits this
-joint_limit_margin: 0.1 # added as a buffer to joint limits [radians]. If moving quickly, make this larger.
+## 配置奇异性和关节限制的处理
+lower_singularity_threshold:  17  # 当条件数达到此值时开始减速（接近奇异性）
+hard_stop_singularity_threshold: 30 # 当条件数达到此值时停止
+joint_limit_margin: 0.1 # 添加到关节限制的缓冲 [弧度]。如果移动速度快，请将其设置得更大。
 
-## Topic names
-cartesian_command_in_topic: /tool_tcp_link_velocity  # Topic for incoming Cartesian twist commands
-joint_command_in_topic: delta_joint_cmds # Topic for incoming joint angle commands
+## 话题名称
+cartesian_command_in_topic: delta_twist_cmds  # 传入笛卡尔 twist 命令的话题
+joint_command_in_topic: delta_joint_cmds # 传入关节角度命令的话题
 joint_topic: joint_states
-status_topic: status # Publish status to this topic
-command_out_topic: /fr5v6_arm_controller/command # Publish outgoing commands here
+status_topic: status # 将状态发布到此话题
+command_out_topic: /joints_position_controller/command # 在此处发布输出命令
 
-## Collision checking for the entire robot body
-check_collisions: true # Check collisions?
-collision_check_rate: 50 # [Hz] Collision-checking can easily bog down a CPU if done too often.
-# Two collision check algorithms are available:
-# "threshold_distance" begins slowing down when nearer than a specified distance. Good if you want to tune collision thresholds manually.
-# "stop_distance" stops if a collision is nearer than the worst-case stopping distance and the distance is decreasing. Requires joint acceleration limits
+## 整个机器人身体的碰撞检查
+check_collisions: true # 检查碰撞？
+collision_check_rate: 50 # [Hz] 如果碰撞检查频率过高，可能会拖慢 CPU。
+# 有两种碰撞检查算法可用：
+# "threshold_distance" 在距离小于指定距离时开始减速。如果您想手动调整碰撞阈值，这种方法很好。
+# "stop_distance" 如果碰撞距离小于最坏情况下的停止距离并且距离在减小，则停止。需要关节加速度限制
 collision_check_type: threshold_distance
-# Parameters for "threshold_distance"-type collision checking
-self_collision_proximity_threshold: 0.01 # Start decelerating when a self-collision is this far [m]
-scene_collision_proximity_threshold: 0.05 # Start decelerating when a scene collision is this far [m]
-# Parameters for "stop_distance"-type collision checking
-collision_distance_safety_factor: 1000 # Must be >= 1. A large safety factor is recommended to account for latency
-min_allowable_collision_distance: 0.01 # Stop if a collision is closer than this [m]
+# "threshold_distance" 类型碰撞检查的参数
+self_collision_proximity_threshold: 0.01 # 当自碰撞距离为此值时开始减速 [米]
+scene_collision_proximity_threshold: 0.05 # 当场景碰撞距离为此值时开始减速 [米]
+# "stop_distance" 类型碰撞检查的参数
+collision_distance_safety_factor: 1000 # 必须 >= 1。建议使用较大的安全系数以应对延迟
+min_allowable_collision_distance: 0.01 # 如果碰撞距离小于此值则停止 [米]
+

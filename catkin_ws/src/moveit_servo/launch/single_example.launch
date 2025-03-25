@@ -2,20 +2,16 @@
 
     <arg name="config" default="$(find moveit_servo)/config/single_config.yaml" />
 
+
     <node name="servo_server" pkg="moveit_servo" type="servo_server" output="screen">
         <rosparam command="load" file="$(arg config)" />
-        <param name="control_mode" value="velocity" />
     </node>
 
-    <rosparam
-        file="$(find ros_control_boilerplate)/frrobot_control/config/frrobot_controllers.yaml"
-        command="load" />
-
-    <node name="controller_stopper" pkg="controller_manager" type="controller_manager"
-        output="screen"
-        args="stop fr5v6_arm_controller" />
+    <!-- Stop fr5v6_arm_controller and start joints_position_controller -->
+    <node pkg="rosservice" type="rosservice" name="stop_fr5v6_arm_controller"
+        args="call /controller_manager/switch_controller '{start_controllers: [], stop_controllers: ['fr5v6_arm_controller'], strictness: 2}'" />
         
-    <node name="controller_spawner" pkg="controller_manager" type="spawner" output="screen"
-        args="joints_position_controller" />
+    <node pkg="rosservice" type="rosservice" name="start_joints_position_controller"
+        args="call /controller_manager/switch_controller '{start_controllers: ['joints_position_controller'], stop_controllers: [], strictness: 2}'" />
 
 </launch>
