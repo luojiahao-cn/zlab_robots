@@ -1,0 +1,42 @@
+# 按钮映射
+buttons:
+  a: 0                 # A按钮
+  b: 1                 # B按钮
+  x: 3                 # X按钮
+  y: 4                 # Y按钮
+  lb: 2                # 左肩按钮
+  rb: 5                # 右肩按钮
+  back: 6              # Back按钮
+  start: 7             # Start按钮
+  power: 8             # Xbox Guide按钮
+  left_stick: 9        # 左摇杆按钮
+  right_stick: 10      # 右摇杆按钮
+  dpad_left: -1        # 十字键左 (Xbox 360使用轴而非按钮)
+  dpad_right: -1       # 十字键右 (Xbox 360使用轴而非按钮)
+  dpad_up: -1          # 十字键上 (Xbox 360使用轴而非按钮)
+  dpad_down: -1        # 十字键下 (Xbox 360使用轴而非按钮)
+
+# 轴映射
+axes:
+  left_stick_x: 0      # 左摇杆X轴
+  left_stick_y: 1      # 左摇杆Y轴
+  left_trigger: 2      # 触发器共享轴
+  right_trigger: 2     # 触发器共享轴 (与left_trigger相同)
+  right_stick_x: 3     # 右摇杆X轴
+  right_stick_y: 4     # 右摇杆Y轴
+  dpad_x: 6            # 十字键水平
+  dpad_y: 7            # 十字键垂直
+
+# 控制参数
+linear_scale: 0.2      # 线性运动速度系数
+angular_scale: 0.2     # 角度运动速度系数
+joint_scale: 0.1       # 关节速度系数
+deadzone: 0.1          # 摇杆死区
+
+# 额外配置
+is_xbox360_mode: true              # 启用Xbox 360模式
+planning_frame_id: "world"         # 规划坐标系
+ee_frame_id: "frrobot_tool_tcp_link" # 末端执行器坐标系
+twist_topic: "/servo_server/delta_twist_cmds"
+joint_topic: "/servo_server/delta_joint_cmds"
+joy_topic: "/joy"

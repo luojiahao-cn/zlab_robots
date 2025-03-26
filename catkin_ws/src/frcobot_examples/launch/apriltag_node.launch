@@ -36,5 +36,6 @@
         <rosparam command="load" file="$(find apriltag_ros)/config/tags.yaml" />
     </node>
 
-    <node name="rviz" pkg="rviz" type="rviz" required="true" />
+    <node name="rviz" pkg="rviz" type="rviz" required="true"
+        args="-d $(find frcobot_examples)/config/apriltag.rviz" />
 </launch>

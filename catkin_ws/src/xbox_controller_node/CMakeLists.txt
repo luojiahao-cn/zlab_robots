@@ -13,6 +13,7 @@ find_package(catkin REQUIRED COMPONENTS
   rospy
   sensor_msgs
   std_msgs
+  moveit_servo
 )
 
 ## System dependencies are found with CMake's conventions
@@ -152,6 +153,24 @@ include_directories(
 #   ${catkin_LIBRARIES}
 # )
 
+# 声明C++可执行文件
+add_executable(servo_keyboard_input src/servo_keyboard_input.cpp)
+add_executable(servo_xbox_input src/servo_xbox_input.cpp)
+
+# 添加依赖
+add_dependencies(servo_keyboard_input ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
+add_dependencies(servo_xbox_input ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
+
+# 链接库
+target_link_libraries(servo_keyboard_input
+  ${catkin_LIBRARIES}
+)
+
+# 为Xbox控制器添加链接库
+target_link_libraries(servo_xbox_input
+  ${catkin_LIBRARIES}
+)
+
 #############
 ## Install ##
 #############
@@ -160,17 +179,17 @@ include_directories(
 # See http://ros.org/doc/api/catkin/html/adv_user_guide/variables.html
 
 ## Mark executable scripts (Python etc.) for installation
-## in contrast to setup.py, you can choose the destination
-# catkin_install_python(PROGRAMS
-#   scripts/my_python_script
-#   DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
-# )
 
 ## Mark executables for installation
 ## See http://docs.ros.org/melodic/api/catkin/html/howto/format1/building_executables.html
 # install(TARGETS ${PROJECT_NAME}_node
 #   RUNTIME DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
 # )
+
+# 安装可执行文件
+install(TARGETS servo_keyboard_input servo_xbox_input 
+  RUNTIME DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
+)
 
 ## Mark libraries for installation
 ## See http://docs.ros.org/melodic/api/catkin/html/howto/format1/building_libraries.html
