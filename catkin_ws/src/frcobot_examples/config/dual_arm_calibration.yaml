@@ -1,0 +1,15 @@
+# 双机械臂标定结果 - 左臂到右臂的变换
+left_to_right_transform:
+  translation:
+    x: 0.00682291
+    y: 0.691748
+    z: -0.0386943
+  rotation:
+    x: -0.0423856
+    y: -0.019484
+    z: -0.105088
+    w: 0.993368
+  rpy: # Roll-Pitch-Yaw (弧度)
+    roll: -0.0802912
+    pitch: -0.047636
+    yaw: -0.208881

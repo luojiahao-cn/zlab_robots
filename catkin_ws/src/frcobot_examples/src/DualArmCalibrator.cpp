@@ -51,6 +51,12 @@ public:
     // 移动机械臂到标定位置
     bool moveArmsToCalibrationPose()
     {
+        if (1)
+        {
+            ROS_INFO("跳过移动机械臂到标定位姿");
+            return true;
+        }
+        
         // 设置左臂标定位姿
         geometry_msgs::PoseStamped left_pose;
         left_pose.header.frame_id = "robot1_base2_link";
@@ -75,12 +81,13 @@ public:
 
         ROS_INFO("正在移动机械臂到标定位姿...");
 
+        // 设置规划时间
+        left_arm_group_->setPlanningTime(2.0);
         // 设置左臂目标位姿
         left_arm_group_->setPoseTarget(left_pose);
 
         // 规划并执行左臂移动
         moveit::planning_interface::MoveGroupInterface::Plan left_plan;
-        bool success = (left_arm_group_->plan(left_plan)) == moveit::planning_interface::MoveItErrorCode::SUCCESS;
         if (!left_arm_group_->plan(left_plan))
         {
             ROS_ERROR("左臂运动规划失败");
@@ -89,7 +96,7 @@ public:
         if (!left_arm_group_->execute(left_plan))
         {
             ROS_ERROR("左臂运动执行失败");
-            return false;
+            // return false;
         }
 
         // 设置右臂目标位姿
@@ -105,7 +112,7 @@ public:
         if (!right_arm_group_->execute(right_plan))
         {
             ROS_ERROR("右臂运动执行失败");
-            return false;
+            // return false;
         }
 
         ROS_INFO("双臂已移动到标定位姿");
@@ -138,13 +145,29 @@ public:
         }
 
         // 计算两个tag之间的相对位置
-        tf2::Transform left_to_right_transform = calculateRelativeTransform();
+        tf2::Transform left_to_right_apriltag = calculateRelativeTransform();
 
-        // 输出标定结果
-        printCalibrationResults(left_to_right_transform);
+        // 输出tag相对位置结果
+        printCalibrationResults(left_to_right_apriltag);
+        
+        // 记录关节角度 
+        std::vector<double> left_joint_values = left_arm_group_->getCurrentJointValues();
+        std::vector<double> right_joint_values = right_arm_group_->getCurrentJointValues();
+
+        // 获取两个机械臂末端变换
+        geometry_msgs::TransformStamped left_base_to_tool_transform, right_base_to_tool_transform;
+        if (!getArmEndEffectorTransforms(left_base_to_tool_transform, right_base_to_tool_transform)) {
+            return false;
+        }
+        
+        // 计算并打印两个机械臂基座之间的变换
+        tf2::Transform left_to_right_base = calculateBaseTransform(
+            left_to_right_apriltag, left_base_to_tool_transform, right_base_to_tool_transform);
+
+        printCalibrationResults(left_to_right_base);
 
         // 保存标定结果
-        saveCalibrationResults(left_to_right_transform);
+        saveCalibrationResults(left_to_right_base);
 
         ROS_INFO("标定成功完成");
         return true;
@@ -245,14 +268,45 @@ private:
     // 计算两个tag之间的相对变换
     tf2::Transform calculateRelativeTransform()
     {
-        // 从PoseStamped消息转换为tf2::Transform
-        tf2::Transform left_tag_tf, right_tag_tf;
+        // 使用TF系统查询从左标签到右标签的变换
+        tf2::Transform left_to_right;
+        try
+        {
+            // 将标签ID转换为TF框架名称
+            std::string left_frame = "tag_" + std::to_string(left_arm_tag_id_);
+            std::string right_frame = "tag_" + std::to_string(right_arm_tag_id_);
 
-        tf2::fromMsg(left_tag_pose_.pose, left_tag_tf);
-        tf2::fromMsg(right_tag_pose_.pose, right_tag_tf);
+            // 等待一段时间确保TF树更新
+            if (!tf_buffer_.canTransform(left_frame, right_frame, ros::Time(0), ros::Duration(1.0)))
+            {
+                ROS_WARN("无法找到从 %s 到 %s 的变换，使用手动计算", left_frame.c_str(), right_frame.c_str());
 
-        // 计算从左tag到右tag的变换
-        tf2::Transform left_to_right = left_tag_tf.inverse() * right_tag_tf;
+                // 回退到手动计算
+                tf2::Transform left_tag_tf, right_tag_tf;
+                tf2::fromMsg(left_tag_pose_.pose, left_tag_tf);
+                tf2::fromMsg(right_tag_pose_.pose, right_tag_tf);
+                return left_tag_tf.inverse() * right_tag_tf;
+            }
+
+            // 查询TF变换
+            geometry_msgs::TransformStamped transform_stamped =
+                tf_buffer_.lookupTransform(left_frame, right_frame, ros::Time(0));
+
+            // 转换为tf2::Transform
+            tf2::fromMsg(transform_stamped.transform, left_to_right);
+
+            ROS_INFO("使用TF系统获取的标签间变换");
+        }
+        catch (tf2::TransformException &ex)
+        {
+            ROS_WARN("TF查询异常: %s，使用手动计算", ex.what());
+
+            // 回退到手动计算
+            tf2::Transform left_tag_tf, right_tag_tf;
+            tf2::fromMsg(left_tag_pose_.pose, left_tag_tf);
+            tf2::fromMsg(right_tag_pose_.pose, right_tag_tf);
+            left_to_right = left_tag_tf.inverse() * right_tag_tf;
+        }
 
         return left_to_right;
     }
@@ -263,11 +317,15 @@ private:
         tf2::Vector3 translation = transform.getOrigin();
         tf2::Quaternion rotation = transform.getRotation();
 
-        ROS_INFO("标定结果:");
+        ROS_INFO("相对坐标结果:");
         ROS_INFO("平移: [%.3f, %.3f, %.3f] 米",
                  translation.x(), translation.y(), translation.z());
         ROS_INFO("旋转四元数: [%.3f, %.3f, %.3f, %.3f]",
                  rotation.x(), rotation.y(), rotation.z(), rotation.w());
+
+        // 计算相对距离
+        double distance = translation.length();
+        ROS_INFO("相对距离: %.3f 米", distance);
 
         // 将四元数转换为RPY (Roll-Pitch-Yaw)
         double roll, pitch, yaw;
@@ -317,6 +375,27 @@ private:
         ROS_INFO("标定结果已保存至: %s", calibration_result_path_.c_str());
     }
 
+    // 获取两个机械臂末端变换
+    bool getArmEndEffectorTransforms(geometry_msgs::TransformStamped &left_transform, geometry_msgs::TransformStamped &right_transform)
+    {
+        left_transform = tf_buffer_.lookupTransform("robot1_base2_link", "robot1_tool_link", ros::Time(0));
+        right_transform = tf_buffer_.lookupTransform("robot2_base2_link", "robot2_tool_link", ros::Time(0));
+        return true;
+    }
+
+    // 计算两个机械臂基座之间的变换
+    tf2::Transform calculateBaseTransform(const tf2::Transform &left_to_right_transform,
+                                          const geometry_msgs::TransformStamped &left_base_to_tool_transform,
+                                          const geometry_msgs::TransformStamped &right_base_to_tool_transform)
+    {
+        tf2::Transform left_base_to_tool, right_base_to_tool;
+        tf2::fromMsg(left_base_to_tool_transform.transform, left_base_to_tool);
+        tf2::fromMsg(right_base_to_tool_transform.transform, right_base_to_tool);
+
+        // return left_to_right_transform * right_base_to_tool.inverse() * left_base_to_tool;
+        return left_base_to_tool * left_to_right_transform * right_base_to_tool.inverse();
+    }
+
     // ROS节点句柄
     ros::NodeHandle nh_;
 
@@ -353,6 +432,8 @@ int main(int argc, char **argv)
     setlocale(LC_CTYPE, "zh_CN.utf8");
     ros::init(argc, argv, "dual_arm_calibrator");
     ros::NodeHandle nh("~");
+    ros::AsyncSpinner spinner(1);
+    spinner.start();
 
     ROS_INFO("启动双机械臂标定节点");
 

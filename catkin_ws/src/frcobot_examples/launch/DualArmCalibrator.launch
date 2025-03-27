@@ -20,16 +20,16 @@
         output="screen">
         <!-- AprilTag 设置 -->
         <param name="apriltag_topic" value="/tag_detections" />
-        <param name="left_arm_tag_id" value="0" />
-        <param name="right_arm_tag_id" value="1" />
+        <param name="left_arm_tag_id" value="201" />
+        <param name="right_arm_tag_id" value="202" />
 
         <!-- MoveIt 组名称 - 根据 FR5V6 双臂配置修改 -->
         <param name="left_arm_group" value="robot1" />
         <param name="right_arm_group" value="robot2" />
 
         <!-- 标定位姿 - 需要根据实际机械臂调整 [x, y, z, qx, qy, qz, qw] -->
-        <rosparam param="left_calibration_pose">[0.4, 0.2, 0.5, 0.0, 1.0, 0.0, 0.0]</rosparam>
-        <rosparam param="right_calibration_pose">[0.4, -0.2, 0.5, 0.0, 1.0, 0.0, 0.0]</rosparam>
+        <rosparam param="left_calibration_pose">[0.054, 0.237, 0.423,-0.586, 0.400, -0.441, 0.550]</rosparam>
+        <rosparam param="right_calibration_pose">[0.095, -0.233, 0.428,-0.493, 0.524, -0.490, 0.492]</rosparam>
 
         <!-- 结果保存路径 -->
         <param name="calibration_result_path"

@@ -12,7 +12,8 @@
     <link name="world" />
 
     <xacro:fr5v6_arm arm_id="$(arg arm_id_1)" connected_to="world" xyz="0 -0.5 0" />
-    <xacro:fr5v6_arm arm_id="$(arg arm_id_2)" connected_to="world" xyz="0 0.5 0" />
+    <xacro:fr5v6_arm arm_id="$(arg arm_id_2)" connected_to="world" xyz="0 0.5 0" /> 
+
 
     <!-- right arm joints control interface -->
     <xacro:gazebo-joint joint="$(arg arm_id_1)_j1" />
