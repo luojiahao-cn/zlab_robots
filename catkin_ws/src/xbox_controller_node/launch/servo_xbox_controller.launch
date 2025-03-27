@@ -9,8 +9,7 @@
     <arg name="debug" default="false" />
     <arg name="is_xbox360_mode" default="true" />
 
-    <!-- 加载Xbox控制器配置 -->
-    <rosparam command="load" file="$(arg config_file)" />
+
 
     <!-- 启动joy节点 -->
     <node pkg="joy" type="joy_node" name="joy">
@@ -22,11 +21,8 @@
 
     <!-- 启动Xbox控制节点 -->
     <node pkg="xbox_controller_node" type="servo_xbox_input" name="servo_xbox_input" output="screen">
-        <!-- 基本控制参数 -->
-        <param name="linear_scale" value="$(arg linear_scale)" />
-        <param name="angular_scale" value="$(arg angular_scale)" />
-        <param name="joint_scale" value="$(arg joint_scale)" />
-        <param name="deadzone" value="$(arg deadzone)" />
+        <!-- 加载Xbox控制器配置 -->
+        <rosparam command="load" file="$(arg config_file)" />
 
         <!-- 模式设置 -->
         <param name="is_xbox360_mode" value="$(arg is_xbox360_mode)" />

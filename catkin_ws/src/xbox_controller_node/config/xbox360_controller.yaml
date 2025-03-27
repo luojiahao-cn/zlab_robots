@@ -4,13 +4,13 @@ buttons:
   b: 1                 # B按钮
   x: 3                 # X按钮
   y: 4                 # Y按钮
-  lb: 2                # 左肩按钮
-  rb: 5                # 右肩按钮
-  back: 6              # Back按钮
-  start: 7             # Start按钮
-  power: 8             # Xbox Guide按钮
-  left_stick: 9        # 左摇杆按钮
-  right_stick: 10      # 右摇杆按钮
+  lb: 6                # 左肩按钮
+  rb: 7                # 右肩按钮
+  back: 10             # Back按钮
+  start: 11            # Start按钮
+  power: 12            # Xbox Guide按钮
+  left_stick: 13        # 左摇杆按钮
+  right_stick: 14      # 右摇杆按钮
   dpad_left: -1        # 十字键左 (Xbox 360使用轴而非按钮)
   dpad_right: -1       # 十字键右 (Xbox 360使用轴而非按钮)
   dpad_up: -1          # 十字键上 (Xbox 360使用轴而非按钮)
@@ -20,10 +20,10 @@ buttons:
 axes:
   left_stick_x: 0      # 左摇杆X轴
   left_stick_y: 1      # 左摇杆Y轴
-  left_trigger: 2      # 触发器共享轴
-  right_trigger: 2     # 触发器共享轴 (与left_trigger相同)
-  right_stick_x: 3     # 右摇杆X轴
-  right_stick_y: 4     # 右摇杆Y轴
+  left_trigger: 5      # LT
+  right_trigger: 4     # RT
+  right_stick_x: 2     # 右摇杆X轴
+  right_stick_y: 3     # 右摇杆Y轴
   dpad_x: 6            # 十字键水平
   dpad_y: 7            # 十字键垂直
 

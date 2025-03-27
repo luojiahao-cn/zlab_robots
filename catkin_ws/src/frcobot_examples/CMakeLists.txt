@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.0.2)
 project(frcobot_examples)
 
 ## Compile as C++11, supported in ROS Kinetic and newer
-# add_compile_options(-std=c++11)
+add_compile_options(-std=c++11)
 
 ## Find catkin macros and libraries
 ## if COMPONENTS list like find_package(catkin REQUIRED COMPONENTS xyz)
@@ -15,11 +15,17 @@ find_package(catkin REQUIRED COMPONENTS
   geometric_shapes
   std_msgs
   moveit_visual_tools
+  image_transport
+  cv_bridge
+  sensor_msgs
+  tf2_ros
+  tf2_geometry_msgs
+  apriltag_ros
 )
 
 ## System dependencies are found with CMake's conventions
 # find_package(Boost REQUIRED COMPONENTS system)
-
+find_package(OpenCV REQUIRED)
 
 ## Uncomment this if the package has a setup.py. This macro ensures
 ## modules and global scripts declared therein get installed
@@ -109,7 +115,17 @@ find_package(catkin REQUIRED COMPONENTS
 catkin_package(
 #  INCLUDE_DIRS include
 #  LIBRARIES frcobot_examples
-#  CATKIN_DEPENDS message_generation roscpp std_msgs
+  CATKIN_DEPENDS 
+    roscpp 
+    std_msgs 
+    moveit_core 
+    moveit_ros_planning_interface
+    image_transport
+    cv_bridge
+    sensor_msgs
+    tf2_ros
+    tf2_geometry_msgs
+    apriltag_ros
 #  DEPENDS system_lib
 )
 
@@ -122,6 +138,7 @@ catkin_package(
 include_directories(
 # include
   ${catkin_INCLUDE_DIRS}
+  ${OpenCV_INCLUDE_DIRS}
 )
 
 ## Declare a C++ library
@@ -139,9 +156,10 @@ include_directories(
 ## The recommended prefix ensures that target names across packages don't collide
 # add_executable(${PROJECT_NAME}_node src/frcobot_examples_node.cpp)
 
-add_executable(dual_arms_control src/dual_arms_control.cpp)
+add_executable(example_dual_arms_control src/example_dual_arms_control.cpp)
 add_executable(example_test src/example_test.cpp)
 add_executable(environment src/environment.cpp)
+add_executable(DualArmCalibrator src/DualArmCalibrator.cpp)
 
 ## Rename C++ executable without prefix
 ## The above recommended prefix causes long target names, the following renames the
@@ -157,9 +175,13 @@ add_executable(environment src/environment.cpp)
 # target_link_libraries(${PROJECT_NAME}_node
 #   ${catkin_LIBRARIES}
 # )
-target_link_libraries(dual_arms_control ${catkin_LIBRARIES})
+target_link_libraries(example_dual_arms_control ${catkin_LIBRARIES})
 target_link_libraries(example_test ${catkin_LIBRARIES})
 target_link_libraries(environment ${catkin_LIBRARIES})
+target_link_libraries(DualArmCalibrator 
+  ${catkin_LIBRARIES}
+  ${OpenCV_LIBRARIES}
+)
 #############
 ## Install ##
 #############

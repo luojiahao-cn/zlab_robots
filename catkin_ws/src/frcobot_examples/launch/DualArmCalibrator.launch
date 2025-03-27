@@ -1,0 +1,42 @@
+<?xml version="1.0"?>
+<launch>
+    <!-- 加载 FR5V6 双臂 MoveIt 配置 -->
+    <!-- <include file="$(find fr5v6_dual_moveit_config)/launch/move_group.launch">
+        <arg name="allow_trajectory_execution" value="true" />
+        <arg name="fake_execution" value="false" />
+        <arg name="info" value="true" />
+    </include> -->
+
+    <!-- 可选：启动 AprilTag 检测（如果未在其他地方启动） -->
+    <!-- 
+  <include file="$(find apriltag_ros)/launch/continuous_detection.launch">
+    <arg name="camera_name" value="camera" />
+    <arg name="image_topic" value="image_rect" />
+  </include>
+  -->
+
+    <!-- 标定程序节点 -->
+    <node name="dual_arm_calibrator" pkg="frcobot_examples" type="DualArmCalibrator"
+        output="screen">
+        <!-- AprilTag 设置 -->
+        <param name="apriltag_topic" value="/tag_detections" />
+        <param name="left_arm_tag_id" value="0" />
+        <param name="right_arm_tag_id" value="1" />
+
+        <!-- MoveIt 组名称 - 根据 FR5V6 双臂配置修改 -->
+        <param name="left_arm_group" value="robot1" />
+        <param name="right_arm_group" value="robot2" />
+
+        <!-- 标定位姿 - 需要根据实际机械臂调整 [x, y, z, qx, qy, qz, qw] -->
+        <rosparam param="left_calibration_pose">[0.4, 0.2, 0.5, 0.0, 1.0, 0.0, 0.0]</rosparam>
+        <rosparam param="right_calibration_pose">[0.4, -0.2, 0.5, 0.0, 1.0, 0.0, 0.0]</rosparam>
+
+        <!-- 结果保存路径 -->
+        <param name="calibration_result_path"
+            value="$(find frcobot_examples)/config/dual_arm_calibration.yaml" />
+    </node>
+
+    <!-- 可选：RViz 可视化 -->
+    <!-- <node name="rviz" pkg="rviz" type="rviz"
+        args="-d $(find fr5v6_dual_moveit_config)/launch/moveit.rviz" required="true" /> -->
+</launch>

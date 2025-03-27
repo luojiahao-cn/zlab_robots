@@ -36,7 +36,6 @@ private:
     std::string command_frame_id_; // 命令坐标系ID
     bool is_joint_mode_;           // 是否为关节模式
     int current_joint_;            // 当前选择的关节
-    bool is_xbox360_mode_;         // 是否为Xbox 360控制器模式
 
     // 话题名称
     std::string twist_topic_;       // 扭曲命令话题
@@ -104,7 +103,6 @@ XboxServo::XboxServo() : pnh_("~"),
                          deadzone_(0.1),
                          is_joint_mode_(false),
                          current_joint_(0),
-                         is_xbox360_mode_(true), // 默认为Xbox 360模式
                          twist_topic_("/servo_server/delta_twist_cmds"),
                          joint_topic_("/servo_server/delta_joint_cmds"),
                          joy_topic_("/joy"),
@@ -127,7 +125,6 @@ XboxServo::XboxServo() : pnh_("~"),
 
     // 打印欢迎信息和控制器帮助
     ROS_INFO("Xbox 360控制器节点已初始化");
-    ROS_INFO("按键配置: %s模式", is_xbox360_mode_ ? "Xbox 360" : "标准Xbox");
     printControllerHelp();
 
     // 设置调试级别
@@ -157,7 +154,6 @@ void XboxServo::loadParameters()
     pnh_.param("angular_scale", angular_scale_, 0.2);
     pnh_.param("joint_scale", joint_scale_, 0.1);
     pnh_.param("deadzone", deadzone_, 0.1);
-    pnh_.param("is_xbox360_mode", is_xbox360_mode_, true);
     pnh_.param("planning_frame_id", planning_frame_id_, std::string("world"));
     pnh_.param("ee_frame_id", ee_frame_id_, std::string("frrobot_tool_tcp_link"));
     command_frame_id_ = planning_frame_id_;
@@ -167,66 +163,35 @@ void XboxServo::loadParameters()
     pnh_.param("joint_topic", joint_topic_, std::string("/servo_server/delta_joint_cmds"));
     pnh_.param("joy_topic", joy_topic_, std::string("/joy"));
 
-    // 加载按钮映射 - Xbox 360默认值
-    if (is_xbox360_mode_)
-    {
-        // Xbox 360默认按钮映射
-        pnh_.param("buttons/a", buttons_.a, 0);
-        pnh_.param("buttons/b", buttons_.b, 1);
-        pnh_.param("buttons/x", buttons_.x, 2);
-        pnh_.param("buttons/y", buttons_.y, 3);
-        pnh_.param("buttons/lb", buttons_.lb, 4);
-        pnh_.param("buttons/rb", buttons_.rb, 5);
-        pnh_.param("buttons/back", buttons_.back, 6);
-        pnh_.param("buttons/start", buttons_.start, 7);
-        pnh_.param("buttons/power", buttons_.power, 8);
-        pnh_.param("buttons/left_stick", buttons_.left_stick, 9);
-        pnh_.param("buttons/right_stick", buttons_.right_stick, 10);
+    // Xbox 360默认按钮映射
+    pnh_.param("buttons/a", buttons_.a, 0);
+    pnh_.param("buttons/b", buttons_.b, 1);
+    pnh_.param("buttons/x", buttons_.x, 2);
+    pnh_.param("buttons/y", buttons_.y, 3);
+    pnh_.param("buttons/lb", buttons_.lb, 4);
+    pnh_.param("buttons/rb", buttons_.rb, 5);
+    pnh_.param("buttons/back", buttons_.back, 6);
+    pnh_.param("buttons/start", buttons_.start, 7);
+    pnh_.param("buttons/power", buttons_.power, 8);
+    pnh_.param("buttons/left_stick", buttons_.left_stick, 9);
+    pnh_.param("buttons/right_stick", buttons_.right_stick, 10);
 
-        // Xbox 360没有十字键作为按钮，而是轴
-        pnh_.param("buttons/dpad_left", buttons_.dpad_left, -1);
-        pnh_.param("buttons/dpad_right", buttons_.dpad_right, -1);
-        pnh_.param("buttons/dpad_up", buttons_.dpad_up, -1);
-        pnh_.param("buttons/dpad_down", buttons_.dpad_down, -1);
+    // Xbox 360没有十字键作为按钮，而是轴
+    pnh_.param("buttons/dpad_left", buttons_.dpad_left, -1);
+    pnh_.param("buttons/dpad_right", buttons_.dpad_right, -1);
+    pnh_.param("buttons/dpad_up", buttons_.dpad_up, -1);
+    pnh_.param("buttons/dpad_down", buttons_.dpad_down, -1);
 
-        // Xbox 360特有的轴配置
-        pnh_.param("axes/left_stick_x", axes_.left_stick_x, 0);
-        pnh_.param("axes/left_stick_y", axes_.left_stick_y, 1);
-        pnh_.param("axes/right_stick_x", axes_.right_stick_x, 3);
-        pnh_.param("axes/right_stick_y", axes_.right_stick_y, 4);
-        pnh_.param("axes/left_trigger", axes_.left_trigger, 2);   // 在Xbox 360中这是左右触发器共享的轴
-        pnh_.param("axes/right_trigger", axes_.right_trigger, 2); // 同上
-        pnh_.param("axes/dpad_x", axes_.dpad_x, 6);               // 十字键水平
-        pnh_.param("axes/dpad_y", axes_.dpad_y, 7);               // 十字键垂直
-    }
-    else
-    {
-        // 标准Xbox控制器映射
-        pnh_.param("buttons/a", buttons_.a, 0);
-        pnh_.param("buttons/b", buttons_.b, 1);
-        pnh_.param("buttons/x", buttons_.x, 2);
-        pnh_.param("buttons/y", buttons_.y, 3);
-        pnh_.param("buttons/lb", buttons_.lb, 4);
-        pnh_.param("buttons/rb", buttons_.rb, 5);
-        pnh_.param("buttons/back", buttons_.back, 6);
-        pnh_.param("buttons/start", buttons_.start, 7);
-        pnh_.param("buttons/power", buttons_.power, 8);
-        pnh_.param("buttons/left_stick", buttons_.left_stick, 9);
-        pnh_.param("buttons/right_stick", buttons_.right_stick, 10);
-        pnh_.param("buttons/dpad_left", buttons_.dpad_left, 11);
-        pnh_.param("buttons/dpad_right", buttons_.dpad_right, 12);
-        pnh_.param("buttons/dpad_up", buttons_.dpad_up, 13);
-        pnh_.param("buttons/dpad_down", buttons_.dpad_down, 14);
+    // Xbox 360特有的轴配置
+    pnh_.param("axes/left_stick_x", axes_.left_stick_x, 0);
+    pnh_.param("axes/left_stick_y", axes_.left_stick_y, 1);
+    pnh_.param("axes/right_stick_x", axes_.right_stick_x, 3);
+    pnh_.param("axes/right_stick_y", axes_.right_stick_y, 4);
+    pnh_.param("axes/left_trigger", axes_.left_trigger, 2);   // 在Xbox 360中这是左右触发器共享的轴
+    pnh_.param("axes/right_trigger", axes_.right_trigger, 2); // 同上
+    pnh_.param("axes/dpad_x", axes_.dpad_x, 6);               // 十字键水平
+    pnh_.param("axes/dpad_y", axes_.dpad_y, 7);               // 十字键垂直
 
-        pnh_.param("axes/left_stick_x", axes_.left_stick_x, 0);
-        pnh_.param("axes/left_stick_y", axes_.left_stick_y, 1);
-        pnh_.param("axes/right_stick_x", axes_.right_stick_x, 3);
-        pnh_.param("axes/right_stick_y", axes_.right_stick_y, 4);
-        pnh_.param("axes/left_trigger", axes_.left_trigger, 2);
-        pnh_.param("axes/right_trigger", axes_.right_trigger, 5);
-        pnh_.param("axes/dpad_x", axes_.dpad_x, -1); // 标准Xbox不使用
-        pnh_.param("axes/dpad_y", axes_.dpad_y, -1); // 标准Xbox不使用
-    }
 }
 
 void XboxServo::printControllerHelp()
@@ -310,12 +275,10 @@ void XboxServo::joyCallback(const sensor_msgs::Joy::ConstPtr &joy)
                 ROS_DEBUG("右摇杆X轴: %.2f", joy->axes[i]);
             else if (i == axes_.right_stick_y)
                 ROS_DEBUG("右摇杆Y轴: %.2f", joy->axes[i]);
-            else if (i == axes_.left_trigger && !is_xbox360_mode_)
+            else if (i == axes_.left_trigger)
                 ROS_DEBUG("左触发器: %.2f", joy->axes[i]);
-            else if (i == axes_.right_trigger && !is_xbox360_mode_)
+            else if (i == axes_.right_trigger)
                 ROS_DEBUG("右触发器: %.2f", joy->axes[i]);
-            else if (i == axes_.left_trigger && is_xbox360_mode_)
-                ROS_DEBUG("触发器轴: %.2f", joy->axes[i]);
             else if (i == axes_.dpad_x)
                 ROS_DEBUG("十字键X轴: %.2f", joy->axes[i]);
             else if (i == axes_.dpad_y)
@@ -358,9 +321,10 @@ void XboxServo::joyCallback(const sensor_msgs::Joy::ConstPtr &joy)
         // 使用十字键选择关节
         bool joint_changed = false;
 
-        if (is_xbox360_mode_ && joy->axes.size() > axes_.dpad_y)
+        // 移除条件判断，直接使用Xbox 360的代码
+        if (joy->axes.size() > axes_.dpad_y)
         {
-            // Xbox 360模式: 使用十字键轴值
+            // 使用十字键轴值
             if (joy->axes[axes_.dpad_y] > 0.5)
             { // 十字键上
                 current_joint_ = (current_joint_ + 1) % 6;
@@ -368,21 +332,6 @@ void XboxServo::joyCallback(const sensor_msgs::Joy::ConstPtr &joy)
             }
             else if (joy->axes[axes_.dpad_y] < -0.5)
             { // 十字键下
-                current_joint_ = (current_joint_ + 5) % 6;
-                joint_changed = true;
-            }
-        }
-        else if (!is_xbox360_mode_ && joy->buttons.size() > buttons_.dpad_up &&
-                 joy->buttons.size() > buttons_.dpad_down)
-        {
-            // 标准Xbox模式: 使用十字键按钮
-            if (joy->buttons[buttons_.dpad_up] == 1)
-            {
-                current_joint_ = (current_joint_ + 1) % 6;
-                joint_changed = true;
-            }
-            else if (joy->buttons[buttons_.dpad_down] == 1)
-            {
                 current_joint_ = (current_joint_ + 5) % 6;
                 joint_changed = true;
             }
@@ -428,7 +377,8 @@ void XboxServo::joyCallback(const sensor_msgs::Joy::ConstPtr &joy)
         // 处理触发器
         double leftTrigger = 0.0, rightTrigger = 0.0;
 
-        if (is_xbox360_mode_ && joy->axes.size() > axes_.left_trigger)
+        // 移除条件判断，直接使用Xbox 360的代码
+        if (joy->axes.size() > axes_.left_trigger)
         {
             // Xbox 360模式: 左右触发器共享一个轴
             double triggerAxis = joy->axes[axes_.left_trigger];
@@ -442,20 +392,6 @@ void XboxServo::joyCallback(const sensor_msgs::Joy::ConstPtr &joy)
                 // 左触发器被按下（正值）
                 leftTrigger = (triggerAxis - deadzone_) / (1.0 - deadzone_);
             }
-        }
-        else if (!is_xbox360_mode_ &&
-                 joy->axes.size() > axes_.left_trigger &&
-                 joy->axes.size() > axes_.right_trigger)
-        {
-            // 标准Xbox模式: 左右触发器是独立轴
-            // 触发器通常范围为1(未按下)到-1(完全按下)
-            leftTrigger = (1.0 - joy->axes[axes_.left_trigger]) / 2.0;
-            rightTrigger = (1.0 - joy->axes[axes_.right_trigger]) / 2.0;
-
-            if (leftTrigger < deadzone_)
-                leftTrigger = 0.0;
-            if (rightTrigger < deadzone_)
-                rightTrigger = 0.0;
         }
 
         // Z轴控制 = 右触发器(上) - 左触发器(下)
