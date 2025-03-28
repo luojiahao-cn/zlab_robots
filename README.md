@@ -89,3 +89,9 @@ To install and set up the project, follow these steps:
     
     Press Ctrl+C to remove the boundaries when no longer needed.
 
+- To monitor the robot arm's status using the controller feedback protocol, use the following command:
+
+    ```bash
+    roslaunch frcobot_status frcobot_status.launch
+    ```
+    This will launch the status feedback interface, allowing you to view real-time information about the robot arm's state, including joint positions, tool positions, and error codes.
