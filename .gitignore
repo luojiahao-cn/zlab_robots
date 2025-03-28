@@ -3,5 +3,3 @@ catkin_ws/build/
 catkin_ws/devel/
 doc/.~*
 
-source.sh
-.vscode/
