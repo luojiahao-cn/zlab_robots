@@ -1,22 +1,26 @@
-#include "frcobot_hw/frcobot_hw.h"
-#include <frcobot_hw/status.h>
+#include <frcobot_status/frcobot_status.h>
+#include <frcobot_status/status.h>
 
 FrRobotStatusCtrl::FrRobotStatusCtrl()
 {
 
-    frrobot_status_ = nh_.advertise<frcobot_hw::status>("frcobot_status", 10);
+    frrobot_status_ = nh_.advertise<frcobot_status::status>("frcobot_status", 10);
 
     initTcp(); //Initialize the TCPIP connection with the robot
 }
 
 void FrRobotStatusCtrl::initTcp()
 {
-    nh_.getParam("robot_ip", ROBOTIP);
-    nh_.getParam("robot_port", PORT);
+    // 创建私有命名空间的节点句柄
+    ros::NodeHandle private_nh("~");
+
+    // 从私有命名空间获取参数
+    private_nh.param<std::string>("robot_ip", ROBOTIP, "192.168.31.202"); 
+    private_nh.param<int>("robot_port", PORT, 8083);
+    
     const char *robotIP = (char *)ROBOTIP.c_str();
     if (nh_.hasParam("robot_ip")) {
-        ROS_INFO("%s", robotIP);
-        ROS_INFO("%d", PORT);
+        ROS_INFO("尝试连接到机器人: %s:%d", robotIP, PORT);
     }
     //Set the server address and listening port through the struct sockaddr_in structure;
     memset(&serverSendAddr, 0, sizeof(serverSendAddr));
@@ -134,7 +138,7 @@ void FrRobotStatusCtrl::read()
 void FrRobotStatusCtrl::update()
 {
     // update status tpoic
-    frcobot_hw::status status_msg;
+    frcobot_status::status status_msg;
 
     status_msg.header.stamp = ros::Time::now();
     status_msg.frame_count = frrobot_status.frame_count;
@@ -179,6 +183,8 @@ void FrRobotStatusCtrl::run()
 
 int main(int argc, char **argv)
 {
+    setlocale(LC_CTYPE, "zh_CN.utf8");
+
     ros::init(argc, argv, "FrRobotStatusCtrl");
 
     FrRobotStatusCtrl FrRobotStatusCtrl;
