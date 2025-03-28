@@ -15,6 +15,11 @@
 #include <frrobot_control/FRRobot.h>
 #include <frrobot_control/RobotError.h>
 #include <frrobot_control/RobotTypes.h>
+// 添加线程相关头文件
+#include <thread>
+#include <mutex>
+#include <atomic>
+#include <condition_variable>
 
 #define MAXLINE 4096
 #define PORT_CMD 8080
@@ -22,13 +27,6 @@
 int confd;
 int len;
 int flag = 1;
-float joints[6];
-float a = 0.0;
-float v = 0.0;
-float t = 0.002;
-float lat = 0.002;
-float gain = 0.0;
-float joints_sta[6] = {0, 0, 0, 0, 0, 0}; // 关节数组
 socklen_t sendaddr_length;
 char recvLine[MAXLINE];
 char sendCmdLine[MAXLINE];
@@ -41,7 +39,8 @@ namespace frrobot_control
 {
 
   FrRobotHWInterface::FrRobotHWInterface(ros::NodeHandle &nh, urdf::Model *urdf_model)
-      : ros_control_boilerplate::GenericHWInterface(nh, urdf_model)
+      : ros_control_boilerplate::GenericHWInterface(nh, urdf_model),
+        is_running_(false), need_reconnect_(false), has_new_command_(false)
   {
     std::string robot_ip;
     if (!nh.getParam("robot_ip", robot_ip))
@@ -51,20 +50,44 @@ namespace frrobot_control
         ROS_WARN("Param 'robot_ip' not found, using default IP: %s", robot_ip.c_str());
     }
 
-    // Set the server address and listening port through the struct sockaddr_in structure;
+    // 初始化控制参数
+    a_ = 0.0;
+    v_ = 0.0;
+    t_ = 0.002;
+    lat_ = 0.002;
+    gain_ = 0.0;
+    
+    // 初始化关节位置缓存
+    memset(cached_joint_positions_, 0, sizeof(cached_joint_positions_));
+    memset(cached_joint_commands_, 0, sizeof(cached_joint_commands_));
+
+    // 设置服务器地址
     memset(&serverSendAddr, 0, sizeof(serverSendAddr));
     serverSendAddr.sin_family = AF_INET;
     serverSendAddr.sin_addr.s_addr = inet_addr(robot_ip.c_str());
     serverSendAddr.sin_port = htons(PORT_CMD);
     sendaddr_length = sizeof(serverSendAddr);
 
-    // Use socket() to generate a socket file descriptor;
+    // 创建socket
+    std::lock_guard<std::mutex> lock(socket_mutex_);
     if ((confd = socket(AF_INET, SOCK_STREAM, 0)) < 0)
     {
       ROS_ERROR("socket() error");
       perror("socket() error");
       exit(1);
     }
+    
+    // 设置接收超时
+    struct timeval timeout;
+    timeout.tv_sec = 2;
+    timeout.tv_usec = 0;
+    if (setsockopt(confd, SOL_SOCKET, SO_RCVTIMEO, (const char *)&timeout, sizeof(timeout)) < 0)
+    {
+        ROS_ERROR("setsockopt() error");
+        perror("setsockopt() error");
+        exit(1);
+    }
+
     ROS_INFO("Try connect to server IP: %s, port: %d", robot_ip.c_str(), PORT_CMD);
     if (connect(confd, (struct sockaddr *)&serverSendAddr, sizeof(serverSendAddr)) < 0)
     {
@@ -73,136 +96,251 @@ namespace frrobot_control
       exit(1);
     }
 
-    // 设置接收超时
-    struct timeval timeout;
-    timeout.tv_sec = 2;  // 超时时间（秒）
-    timeout.tv_usec = 0; // 超时时间（微秒）
-    if (setsockopt(confd, SOL_SOCKET, SO_RCVTIMEO, (const char *)&timeout, sizeof(timeout)) < 0)
-    {
-        ROS_ERROR("setsockopt() error");
-        perror("setsockopt() error");
-        exit(1);
-    }
-
-    ROS_INFO("connected to server");
+    ROS_INFO("Connected to server");
+    
+    // 启动通信线程
+    is_running_ = true;
+    comm_thread_ = std::thread(&FrRobotHWInterface::communicationThread, this);
 
     ROS_INFO_NAMED("frrobot_hw_interface", "FrRobotHWInterface Ready.");
   }
-
-  void FrRobotHWInterface::reconnect()
+  
+  // 析构函数中停止线程
+  FrRobotHWInterface::~FrRobotHWInterface()
   {
+    is_running_ = false;
+    if (comm_thread_.joinable()) {
+      comm_thread_.join();
+    }
+    
+    std::lock_guard<std::mutex> lock(socket_mutex_);
+    if (confd >= 0) {
       close(confd);
-      ROS_INFO("Reconnecting to server...");
-      if ((confd = socket(AF_INET, SOCK_STREAM, 0)) < 0)
-      {
-          ROS_ERROR("socket() error");
-          perror("socket() error");
-          exit(1);
-      }
-      if (connect(confd, (struct sockaddr *)&serverSendAddr, sizeof(serverSendAddr)) < 0)
-      {
-          ROS_ERROR("connect() error");
-          perror("connect() error");
-          exit(1);
-      }
-      ROS_INFO("Reconnected to server");
+      confd = -1;
+    }
   }
 
-  void FrRobotHWInterface::write(ros::Duration &elapsed_time)
+  // 通信线程主函数
+  void FrRobotHWInterface::communicationThread()
   {
-    // ROS_INFO("write");
-    // Safety
-    enforceLimits(elapsed_time);
-
-    for (std::size_t joint_id = 0; joint_id < num_joints_; ++joint_id)
+    ROS_INFO("Communication thread started");
+    
+    while (is_running_)
     {
-      joints[joint_id] = joint_position_command_[joint_id] * 180 / M_PI;
+      // 检查是否需要重连
+      if (need_reconnect_)
+      {
+        socketReconnect();
+        need_reconnect_ = false;
+      }
+      
+      // 获取关节位置
+      if (!getJointPositions())
+      {
+        need_reconnect_ = true;
+        std::this_thread::sleep_for(std::chrono::milliseconds(100));
+        continue;
+      }
+      
+      // 检查是否有新命令需要发送
+      {
+        std::unique_lock<std::mutex> lock(joints_mutex_);
+        if (has_new_command_)
+        {
+          std::string cmd, response;
+          sprintf(send_buf, "ServoJ(%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f)", 
+                 cached_joint_commands_[0], cached_joint_commands_[1], 
+                 cached_joint_commands_[2], cached_joint_commands_[3], 
+                 cached_joint_commands_[4], cached_joint_commands_[5], 
+                 a_, v_, t_, lat_, gain_);
+          
+          cmd = std::string(send_buf);
+          if (!sendCommand(cmd, response))
+          {
+            need_reconnect_ = true;
+          }
+          
+          has_new_command_ = false;
+          cmd_cv_.notify_one();
+        }
+      }
+      
+      // 控制通信频率
+      std::this_thread::sleep_for(std::chrono::milliseconds(5));
     }
-    // printf("joints: %f,%f,%f,%f,%f,%f;\n", joints[0],joints[1],joints[2],joints[3],joints[4],joints[5]);
-    sprintf(send_buf, "ServoJ(%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f)", joints[0], joints[1], joints[2], joints[3], joints[4], joints[5], a, v, t, lat, gain);
-
-    len = strlen(send_buf);
-    sprintf(sendCmdLine, "/f/bIII123III376III%dIII%sIII/b/f", len, send_buf);
-    // Send data to the server, send();
-    int send_length = 0;
-    send_length = send(confd, sendCmdLine, sizeof(sendCmdLine), 0);
+    
+    ROS_INFO("Communication thread stopped");
+  }
+  
+  // 安全地重新连接socket
+  void FrRobotHWInterface::socketReconnect()
+  {
+    ROS_INFO("Reconnecting to server...");
+    
+    std::lock_guard<std::mutex> lock(socket_mutex_);
+    if (confd >= 0) {
+      close(confd);
+    }
+    
+    if ((confd = socket(AF_INET, SOCK_STREAM, 0)) < 0)
+    {
+      ROS_ERROR("socket() error during reconnect");
+      perror("socket() error");
+      return;
+    }
+    
+    // 设置接收超时
+    struct timeval timeout;
+    timeout.tv_sec = 2;
+    timeout.tv_usec = 0;
+    if (setsockopt(confd, SOL_SOCKET, SO_RCVTIMEO, (const char *)&timeout, sizeof(timeout)) < 0)
+    {
+      ROS_ERROR("setsockopt() error during reconnect");
+      perror("setsockopt() error");
+      return;
+    }
+    
+    if (connect(confd, (struct sockaddr *)&serverSendAddr, sizeof(serverSendAddr)) < 0)
+    {
+      ROS_ERROR("connect() error during reconnect");
+      perror("connect() error");
+      return;
+    }
+    
+    ROS_INFO("Reconnected to server successfully");
+  }
+  
+  // 发送命令并获取响应
+  bool FrRobotHWInterface::sendCommand(const std::string& cmd, std::string& response)
+  {
+    std::lock_guard<std::mutex> lock(socket_mutex_);
+    
+    int len = cmd.length();
+    char sendCmdLine[MAXLINE];
+    sprintf(sendCmdLine, "/f/bIII123III376III%dIII%sIII/b/f", len, cmd.c_str());
+    
+    int send_length = send(confd, sendCmdLine, strlen(sendCmdLine), 0);
     if (send_length < 0)
     {
-      perror("send() error");
+      ROS_ERROR("Failed to send command: %s", cmd.c_str());
+      return false;
     }
-    else
-    {
-      // printf("write_sendmsg: %s;\n", sendCmdLine);
-    }
-    int recv_length = 0;
-    // Receive data from the server, recv();
+    
+    char recvLine[MAXLINE];
     recvLine[MAXLINE - 1] = '\0';
-    recv_length = recv(confd, recvLine, sizeof(recvLine), 0);
+    int recv_length = recv(confd, recvLine, sizeof(recvLine), 0);
     if (recv_length <= 0)
     {
-      perror("recv");
-      reconnect();
+      ROS_ERROR("Failed to receive response for command: %s", cmd.c_str());
+      return false;
     }
-    else
+    
+    response = std::string(recvLine);
+    return true;
+  }
+  
+  // 获取关节位置
+  bool FrRobotHWInterface::getJointPositions()
+  {
+    std::string cmd = "GetActualJointPosRadian()";
+    std::string response;
+    
     {
-      // printf("write_recvmsg: %s;\n", recvLine);
+      std::lock_guard<std::mutex> lock(socket_mutex_);
+      
+      char sendStaLine[MAXLINE];
+      sprintf(sendStaLine, "/f/bIII123III375III25IIIGetActualJointPosRadian()III/b/f");
+      
+      int send_length = send(confd, sendStaLine, strlen(sendStaLine), 0);
+      if (send_length < 0)
+      {
+        ROS_ERROR("Failed to send joint position request");
+        return false;
+      }
+      
+      char recvLine[MAXLINE];
+      recvLine[MAXLINE - 1] = '\0';
+      int recv_length = recv(confd, recvLine, sizeof(recvLine), 0);
+      if (recv_length <= 0)
+      {
+        ROS_ERROR("Failed to receive joint positions");
+        return false;
+      }
+      
+      response = std::string(recvLine);
+    }
+    
+    // 解析响应
+    int pos = 0;
+    int jointsDataLen = 0;
+    std::string tempJoints = response;
+    for (int i = 0; i < 3; i++)
+    {
+      pos = tempJoints.find("III") + 3;
+      tempJoints = tempJoints.substr(pos);
+    }
+    pos = tempJoints.find("III");
+    jointsDataLen = stoi(tempJoints.substr(0, pos));
+    tempJoints = tempJoints.substr(pos + 3, jointsDataLen);
+    
+    float temp_joints[6];
+    for (int i = 0; i < 6; i++)
+    {
+      pos = tempJoints.find(",");
+      temp_joints[i] = stof(tempJoints.substr(0, pos));
+      tempJoints = tempJoints.substr(pos + 1);
+    }
+    
+    // 更新缓存的关节位置
+    {
+      std::lock_guard<std::mutex> lock(joints_mutex_);
+      memcpy(cached_joint_positions_, temp_joints, sizeof(temp_joints));
+    }
+    
+    return true;
+  }
+
+  // 更新后的write函数
+  void FrRobotHWInterface::write(ros::Duration &elapsed_time)
+  {
+    // 安全限制
+    enforceLimits(elapsed_time);
+    
+    float temp_cmd[6];
+    for (std::size_t joint_id = 0; joint_id < num_joints_; ++joint_id)
+    {
+      temp_cmd[joint_id] = joint_position_command_[joint_id] * 180 / M_PI;
+    }
+    
+    // 更新命令并通知通信线程
+    {
+      std::unique_lock<std::mutex> lock(joints_mutex_);
+      memcpy(cached_joint_commands_, temp_cmd, sizeof(temp_cmd));
+      has_new_command_ = true;
+      
+      // 等待命令发送完成或超时
+      cmd_cv_.wait_for(lock, std::chrono::milliseconds(50), 
+                       [this]{ return !has_new_command_; });
     }
   }
 
+  // 更新后的read函数
   void FrRobotHWInterface::read(ros::Duration &elapsed_time)
   {
-    int send_length_sta = 0;
-    sprintf(sendStaLine, "/f/bIII123III375III25IIIGetActualJointPosRadian()III/b/f");
-    send_length_sta = send(confd, sendStaLine, sizeof(sendStaLine), 0);
-    if (send_length_sta < 0)
+    // 从缓存的关节位置更新控制器状态
     {
-      perror("sendto() error");
-      exit(1);
-
-    }
-    else
-    {
-      // printf("read_sendmsg: %s;\n", sendStaLine);
-    }
-
-    // ROS_INFO("read");
-
-    int recv_length = 0;
-    recvLine[MAXLINE - 1] = '\0';
-    // 接收服务器的数据，recvfrom()；
-    recv_length = recv(confd, recvLine, sizeof(recvLine), 0);
-    if (recv_length <= 0)
-    {
-      perror("recv");
-      reconnect();
-    }
-    else
-    {
-    //   printf("read_recvmsg: %s;\n", recvLine);
-      int pos = 0;
-      int jointsDataLen = 0;
-      std::string tempJoints = recvLine;
-      for (int i = 0; i < 3; i++)
-      {
-        pos = tempJoints.find("III") + 3;
-        tempJoints = tempJoints.substr(pos);
-      }
-      pos = tempJoints.find("III");
-      jointsDataLen = stoi(tempJoints.substr(0, pos));
-      tempJoints = tempJoints.substr(pos + 3, jointsDataLen);
-      for (int i = 0; i < 6; i++)
-      {
-        pos = tempJoints.find(",");
-        joints_sta[i] = stof(tempJoints.substr(0, pos));
-        tempJoints = tempJoints.substr(pos + 1);
-      }
+      std::lock_guard<std::mutex> lock(joints_mutex_);
       for (std::size_t joint_id = 0; joint_id < num_joints_; ++joint_id)
       {
-        joint_position_[joint_id] = joints_sta[joint_id];
-        // joint_position_[joint_id] = joint_position_command_[joint_id];
+        joint_position_[joint_id] = cached_joint_positions_[joint_id];
       }
-    //   printf("recvmsg: %f,%f,%f,%f,%f,%f\n", joints_sta[0],joints_sta[1],joints_sta[2],joints_sta[3],joints_sta[4],joints_sta[5]);
     }
+  }
+
+  // 原有的reconnect函数不再直接调用，而是设置标志让通信线程处理
+  void FrRobotHWInterface::reconnect()
+  {
+    need_reconnect_ = true;
   }
 
   void FrRobotHWInterface::enforceLimits(ros::Duration &period)

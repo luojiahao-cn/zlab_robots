@@ -76,19 +76,19 @@ int main(int argc, char **argv)
     while (ros::ok())
     {
         // Move both arms to 'zero' state
-        moveToState(group_dual, "up");
+        moveToState(group_dual, "up",0.3);
         rate.sleep();
 
         // Move robot1 to 'up' state
-        moveToState(group_robot1, "ready",0.5);
+        moveToState(group_robot1, "ready",0.1);
         rate.sleep();
 
         // Move robot2 to 'up' state
-        moveToState(group_robot2, "ready",0.5);
+        moveToState(group_robot2, "ready",0.1);
         rate.sleep();
 
-        moveToPose(group_robot1, 0.4, 0.2, 0.5, 0.0, 0.0, 0.0, 1.0, 0.3);
-        rate.sleep();
+        // moveToPose(group_robot1, 0.4, 0.2, 0.5, 0.0, 0.0, 0.0, 1.0, 0.3);
+        // rate.sleep();
     }
 
     ros::shutdown();

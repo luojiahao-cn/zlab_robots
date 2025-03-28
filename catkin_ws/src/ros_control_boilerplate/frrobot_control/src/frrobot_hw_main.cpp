@@ -7,8 +7,6 @@
 
 int main(int argc, char** argv)
 {
-    setlocale(LC_CTYPE, "zh_CN.utf8");
-
     ros::init(argc, argv, "frrobot_hw_interface");
     ros::NodeHandle nh;
 
