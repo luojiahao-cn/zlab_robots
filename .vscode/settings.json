@@ -70,7 +70,8 @@
         "typeindex": "cpp",
         "typeinfo": "cpp",
         "variant": "cpp",
-        "shared_mutex": "cpp"
+        "shared_mutex": "cpp",
+        "*.ipp": "cpp"
     },
     "cmake.ignoreCMakeListsMissing": true
 }

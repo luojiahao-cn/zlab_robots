@@ -12,22 +12,43 @@
 #include <QString>
 #include <QMap>
 #include <frcobot_status/status.h>
+#include <signal.h>
+#include <memory>
 
 class FRCobotStatusGUI : public QMainWindow
 {
 public:
     FRCobotStatusGUI(int argc, char **argv, QWidget *parent = nullptr)
-        : QMainWindow(parent), new_status_received_(false)
+        : QMainWindow(parent), new_status_received_(false), app_quitting_(false)
     {
         // 初始化ROS
         ros::init(argc, argv, "frcobot_status_gui");
-        nh_ = new ros::NodeHandle();
+        nh_ = std::make_unique<ros::NodeHandle>();
+        signal(SIGINT, [](int sig) {
+            ros::shutdown();
+        });
+
+        // 获取robot_id (优先从参数服务器获取)
+        if (!nh_->getParam("robot_id", robot_id_))
+        {
+            // 如果参数服务器没有设置，从命名空间提取
+            std::string ns = ros::this_node::getNamespace();
+            if (ns != "/") {
+                // 去掉开头的"/"
+                if (ns[0] == '/') {
+                    ns = ns.substr(1);
+                }
+                robot_id_ = ns;
+            } else {
+                robot_id_ = "default_robot";
+            }
+        }
         
         // 初始化故障码映射
         initErrorCodeMap();
         
         // 订阅状态话题
-        status_sub_ = nh_->subscribe("/frcobot_status", 10,
+        status_sub_ = nh_->subscribe("frcobot_status", 10,
                                      &FRCobotStatusGUI::statusCallback, this);
 
         initUI();
@@ -37,22 +58,24 @@ public:
         connect(ros_timer_, &QTimer::timeout, this, &FRCobotStatusGUI::handleRosMsgs);
         ros_timer_->start(100); // 10Hz
 
-        setWindowTitle("FR机器人状态监视器");
+        // 设置窗口标题包含机器人ID
+        setWindowTitle(QString("FR机器人状态监视器 - Robot ID: %1").arg(QString::fromStdString(robot_id_)));
         resize(900, 700);
     }
 
     ~FRCobotStatusGUI()
     {
-        delete nh_;
+        // 不需要显式delete nh_，智能指针会自动管理
         delete ros_timer_;
     }
 
 private:
     // ROS相关
-    ros::NodeHandle *nh_;
+    std::unique_ptr<ros::NodeHandle> nh_; // 使用智能指针管理NodeHandle
     ros::Subscriber status_sub_;
     frcobot_status::status current_status_;
     bool new_status_received_;
+    bool app_quitting_; // 添加一个标志表示应用是否正在退出
 
     // 界面组件
     QWidget *central_widget_;
@@ -68,6 +91,8 @@ private:
     QCheckBox *io_checkboxes_[24]; // 简化IO显示
     QLabel *robot_motion_done_label_;
     QLabel *gripper_motion_done_label_;
+    QLabel *robot_id_label_; // 添加机器人ID标签
+    std::string robot_id_; // 添加机器人ID变量
 
     // 定时器
     QTimer *ros_timer_;
@@ -86,23 +111,31 @@ private:
         QGroupBox *overview_group = new QGroupBox("机器人状态概览", central_widget_);
         QGridLayout *overview_layout = new QGridLayout(overview_group);
 
-        overview_layout->addWidget(new QLabel("程序状态:"), 0, 0);
+        // 添加Robot ID显示
+        overview_layout->addWidget(new QLabel("机器人ID:"), 0, 0);
+        robot_id_label_ = new QLabel(QString::fromStdString(robot_id_));
+        // 设置机器人ID标签样式，使其醒目
+        robot_id_label_->setStyleSheet("QLabel { color: blue; font-weight: bold; }");
+        overview_layout->addWidget(robot_id_label_, 0, 1);
+
+        // 原有的程序状态移到后面
+        overview_layout->addWidget(new QLabel("程序状态:"), 0, 2);
         program_state_label_ = new QLabel("未知");
-        overview_layout->addWidget(program_state_label_, 0, 1);
+        overview_layout->addWidget(program_state_label_, 0, 3);
 
-        overview_layout->addWidget(new QLabel("机器人模式:"), 0, 2);
+        overview_layout->addWidget(new QLabel("机器人模式:"), 1, 0);
         robot_mode_label_ = new QLabel("未知");
-        overview_layout->addWidget(robot_mode_label_, 0, 3);
+        overview_layout->addWidget(robot_mode_label_, 1, 1);
 
-        overview_layout->addWidget(new QLabel("错误代码:"), 1, 0);
+        overview_layout->addWidget(new QLabel("错误代码:"), 1, 2);
         error_code_label_ = new QLabel("0");
-        overview_layout->addWidget(error_code_label_, 1, 1);
+        overview_layout->addWidget(error_code_label_, 1, 3);
 
-        overview_layout->addWidget(new QLabel("故障描述:"), 1, 2);
+        overview_layout->addWidget(new QLabel("故障描述:"), 2, 0);
         error_description_label_ = new QLabel("无故障");
         // 设置错误描述标签的样式
         error_description_label_->setStyleSheet("QLabel { color: green; font-weight: bold; }");
-        overview_layout->addWidget(error_description_label_, 1, 3);
+        overview_layout->addWidget(error_description_label_, 2, 1);
 
         main_layout->addWidget(overview_group);
 
@@ -178,8 +211,23 @@ private:
         new_status_received_ = true;
     }
 
+    // ROS shutdown回调
+    void rosShutdownCallback()
+    {
+        app_quitting_ = true;
+        QMetaObject::invokeMethod(qApp, "quit", Qt::QueuedConnection);
+    }
+
     void handleRosMsgs()
     {
+        // 检查ROS是否仍在运行
+        if (!ros::ok() && !app_quitting_)
+        {
+            app_quitting_ = true;
+            QApplication::quit();
+            return;
+        }
+        
         ros::spinOnce();
 
         if (new_status_received_)
@@ -294,7 +342,14 @@ private:
 int main(int argc, char **argv)
 {
     QApplication app(argc, argv);
+    
+    // 确保应用程序可以通过信号正确退出
+    signal(SIGINT, [](int sig) {
+        QApplication::quit();
+    });
+    
     FRCobotStatusGUI gui(argc, argv);
     gui.show();
+    
     return app.exec();
 }
