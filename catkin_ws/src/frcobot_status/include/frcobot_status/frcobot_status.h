@@ -54,8 +54,13 @@ class FrRobotStatusCtrl
         void read();
         void update();
         void run();
+        bool isConnected() const { return is_connected_; }
 
     private:
         ros::NodeHandle nh_;
         ros::Publisher frrobot_status_;
+        bool is_connected_ = false;
+        ros::Time last_recv_time_;
+        bool first_read_ = true;
+        const double RECV_TIMEOUT = 2.0; // 2秒超时
 };

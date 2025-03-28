@@ -7,22 +7,24 @@
 
 int main(int argc, char** argv)
 {
-  ros::init(argc, argv, "frrobot_hw_interface");
-  ros::NodeHandle nh;
+    setlocale(LC_CTYPE, "zh_CN.utf8");
 
-  // NOTE: We run the ROS loop in a separate thread as external calls such
-  // as service callbacks to load controllers can block the (main) control loop
-  ros::AsyncSpinner spinner(3);
-  spinner.start();
+    ros::init(argc, argv, "frrobot_hw_interface");
+    ros::NodeHandle nh;
 
-  // Create the hardware interface specific to your robot
+    // NOTE: We run the ROS loop in a separate thread as external calls such
+    // as service callbacks to load controllers can block the (main) control loop
+    ros::AsyncSpinner spinner(3);
+    spinner.start();
+
+    // Create the hardware interface specific to your robot
   boost::shared_ptr<frrobot_control::FrRobotHWInterface> frrobot_hw_interface
     (new frrobot_control::FrRobotHWInterface(nh));
-  frrobot_hw_interface->init();
+    frrobot_hw_interface->init();
 
-  // Start the control loop
-  ros_control_boilerplate::GenericHWControlLoop control_loop(nh, frrobot_hw_interface);
-  control_loop.run(); // Blocks until shutdown signal recieved
+    // Start the control loop
+    ros_control_boilerplate::GenericHWControlLoop control_loop(nh, frrobot_hw_interface);
+    control_loop.run(); // Blocks until shutdown signal recieved
 
-  return 0;
+    return 0;
 }

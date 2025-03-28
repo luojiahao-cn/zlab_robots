@@ -10,6 +10,7 @@
 #include <QCheckBox>
 #include <QTimer>
 #include <QString>
+#include <QMap>
 #include <frcobot_status/status.h>
 
 class FRCobotStatusGUI : public QMainWindow
@@ -21,7 +22,10 @@ public:
         // 初始化ROS
         ros::init(argc, argv, "frcobot_status_gui");
         nh_ = new ros::NodeHandle();
-
+        
+        // 初始化故障码映射
+        initErrorCodeMap();
+        
         // 订阅状态话题
         status_sub_ = nh_->subscribe("/frcobot_status", 10,
                                      &FRCobotStatusGUI::statusCallback, this);
@@ -55,6 +59,7 @@ private:
     QLabel *program_state_label_;
     QLabel *robot_mode_label_;
     QLabel *error_code_label_;
+    QLabel *error_description_label_; // 添加故障描述标签
     QProgressBar *joint_position_bars_[6];
     QLabel *joint_position_values_[6];
     QLabel *tool_position_labels_[6];
@@ -66,6 +71,9 @@ private:
 
     // 定时器
     QTimer *ros_timer_;
+
+    // 故障码映射
+    QMap<int, QString> error_code_map_;
 
     void initUI()
     {
@@ -89,6 +97,12 @@ private:
         overview_layout->addWidget(new QLabel("错误代码:"), 1, 0);
         error_code_label_ = new QLabel("0");
         overview_layout->addWidget(error_code_label_, 1, 1);
+
+        overview_layout->addWidget(new QLabel("故障描述:"), 1, 2);
+        error_description_label_ = new QLabel("无故障");
+        // 设置错误描述标签的样式
+        error_description_label_->setStyleSheet("QLabel { color: green; font-weight: bold; }");
+        overview_layout->addWidget(error_description_label_, 1, 3);
 
         main_layout->addWidget(overview_group);
 
@@ -139,6 +153,23 @@ private:
         motion_layout->addWidget(gripper_motion_done_label_, 0, 3);
 
         main_layout->addWidget(motion_status_group);
+    }
+
+    void initErrorCodeMap()
+    {
+        error_code_map_[0] = "无故障";
+        error_code_map_[1] = "驱动器故障";
+        error_code_map_[2] = "超出软限位故障";
+        error_code_map_[3] = "碰撞故障";
+        error_code_map_[4] = "奇异位姿";
+        error_code_map_[5] = "从站错误";
+        error_code_map_[6] = "指令点错误";
+        error_code_map_[7] = "IO错误";
+        error_code_map_[8] = "夹爪错误";
+        error_code_map_[9] = "文件错误";
+        error_code_map_[10] = "参数错误";
+        error_code_map_[11] = "扩展轴超出软限位错误";
+        error_code_map_[12] = "关节配置警告";
     }
 
     void statusCallback(const frcobot_status::status::ConstPtr &msg)
@@ -200,7 +231,25 @@ private:
         robot_mode_label_->setText(mode_str);
 
         // 更新错误代码
-        error_code_label_->setText(QString::number(current_status_.error_code));
+        int error_code = current_status_.error_code;
+        error_code_label_->setText(QString::number(error_code));
+
+        // 更新故障描述
+        if (error_code_map_.contains(error_code)) {
+            error_description_label_->setText(error_code_map_[error_code]);
+            
+            // 根据故障严重性更改颜色
+            if (error_code == 0) {
+                error_description_label_->setStyleSheet("QLabel { color: green; font-weight: bold; }");
+            } else if (error_code <= 4) {
+                error_description_label_->setStyleSheet("QLabel { color: red; font-weight: bold; }");
+            } else {
+                error_description_label_->setStyleSheet("QLabel { color: orange; font-weight: bold; }");
+            }
+        } else {
+            error_description_label_->setText("未知故障");
+            error_description_label_->setStyleSheet("QLabel { color: red; font-weight: bold; }");
+        }
 
         // 更新关节位置
         for (int i = 0; i < 6 && i < current_status_.cur_joints_pose.size(); i++)
