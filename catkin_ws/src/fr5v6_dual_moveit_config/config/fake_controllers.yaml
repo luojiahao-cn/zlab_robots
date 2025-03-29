@@ -34,8 +34,8 @@ controller_list:
       - robot2_j6
 initial:  # Define initial robot poses per group
   - group: robot1
-    pose: zero
+    pose: ready
   - group: robot2
-    pose: zero
+    pose: ready
   - group: dual_robots
     pose: ready

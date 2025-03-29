@@ -13,8 +13,6 @@ Maximum weight of end-effector: 5kg
 ## Structure
 
 The project is structured as follows:
-- **apriltag**: Used for visual fiducial marker detection and localization.
-  - **apriltag_ros**
 - **MoveIt!**: Used for motion planning and execution.
   - **fr5v6_dual_moveit_config**: Used for motion planning and configuration of dual robot arms.
   - **fr5v6_single_moveit_config**: Used for motion planning and configuration of a single robot arm.
@@ -33,14 +31,20 @@ To install and set up the project, follow these steps:
     cd zlab_robots
     ```
 
-2. Initialize and update submodules:
+2. Install dependencies:
+    In the workspace's `src` directory, run the following command:
     ```bash
-    git submodule update --init --recursive
+    cd catkin_ws/src
+    rosdep install --from-paths . --ignore-src -r -y
+    sudo apt-get install ros-noetic-moveit
+    sudo apt-get install ros-noetic-trac-ik
+    sudo apt-get install ros-noetic-ros-controllers
     ```
 
 3. Build the workspace:
+    In the workspace's `catkin_ws` directory, run the following command:
     ```bash
-    cd catkin_ws
+    cd ..
     catkin_make
     ```
 
