@@ -1,3 +1,0 @@
-[submodule "catkin_ws/src/apriltag_ros"]
-	path = catkin_ws/src/apriltag_ros
-	url = https://github.com/luojiahao-cn/apriltag_ros.git
