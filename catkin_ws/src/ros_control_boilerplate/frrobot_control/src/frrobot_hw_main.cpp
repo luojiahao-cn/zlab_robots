@@ -16,7 +16,7 @@ int main(int argc, char** argv)
     spinner.start();
 
     // Create the hardware interface specific to your robot
-  boost::shared_ptr<frrobot_control::FrRobotHWInterface> frrobot_hw_interface
+    boost::shared_ptr<frrobot_control::FrRobotHWInterface> frrobot_hw_interface
     (new frrobot_control::FrRobotHWInterface(nh));
     frrobot_hw_interface->init();
 
