@@ -99,3 +99,50 @@ To install and set up the project, follow these steps:
     roslaunch frcobot_status frcobot_status.launch
     ```
     This will launch the status feedback interface, allowing you to view real-time information about the robot arm's state, including joint positions, tool positions, and error codes.
+
+
+## Common Issues
+
+### Robot Arm Motion Stuttering
+
+If you experience stuttering in the robot arm's motion, follow these steps to diagnose and resolve the issue:
+
+1. Enable Control Loop Monitoring:
+   Uncomment the following code in `catkin_ws/src/ros_control_boilerplate/src/generic_hw_control_loop.cpp`:
+   ```cpp
+   ROS_WARN_STREAM_NAMED(name_, "desired update period of " << desired_update_period_
+                               << ", cycle time: " << elapsed_time_
+                               << ", exceeded by: " << cycle_time_error
+                               << ",> threshold: " << cycle_time_error_threshold_);
+   ```
+
+2. Monitor Warning Messages:
+   - Watch for cycle time warnings indicating the control loop cannot maintain the desired frequency
+   - The warning will show the desired period, actual cycle time, and threshold exceedance
+
+3. Solutions:
+   - Reduce the control frequency by modifying the `control_frequency` parameter
+   - Improve computer performance by checking CPU usage and closing unnecessary processes
+   - Optimize network connection between the robot and controller
+
+### Other Common Issues
+
+#### Connection Problems
+If you encounter connection errors, verify:
+- Robot IP address is correct
+- Network connection is stable
+- Firewall settings allow communication on required ports
+
+#### Planning Failures
+If motion planning fails, check:
+- Target position is within workspace
+- No collision present
+- Planning parameters are appropriate
+
+#### Error Messages
+Common error messages and solutions:
+- "Connection lost with robot": Check network connectivity
+- "Failed to receive joint states": Verify robot status and connection
+- "Control loop cycle time exceeded": Adjust control frequency or system resources
+
+For additional support or specific issues not covered here, please refer to the documentation or contact technical support.

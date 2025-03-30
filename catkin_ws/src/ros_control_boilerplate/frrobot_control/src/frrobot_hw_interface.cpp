@@ -43,38 +43,41 @@ namespace frrobot_control
     FrRobotHWInterface::FrRobotHWInterface(ros::NodeHandle &nh, urdf::Model *urdf_model)
         : ros_control_boilerplate::GenericHWInterface(nh, urdf_model)
     {
-        std::string robot_ip;
-        if (!nh.getParam("robot_ip", robot_ip))
+        if (!nh.getParam("robot_ip", robot_ip_))
         {
             ROS_ERROR("Failed to get param 'robot_ip'");
-            robot_ip = "192.168.31.202";
-            ROS_WARN("Param 'robot_ip' not found, using default IP: %s", robot_ip.c_str());
+            robot_ip_ = "192.168.31.202";
+            ROS_WARN("Param 'robot_ip' not found, using default IP: %s", robot_ip_.c_str());
         }
 
         memset(&serverSendAddr, 0, sizeof(serverSendAddr));
         serverSendAddr.sin_family = AF_INET;
-        serverSendAddr.sin_addr.s_addr = inet_addr(robot_ip.c_str());
+        serverSendAddr.sin_addr.s_addr = inet_addr(robot_ip_.c_str());
         serverSendAddr.sin_port = htons(PORT_CMD);
 
         if ((confd = socket(AF_INET, SOCK_STREAM, 0)) < 0)
         {
-            ROS_ERROR("Failed to create socket: %s", strerror(errno));
+            ROS_ERROR("Failed to create socket for robot at %s: %s", 
+                      robot_ip_.c_str(), strerror(errno));
             exit(1);
         }
 
         // 设置 TCP keepalive
         int keepalive = 1;
         if (setsockopt(confd, SOL_SOCKET, SO_KEEPALIVE, &keepalive, sizeof(keepalive)) < 0) {
-            ROS_ERROR("Failed to set SO_KEEPALIVE: %s", strerror(errno));
+            ROS_ERROR("Failed to set SO_KEEPALIVE for robot at %s: %s", 
+                      robot_ip_.c_str(), strerror(errno));
         }
 
         // 设置发送和接收缓冲区大小
         int buffer_size = MAXLINE;
         if (setsockopt(confd, SOL_SOCKET, SO_SNDBUF, &buffer_size, sizeof(buffer_size)) < 0) {
-            ROS_ERROR("Failed to set SO_SNDBUF: %s", strerror(errno));
+            ROS_ERROR("Failed to set send buffer size for robot at %s: %s", 
+                      robot_ip_.c_str(), strerror(errno));
         }
         if (setsockopt(confd, SOL_SOCKET, SO_RCVBUF, &buffer_size, sizeof(buffer_size)) < 0) {
-            ROS_ERROR("Failed to set SO_RCVBUF: %s", strerror(errno));
+            ROS_ERROR("Failed to set receive buffer size for robot at %s: %s", 
+                      robot_ip_.c_str(), strerror(errno));
         }
 
         // 设置接收超时
@@ -83,18 +86,29 @@ namespace frrobot_control
         timeout.tv_usec = 0;
         if (setsockopt(confd, SOL_SOCKET, SO_RCVTIMEO, &timeout, sizeof(timeout)) < 0)
         {
-            ROS_ERROR("Failed to set SO_RCVTIMEO: %s", strerror(errno));
+            ROS_ERROR("Failed to set receive timeout for robot at %s: %s", 
+                      robot_ip_.c_str(), strerror(errno));
             exit(1);
         }
 
-        ROS_INFO("Connecting to robot at %s:%d", robot_ip.c_str(), PORT_CMD);
+        // Set send timeout
+        if (setsockopt(confd, SOL_SOCKET, SO_SNDTIMEO, &timeout, sizeof(timeout)) < 0)
+        {
+            ROS_ERROR("Failed to set send timeout for robot at %s: %s", 
+                      robot_ip_.c_str(), strerror(errno));
+            exit(1);
+        }
+
+        ROS_INFO("Attempting to connect to robot at %s:%d", robot_ip_.c_str(), PORT_CMD);
         if (connect(confd, (struct sockaddr *)&serverSendAddr, sizeof(serverSendAddr)) < 0)
         {
-            ROS_ERROR("Failed to connect: %s", strerror(errno));
+            ROS_ERROR("Failed to connect to robot at %s:%d: %s", 
+                      robot_ip_.c_str(), PORT_CMD, strerror(errno));
             exit(1);
         }
 
-        ROS_INFO_NAMED("frrobot_hw_interface", "FrRobotHWInterface Ready.");
+        ROS_INFO_NAMED("frrobot_hw_interface", "Successfully connected to robot at %s:%d", 
+                       robot_ip_.c_str(), PORT_CMD);
     }
 
 
@@ -121,16 +135,35 @@ namespace frrobot_control
         ssize_t send_length = send(confd, sendCmdLine, strlen(sendCmdLine), MSG_NOSIGNAL);
         if (send_length < 0)
         {
-            ROS_ERROR("Send failed: %s", strerror(errno));
+            if (errno == EPIPE || errno == ECONNRESET) {
+                ROS_ERROR("Connection lost with robot at %s:%d: %s", 
+                         robot_ip_.c_str(), PORT_CMD, strerror(errno));
+                exit(1);
+            }
+            ROS_ERROR("Send failed to %s:%d: %s", 
+                     robot_ip_.c_str(), PORT_CMD, strerror(errno));
             return;
         }
 
         // 清空接收缓冲区
         memset(recvLine, 0, sizeof(recvLine));
         ssize_t recv_length = recv(confd, recvLine, sizeof(recvLine)-1, 0);
-        if (recv_length < 0 && errno != EAGAIN)
+        if (recv_length < 0)
         {
-            ROS_ERROR("Receive failed: %s", strerror(errno));
+            if (errno == EAGAIN || errno == EWOULDBLOCK)
+            {
+                ROS_WARN("Receive timeout while waiting for response from %s:%d", 
+                        robot_ip_.c_str(), PORT_CMD);
+                return;
+            }
+            else if (errno == ECONNRESET || errno == ETIMEDOUT)
+            {
+                ROS_ERROR("Connection lost with robot at %s:%d: %s", 
+                         robot_ip_.c_str(), PORT_CMD, strerror(errno));
+                exit(1);
+            }
+            ROS_ERROR("Failed to receive data from %s:%d: %s", 
+                     robot_ip_.c_str(), PORT_CMD, strerror(errno));
             return;
         }
     }
@@ -181,9 +214,26 @@ namespace frrobot_control
                 ROS_ERROR("Failed to parse joint data: %s", e.what());
             }
         }
-        else if (recv_length < 0 && errno != EAGAIN)
-        {
-            ROS_ERROR("Receive failed: %s", strerror(errno));
+        else if (recv_length == 0) {
+            ROS_ERROR("Connection closed by robot at %s:%d", 
+                     robot_ip_.c_str(), PORT_CMD);
+            exit(1);
+        } 
+        else if (recv_length < 0) {
+            if (errno == EAGAIN || errno == EWOULDBLOCK)
+            {
+                ROS_WARN("Receive timeout while reading joint states from %s:%d", 
+                        robot_ip_.c_str(), PORT_CMD);
+                return;
+            }
+            else if (errno == ECONNRESET || errno == ETIMEDOUT)
+            {
+                ROS_ERROR("Connection lost while reading joint states from %s:%d: %s", 
+                         robot_ip_.c_str(), PORT_CMD, strerror(errno));
+                exit(1);
+            }
+            ROS_ERROR("Failed to receive joint states from %s:%d: %s", 
+                     robot_ip_.c_str(), PORT_CMD, strerror(errno));
             return;
         }
     }
@@ -221,5 +271,7 @@ namespace frrobot_control
         // ----------------------------------------------------
         // ----------------------------------------------------
     }
+
+
 
 } // namespace frrobot_control

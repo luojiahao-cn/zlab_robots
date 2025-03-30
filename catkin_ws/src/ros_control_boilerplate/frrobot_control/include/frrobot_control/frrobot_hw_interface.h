@@ -30,25 +30,18 @@ namespace frrobot_control
       virtual void enforceLimits(ros::Duration &period);
 
     private:
-      // 线程相关成员
-      std::thread comm_thread_;
-      std::mutex joints_mutex_;
-      std::mutex socket_mutex_;
-      std::atomic<bool> is_running_;
-      std::atomic<bool> need_reconnect_;
-      std::condition_variable cmd_cv_;
-      bool has_new_command_;
+      // TCP通信相关
+      std::string robot_ip_;
+      int socket_fd_;
       
-      // 通信线程相关函数
-      void communicationThread();
-      void socketReconnect();
-      bool sendCommand(const std::string& cmd, std::string& response);
-      bool getJointPositions();
-      
-      // 存储当前关节状态和命令
-      float cached_joint_positions_[6];
-      float cached_joint_commands_[6];
-      float a_, v_, t_, lat_, gain_;
+      // 运动参数
+      float joints_[6];        // 关节命令值
+      float joints_state_[6];  // 关节状态值
+      float a_;                // 加速度
+      float v_;                // 速度
+      float t_;                // 周期
+      float lat_;              // 滞后时间
+      float gain_;             // 增益
 
   }; // class
 

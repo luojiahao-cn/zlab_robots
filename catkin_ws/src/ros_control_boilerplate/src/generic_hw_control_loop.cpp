@@ -59,7 +59,7 @@ namespace ros_control_boilerplate
         // ROS_WARN_STREAM_NAMED(name_, "desired update period of " << desired_update_period_
         //                             << ", cycle time: " << elapsed_time_
         //                             << ", exceeded by: " << cycle_time_error
-        //                             << ", threshold: " << cycle_time_error_threshold_);
+        //                             << ",> threshold: " << cycle_time_error_threshold_);
     }
     else
     {
