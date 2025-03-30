@@ -34,7 +34,7 @@ char recvLine[MAXLINE];
 char sendCmdLine[MAXLINE];
 char sendStaLine[MAXLINE];
 char recv_buf[MAXLINE];
-char send_buf[MAXLINE - 200];
+char send_buf[MAXLINE - 50];
 struct sockaddr_in serverSendAddr;
 
 namespace frrobot_control
@@ -51,156 +51,140 @@ namespace frrobot_control
             ROS_WARN("Param 'robot_ip' not found, using default IP: %s", robot_ip.c_str());
         }
 
-        // Set the server address and listening port through the struct sockaddr_in structure;
         memset(&serverSendAddr, 0, sizeof(serverSendAddr));
         serverSendAddr.sin_family = AF_INET;
         serverSendAddr.sin_addr.s_addr = inet_addr(robot_ip.c_str());
         serverSendAddr.sin_port = htons(PORT_CMD);
-        sendaddr_length = sizeof(serverSendAddr);
 
-        // Use socket() to generate a socket file descriptor;
         if ((confd = socket(AF_INET, SOCK_STREAM, 0)) < 0)
         {
-            ROS_ERROR("socket() error");
-            perror("socket() error");
+            ROS_ERROR("Failed to create socket: %s", strerror(errno));
             exit(1);
         }
-        ROS_INFO("Try connect to server IP: %s, port: %d", robot_ip.c_str(), PORT_CMD);
-        if (connect(confd, (struct sockaddr *)&serverSendAddr, sizeof(serverSendAddr)) < 0)
-        {
-            ROS_ERROR("connect() error");
-            perror("connect() error");
-            exit(1);
+
+        // 设置 TCP keepalive
+        int keepalive = 1;
+        if (setsockopt(confd, SOL_SOCKET, SO_KEEPALIVE, &keepalive, sizeof(keepalive)) < 0) {
+            ROS_ERROR("Failed to set SO_KEEPALIVE: %s", strerror(errno));
+        }
+
+        // 设置发送和接收缓冲区大小
+        int buffer_size = MAXLINE;
+        if (setsockopt(confd, SOL_SOCKET, SO_SNDBUF, &buffer_size, sizeof(buffer_size)) < 0) {
+            ROS_ERROR("Failed to set SO_SNDBUF: %s", strerror(errno));
+        }
+        if (setsockopt(confd, SOL_SOCKET, SO_RCVBUF, &buffer_size, sizeof(buffer_size)) < 0) {
+            ROS_ERROR("Failed to set SO_RCVBUF: %s", strerror(errno));
         }
 
         // 设置接收超时
         struct timeval timeout;
-        timeout.tv_sec = 2;  // 超时时间（秒）
-        timeout.tv_usec = 0; // 超时时间（微秒）
-        if (setsockopt(confd, SOL_SOCKET, SO_RCVTIMEO, (const char *)&timeout, sizeof(timeout)) < 0)
+        timeout.tv_sec = 2;
+        timeout.tv_usec = 0;
+        if (setsockopt(confd, SOL_SOCKET, SO_RCVTIMEO, &timeout, sizeof(timeout)) < 0)
         {
-            ROS_ERROR("setsockopt() error");
-            perror("setsockopt() error");
+            ROS_ERROR("Failed to set SO_RCVTIMEO: %s", strerror(errno));
             exit(1);
         }
 
-        ROS_INFO("connected to server");
+        ROS_INFO("Connecting to robot at %s:%d", robot_ip.c_str(), PORT_CMD);
+        if (connect(confd, (struct sockaddr *)&serverSendAddr, sizeof(serverSendAddr)) < 0)
+        {
+            ROS_ERROR("Failed to connect: %s", strerror(errno));
+            exit(1);
+        }
 
         ROS_INFO_NAMED("frrobot_hw_interface", "FrRobotHWInterface Ready.");
     }
 
-    void FrRobotHWInterface::reconnect()
-    {
-        close(confd);
-        ROS_INFO("Reconnecting to server...");
-        if ((confd = socket(AF_INET, SOCK_STREAM, 0)) < 0)
-        {
-            ROS_ERROR("socket() error");
-            perror("socket() error");
-            exit(1);
-        }
-        if (connect(confd, (struct sockaddr *)&serverSendAddr, sizeof(serverSendAddr)) < 0)
-        {
-            ROS_ERROR("connect() error");
-            perror("connect() error");
-            exit(1);
-        }
-        ROS_INFO("Reconnected to server");
-    }
 
     void FrRobotHWInterface::write(ros::Duration &elapsed_time)
     {
-        // ROS_INFO("write");
-        // Safety
         enforceLimits(elapsed_time);
+
+        // 清空发送缓冲区
+        memset(send_buf, 0, sizeof(send_buf));
+        memset(sendCmdLine, 0, sizeof(sendCmdLine));
 
         for (std::size_t joint_id = 0; joint_id < num_joints_; ++joint_id)
         {
             joints[joint_id] = joint_position_command_[joint_id] * 180 / M_PI;
         }
-        // printf("joints: %f,%f,%f,%f,%f,%f;\n", joints[0],joints[1],joints[2],joints[3],joints[4],joints[5]);
-        sprintf(send_buf, "ServoJ(%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f)", joints[0], joints[1], joints[2], joints[3], joints[4], joints[5], a, v, t, lat, gain);
+
+        snprintf(send_buf, sizeof(send_buf), "ServoJ(%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f)", 
+                joints[0], joints[1], joints[2], joints[3], joints[4], joints[5], 
+                a, v, t, lat, gain);
 
         len = strlen(send_buf);
-        sprintf(sendCmdLine, "/f/bIII123III376III%dIII%sIII/b/f", len, send_buf);
-        // Send data to the server, send();
-        int send_length = 0;
-        send_length = send(confd, sendCmdLine, sizeof(sendCmdLine), 0);
+        snprintf(sendCmdLine, sizeof(sendCmdLine), "/f/bIII123III376III%dIII%sIII/b/f", len, send_buf);
+
+        ssize_t send_length = send(confd, sendCmdLine, strlen(sendCmdLine), MSG_NOSIGNAL);
         if (send_length < 0)
         {
-            perror("send() error");
+            ROS_ERROR("Send failed: %s", strerror(errno));
+            return;
         }
-        else
+
+        // 清空接收缓冲区
+        memset(recvLine, 0, sizeof(recvLine));
+        ssize_t recv_length = recv(confd, recvLine, sizeof(recvLine)-1, 0);
+        if (recv_length < 0 && errno != EAGAIN)
         {
-            // printf("write_sendmsg: %s;\n", sendCmdLine);
-        }
-        int recv_length = 0;
-        // Receive data from the server, recv();
-        recvLine[MAXLINE - 1] = '\0';
-        recv_length = recv(confd, recvLine, sizeof(recvLine), 0);
-        if (recv_length <= 0)
-        {
-            perror("recv");
-            reconnect();
-        }
-        else
-        {
-            // printf("write_recvmsg: %s;\n", recvLine);
+            ROS_ERROR("Receive failed: %s", strerror(errno));
+            return;
         }
     }
 
     void FrRobotHWInterface::read(ros::Duration &elapsed_time)
     {
-        int send_length_sta = 0;
-        sprintf(sendStaLine, "/f/bIII123III375III25IIIGetActualJointPosRadian()III/b/f");
-        send_length_sta = send(confd, sendStaLine, sizeof(sendStaLine), 0);
-        if (send_length_sta < 0)
+        // 清空发送缓冲区
+        memset(sendStaLine, 0, sizeof(sendStaLine));
+        snprintf(sendStaLine, sizeof(sendStaLine), "/f/bIII123III375III25IIIGetActualJointPosRadian()III/b/f");
+
+        ssize_t send_length = send(confd, sendStaLine, strlen(sendStaLine), MSG_NOSIGNAL);
+        if (send_length < 0)
         {
-            perror("sendto() error");
-            exit(1);
-        }
-        else
-        {
-            // printf("read_sendmsg: %s;\n", sendStaLine);
+            ROS_ERROR("Send failed: %s", strerror(errno));
+            return;
         }
 
-        // ROS_INFO("read");
+        // 清空接收缓冲区
+        memset(recvLine, 0, sizeof(recvLine));
+        ssize_t recv_length = recv(confd, recvLine, sizeof(recvLine)-1, 0);
+        if (recv_length > 0)
+        {
+            try {
+                int pos = 0;
+                int jointsDataLen = 0;
+                std::string tempJoints = recvLine;
+                for (int i = 0; i < 3; i++)
+                {
+                    pos = tempJoints.find("III") + 3;
+                    tempJoints = tempJoints.substr(pos);
+                }
+                pos = tempJoints.find("III");
+                jointsDataLen = std::stoi(tempJoints.substr(0, pos));
+                tempJoints = tempJoints.substr(pos + 3, jointsDataLen);
 
-        int recv_length = 0;
-        recvLine[MAXLINE - 1] = '\0';
-        // 接收服务器的数据，recvfrom()；
-        recv_length = recv(confd, recvLine, sizeof(recvLine), 0);
-        if (recv_length <= 0)
-        {
-            perror("recv");
-            reconnect();
+                for (int i = 0; i < 6; i++)
+                {
+                    pos = tempJoints.find(",");
+                    joints_sta[i] = std::stof(tempJoints.substr(0, pos));
+                    tempJoints = tempJoints.substr(pos + 1);
+                }
+
+                for (std::size_t joint_id = 0; joint_id < num_joints_; ++joint_id)
+                {
+                    joint_position_[joint_id] = joints_sta[joint_id];
+                }
+            } catch (const std::exception& e) {
+                ROS_ERROR("Failed to parse joint data: %s", e.what());
+            }
         }
-        else
+        else if (recv_length < 0 && errno != EAGAIN)
         {
-            //   printf("read_recvmsg: %s;\n", recvLine);
-            int pos = 0;
-            int jointsDataLen = 0;
-            std::string tempJoints = recvLine;
-            for (int i = 0; i < 3; i++)
-            {
-                pos = tempJoints.find("III") + 3;
-                tempJoints = tempJoints.substr(pos);
-            }
-            pos = tempJoints.find("III");
-            jointsDataLen = stoi(tempJoints.substr(0, pos));
-            tempJoints = tempJoints.substr(pos + 3, jointsDataLen);
-            for (int i = 0; i < 6; i++)
-            {
-                pos = tempJoints.find(",");
-                joints_sta[i] = stof(tempJoints.substr(0, pos));
-                tempJoints = tempJoints.substr(pos + 1);
-            }
-            for (std::size_t joint_id = 0; joint_id < num_joints_; ++joint_id)
-            {
-                joint_position_[joint_id] = joints_sta[joint_id];
-                // joint_position_[joint_id] = joint_position_command_[joint_id];
-            }
-            //   printf("recvmsg: %f,%f,%f,%f,%f,%f\n", joints_sta[0],joints_sta[1],joints_sta[2],joints_sta[3],joints_sta[4],joints_sta[5]);
+            ROS_ERROR("Receive failed: %s", strerror(errno));
+            return;
         }
     }
 

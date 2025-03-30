@@ -56,10 +56,19 @@ namespace ros_control_boilerplate
     const double cycle_time_error = (elapsed_time_ - desired_update_period_).toSec();
     if (cycle_time_error > cycle_time_error_threshold_)
     {
-        ROS_WARN_STREAM_NAMED(name_, "Cycle time exceeded error threshold by: "
-                                       << cycle_time_error << ", cycle time: " << elapsed_time_
-                                       << ", threshold: " << cycle_time_error_threshold_);
+        // ROS_WARN_STREAM_NAMED(name_, "desired update period of " << desired_update_period_
+        //                             << ", cycle time: " << elapsed_time_
+        //                             << ", exceeded by: " << cycle_time_error
+        //                             << ", threshold: " << cycle_time_error_threshold_);
     }
+    else
+    {
+        // ROS_INFO_STREAM_NAMED(name_, "desired update period of " << desired_update_period_
+        //                             << ", cycle time: " << elapsed_time_
+        //                             << ", exceeded by: " << cycle_time_error
+        //                             << ", within threshold: " << cycle_time_error_threshold_);
+    }
+    
 
     // Output
     hardware_interface_->read(now, elapsed_time_);

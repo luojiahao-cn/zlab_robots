@@ -20,11 +20,6 @@ namespace frrobot_control
        */
       FrRobotHWInterface(ros::NodeHandle &nh, urdf::Model *urdf_model = NULL);
 
-      /**
-       * @brief Destructor
-       */
-      virtual ~FrRobotHWInterface();
-
       /** @brief Read the state from the robot hardware. */
       virtual void read(ros::Duration &elapsed_time);
 
@@ -33,9 +28,6 @@ namespace frrobot_control
 
       /** @brief Enforce limits for all values before writing */
       virtual void enforceLimits(ros::Duration &period);
-
-      /** @brief Reconnect to the robot */
-      void reconnect();
 
     private:
       // 线程相关成员
