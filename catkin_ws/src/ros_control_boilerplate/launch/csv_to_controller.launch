@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+<launch>
+    <!-- 定义参数，设置默认值 -->
+    <arg name="csv_file" default="/home/lawkaho/recorded_trajectory_1.csv" />
+
+    <!-- 启动csv_to_controller节点 -->
+    <node name="csv_to_controller_node"
+        pkg="ros_control_boilerplate"
+        type="csv_to_controller_main"
+        output="screen">
+
+        <!-- 参数配置 -->
+        <param name="csv_path" value="$(arg csv_file)" />
+        <param name="joint_trajectory_action"
+            value="/robot2_controller/follow_joint_trajectory" />
+        <param name="controller_state_topic"
+            value="/robot2_controller/state" />
+    </node>
+</launch>

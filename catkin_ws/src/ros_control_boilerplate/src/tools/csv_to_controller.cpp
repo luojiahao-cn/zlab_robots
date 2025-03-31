@@ -98,19 +98,59 @@ void CSVToController::loadAndRunCSV(const std::string& file_name)
   control_msgs::FollowJointTrajectoryGoal pre_goal; // moving to start state
   control_msgs::FollowJointTrajectoryGoal goal; // csv file
 
-  // Populate joint names
-  goal.trajectory.joint_names.push_back("joint_a1");
-  goal.trajectory.joint_names.push_back("joint_a2");
-  goal.trajectory.joint_names.push_back("joint_a3");
-  goal.trajectory.joint_names.push_back("joint_a4");
-  goal.trajectory.joint_names.push_back("joint_a5");
-  goal.trajectory.joint_names.push_back("joint_a6");
-  goal.trajectory.joint_names.push_back("joint_a7");
-  pre_goal.trajectory.joint_names = goal.trajectory.joint_names;
-  double num_joints = goal.trajectory.joint_names.size();
+//   // Populate joint names
+//   goal.trajectory.joint_names.push_back("robot2_j1");
+//   goal.trajectory.joint_names.push_back("robot2_j2");
+//   goal.trajectory.joint_names.push_back("robot2_j3");
+//   goal.trajectory.joint_names.push_back("robot2_j4");
+//   goal.trajectory.joint_names.push_back("robot2_j5");
+//   goal.trajectory.joint_names.push_back("robot2_j6");
+//   //   goal.trajectory.joint_names.push_back("joint_a7");
+//   pre_goal.trajectory.joint_names = goal.trajectory.joint_names;
+//   double num_joints = goal.trajectory.joint_names.size();
 
-  // Skip header
+//   // Skip header
+//   std::getline(input_file, line);
+
+
+  // 读取头部并提取关节名称
   std::getline(input_file, line);
+  std::vector<std::string> joint_names;
+  std::stringstream header_stream(line);
+  std::vector<std::string> header_columns;
+
+  // 读取所有列名
+  while (std::getline(header_stream, cell, ','))
+  {
+      header_columns.push_back(cell);
+  }
+
+  // 提取关节名称
+  for (size_t i = 1; i < header_columns.size(); i += 2)
+  {
+      std::string column_name = header_columns[i];
+      size_t pos = column_name.find("_actual_pos");
+      if (pos != std::string::npos)
+      {
+          std::string joint_name = column_name.substr(0, pos);
+          joint_names.push_back(joint_name);
+          ROS_INFO_STREAM_NAMED("csv_to_controller", "Found joint: " << joint_name);
+      }
+  }
+
+  // 检查是否找到关节
+  if (joint_names.empty())
+  {
+      ROS_ERROR_STREAM_NAMED("csv_to_controller", "Failed to extract joint names from header");
+      return;
+  }
+
+  // 设置关节名称
+  goal.trajectory.joint_names = joint_names;
+  pre_goal.trajectory.joint_names = joint_names;
+  double num_joints = joint_names.size();
+
+  ROS_INFO_STREAM_NAMED("csv_to_controller", "Successfully extracted " << num_joints << " joint names");
 
   // For each line/row
   while (std::getline(input_file, line))
@@ -148,7 +188,12 @@ void CSVToController::loadAndRunCSV(const std::string& file_name)
         ROS_ERROR_STREAM_NAMED("csv_to_controller", "no joint value");
       point.velocities.push_back(atof(cell.c_str()));
 
-      // COMMANDED VEL
+      // ERROR POSITION
+      if (!std::getline(lineStream, cell, ','))
+        ROS_ERROR_STREAM_NAMED("csv_to_controller", "no joint value");
+      // UNUSED
+
+      // ERROR VELOCITY
       if (!std::getline(lineStream, cell, ','))
         ROS_ERROR_STREAM_NAMED("csv_to_controller", "no joint value");
       // UNUSED
@@ -174,6 +219,8 @@ void CSVToController::loadAndRunCSV(const std::string& file_name)
   std::cout << "^^ Goal point " << std::endl;
   pre_goal.trajectory.points.push_back(last_point);
 
+  // Move to start state
+  ROS_INFO_STREAM_NAMED("csv_to_controller", "Moving to start state");
   // Interpolate from first point
   bool done = false;
   double max_velocity = 0.1; // m/s  or radians/s
@@ -193,18 +240,36 @@ void CSVToController::loadAndRunCSV(const std::string& file_name)
     // Position change
     for (std::size_t i = 0; i < num_joints; ++i) // each joint
     {
-      // Do we need to move this joint foward?
-      if (new_point.positions[i] < goal.trajectory.points.front().positions[i])
-      {
-        // Do not allow to go past goal point
-        new_point.positions[i] = std::min(new_point.positions[i] + q_delta,
-                                          goal.trajectory.points.front().positions[i]);
-        new_point.velocities[i] = max_velocity;
-        done = false;
-      } else {
-        // Maintain velocity
-        new_point.velocities[i] = 0;
-      }
+        // 计算与目标位置的差值
+        double position_diff = goal.trajectory.points.front().positions[i] - new_point.positions[i];
+        
+        // 需要移动这个关节吗?
+        if (std::abs(position_diff) > 1e-6)  // 使用小量比较浮点数
+        {
+            done = false;
+            // 根据运动方向确定位置增量
+            double direction = (position_diff > 0) ? 1.0 : -1.0;
+            
+            // 不允许超过目标点
+            new_point.positions[i] = new_point.positions[i] + direction * q_delta;
+            
+            // 确保不会超过目标位置
+            if (direction > 0) {
+                new_point.positions[i] = std::min(new_point.positions[i], 
+                                                goal.trajectory.points.front().positions[i]);
+            } else {
+                new_point.positions[i] = std::max(new_point.positions[i], 
+                                                goal.trajectory.points.front().positions[i]);
+            }
+            
+            // 设置运动速度(保持方向)
+            new_point.velocities[i] = direction * max_velocity;
+        } 
+        else 
+        {
+            // 已达到目标位置,停止运动
+            new_point.velocities[i] = 0;
+        }
     }
     pre_goal.trajectory.points.push_back(new_point);
     last_point = new_point;
@@ -225,10 +290,26 @@ void CSVToController::loadAndRunCSV(const std::string& file_name)
     printPoint(goal.trajectory.points[i]);
   }
 
-  ROS_INFO_STREAM_NAMED("csv_to_controller","Preparing to follow CSV path");
+  ROS_INFO_STREAM_NAMED("csv_to_controller", "Preparing to follow CSV path, Total points: " << goal.trajectory.points.size());
   ros::Duration(0.5).sleep();
   goal.trajectory.header.stamp = ros::Time::now() + ros::Duration(0.5);
   joint_trajectory_action_.sendGoal(goal);
+
+  // Wait for completion
+  joint_trajectory_action_.waitForResult();
+
+  actionlib::SimpleClientGoalState state = joint_trajectory_action_.getState();
+  if (state != actionlib::SimpleClientGoalState::SUCCEEDED)
+  {
+      ROS_ERROR_STREAM("Trajectory execution failed: " << state.toString());
+  }
+  else
+  {
+      ROS_INFO_STREAM("Trajectory execution succeeded: " << state.toString());
+  }
+    // Close file
+    input_file.close();
+    ROS_INFO_STREAM_NAMED("csv_to_controller", "CSVToController Done.");
 }
 
 } // end namespace

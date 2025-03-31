@@ -76,7 +76,7 @@ int main(int argc, char **argv)
     while (ros::ok())
     {
         // Move both arms to 'zero' state
-        moveToState(group_dual, "up",0.3);
+        moveToState(group_dual, "up",0.2);
         rate.sleep();
 
         // Move robot1 to 'up' state

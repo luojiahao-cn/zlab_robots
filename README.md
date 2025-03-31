@@ -4,12 +4,16 @@
 
 Robot arm type: FR5
 
-Arm1: Ram&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ip:192.168.31.202
+- Arm1: Ram&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ip:192.168.31.202
 
-Arm2: Rem&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ip:192.168.31.203
+- Arm2: Rem&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ip:192.168.31.203
 
-Maximum weight of end-effector: 5kg
+- Maximum weight of end-effector: 5kg
 
+Operating System: Ubuntu 20.04 LTS
+  
+- ROS Version: ROS Noetic
+  
 ## Structure
 
 The project is structured as follows:
@@ -39,6 +43,8 @@ To install and set up the project, follow these steps:
     sudo apt-get install ros-noetic-moveit
     sudo apt-get install ros-noetic-trac-ik
     sudo apt-get install ros-noetic-ros-controllers
+    sudo apt-get install ros-noetic-realsense2-camera
+    sudo apt-get install ros-noetic-realsense2-description
     ```
 
 3. Build the workspace:

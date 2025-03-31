@@ -16,7 +16,7 @@
 #include <frrobot_control/RobotError.h>
 #include <frrobot_control/RobotTypes.h>
 
-#define MAXLINE 4096
+#define MAXLINE 1024
 #define PORT_CMD 8080
 
 int confd;
@@ -60,13 +60,6 @@ namespace frrobot_control
             ROS_ERROR("Failed to create socket for robot at %s: %s", 
                       robot_ip_.c_str(), strerror(errno));
             exit(1);
-        }
-
-        // 设置 TCP keepalive
-        int keepalive = 1;
-        if (setsockopt(confd, SOL_SOCKET, SO_KEEPALIVE, &keepalive, sizeof(keepalive)) < 0) {
-            ROS_ERROR("Failed to set SO_KEEPALIVE for robot at %s: %s", 
-                      robot_ip_.c_str(), strerror(errno));
         }
 
         // 设置发送和接收缓冲区大小

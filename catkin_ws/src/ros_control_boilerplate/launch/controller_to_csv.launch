@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<launch>
+    <!-- 启动controller_to_csv节点 -->
+    <node name="controller_to_csv_node"
+        pkg="ros_control_boilerplate"
+        type="controller_to_csv_main"
+        output="screen">
+        <!-- 设置参数 -->
+        <param name="controller_to_csv/record_hz" value="0" />  <!-- 录制频率，设为0表示记录所有消息 -->
+        <!-- 设置话题参数 -->
+        <param name="topic" value="/robot2/robot2_controller/state" />
+        <!-- 设置CSV文件保存路径 -->
+        <param name="csv_path" value="/tmp/recorded_trajectory.csv" />
+    </node>
+</launch>

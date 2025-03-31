@@ -26,7 +26,7 @@ add_message_files(FILES statefb.msg poscmd.msg)
 generate_messages(DEPENDENCIES std_msgs)
 
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${PROJECT_SOURCE_DIR}/cmake)
-# find_package(Gflags REQUIRED)
+find_package(Gflags REQUIRED)
 
 ## System dependencies are found with CMake's conventions
 # find_package(Boost REQUIRED COMPONENTS system)
@@ -104,33 +104,33 @@ target_link_libraries(${PROJECT_NAME}_test_trajectory
   ${catkin_LIBRARIES}
 )
 
-## TOOLS ------------------------------------------------------
+# TOOLS ------------------------------------------------------
 
 # Tool for analyzing controller performance
-# add_library(controller_to_csv src/tools/controller_to_csv.cpp)
-# target_link_libraries(controller_to_csv
-#   ${catkin_LIBRARIES}
-# )
-# add_executable(${PROJECT_NAME}_controller_to_csv_main src/tools/controller_to_csv_main.cpp)
-# set_target_properties(${PROJECT_NAME}_controller_to_csv_main PROPERTIES OUTPUT_NAME controller_to_csv_main PREFIX "")
-# target_link_libraries(${PROJECT_NAME}_controller_to_csv_main
-#   controller_to_csv
-#   ${Gflags_LIBRARIES}
-#   ${catkin_LIBRARIES}
-# )
+add_library(controller_to_csv src/tools/controller_to_csv.cpp)
+target_link_libraries(controller_to_csv
+  ${catkin_LIBRARIES}
+)
+add_executable(${PROJECT_NAME}_controller_to_csv_main src/tools/controller_to_csv_main.cpp)
+set_target_properties(${PROJECT_NAME}_controller_to_csv_main PROPERTIES OUTPUT_NAME controller_to_csv_main PREFIX "")
+target_link_libraries(${PROJECT_NAME}_controller_to_csv_main
+  controller_to_csv
+  ${Gflags_LIBRARIES}
+  ${catkin_LIBRARIES}
+)
 
 # Tool for analyzing controller performance
-# add_library(csv_to_controller src/tools/csv_to_controller.cpp)
-# target_link_libraries(csv_to_controller
-#   ${catkin_LIBRARIES}
-# )
-# add_executable(${PROJECT_NAME}_csv_to_controller_main src/tools/csv_to_controller_main.cpp)
-# set_target_properties(${PROJECT_NAME}_csv_to_controller_main PROPERTIES OUTPUT_NAME csv_to_controller_main PREFIX "")
-# target_link_libraries(${PROJECT_NAME}_csv_to_controller_main
-#   csv_to_controller
-#   ${Gflags_LIBRARIES}
-#   ${catkin_LIBRARIES}
-# )
+add_library(csv_to_controller src/tools/csv_to_controller.cpp)
+target_link_libraries(csv_to_controller
+  ${catkin_LIBRARIES}
+)
+add_executable(${PROJECT_NAME}_csv_to_controller_main src/tools/csv_to_controller_main.cpp)
+set_target_properties(${PROJECT_NAME}_csv_to_controller_main PROPERTIES OUTPUT_NAME csv_to_controller_main PREFIX "")
+target_link_libraries(${PROJECT_NAME}_csv_to_controller_main
+  csv_to_controller
+  ${Gflags_LIBRARIES}
+  ${catkin_LIBRARIES}
+)
 
 # Tool for controlling a robot from keyboard
 add_executable(${PROJECT_NAME}_keyboard_teleop src/tools/keyboard_teleop.cpp)

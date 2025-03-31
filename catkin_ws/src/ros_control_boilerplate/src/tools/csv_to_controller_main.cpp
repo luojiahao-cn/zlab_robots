@@ -41,33 +41,47 @@
 // Command line arguments
 #include <gflags/gflags.h>
 
-DEFINE_string(csv_path, "", "File location to load recoded data from");
-DEFINE_string(joint_trajectory_action, "", "Which action server to send commands to");
-DEFINE_string(controller_state_topic, "", "Where to subscribe the controller state");
 
 int main(int argc, char** argv)
 {
-  google::SetVersionString("0.0.1");
-  google::SetUsageMessage("Utility to load commands from a CSV");
-  google::ParseCommandLineFlags(&argc, &argv, true);
-
   ros::init(argc, argv, "csv_to_controller");
+  ros::NodeHandle nh("~");  // 使用私有命名空间
   ROS_INFO_STREAM_NAMED("main", "Starting CSVToController...");
 
-  // Get file name
-  if (FLAGS_csv_path.empty())
-  {
-    ROS_ERROR_STREAM_NAMED("csv_to_controller","No file name passed in");
-    return 0;
-  }
-  ROS_INFO_STREAM_NAMED("csv_to_controller","Reading from file " << FLAGS_csv_path);
+  // 从参数服务器读取参数
+  std::string csv_path;
+  std::string joint_trajectory_action;
+  std::string controller_state_topic;
 
-  // Allow the action server to recieve and send ros messages
+  // 获取参数，如果获取失败则使用默认值
+  if (!nh.getParam("csv_path", csv_path))
+  {
+    ROS_ERROR_STREAM_NAMED("csv_to_controller", "No csv_path parameter provided");
+    return 1;
+  }
+
+  if (!nh.getParam("joint_trajectory_action", joint_trajectory_action))
+  {
+    ROS_ERROR_STREAM_NAMED("csv_to_controller", "No joint_trajectory_action parameter provided");
+    return 1;
+  }
+
+  if (!nh.getParam("controller_state_topic", controller_state_topic))
+  {
+    ROS_ERROR_STREAM_NAMED("csv_to_controller", "No controller_state_topic parameter provided");
+    return 1;
+  }
+
+  ROS_INFO_STREAM_NAMED("csv_to_controller", "Reading from file " << csv_path);
+  ROS_INFO_STREAM_NAMED("csv_to_controller", "Using action server: " << joint_trajectory_action);
+  ROS_INFO_STREAM_NAMED("csv_to_controller", "Using controller state topic: " << controller_state_topic);
+
+  // 允许动作服务器接收和发送ROS消息
   ros::AsyncSpinner spinner(2);
   spinner.start();
 
-  ros_control_boilerplate::CSVToController converter(FLAGS_joint_trajectory_action, FLAGS_controller_state_topic);
-  converter.loadAndRunCSV(FLAGS_csv_path);
+  ros_control_boilerplate::CSVToController converter(joint_trajectory_action, controller_state_topic);
+  converter.loadAndRunCSV(csv_path);
 
   ROS_INFO_STREAM_NAMED("main", "Shutting down.");
   ros::shutdown();
