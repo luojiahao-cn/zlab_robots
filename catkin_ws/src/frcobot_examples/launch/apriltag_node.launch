@@ -7,7 +7,7 @@
         <arg name="enable_infra2" value="true" />
         <arg name="enable_color" value="true" />
         <!-- <arg name="enable_imu" value="true" /> -->
-        <arg name="unite_imu_method" value="linear_interpolation" />
+        <!-- <arg name="unite_imu_method" value="linear_interpolation" /> -->
     </include>
 
 

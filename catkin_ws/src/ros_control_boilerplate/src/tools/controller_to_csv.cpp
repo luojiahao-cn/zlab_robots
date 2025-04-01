@@ -95,11 +95,14 @@ void ControllerToCSV::stateCB(const control_msgs::JointTrajectoryControllerState
   // Two modes - save all immediately, or only save at certain frequency
   if (recordAll())
   {
-    // Record state
-    states_.push_back(current_state_);
+      current_state_ = *state;
+      // Record state
+      states_.push_back(current_state_);
+      // Record current time
+      timestamps_.push_back(ros::Time::now());
 
-    // Record current time
-    timestamps_.push_back(ros::Time::now());
+      ROS_INFO_STREAM_NAMED(name_, "Recording state: " << current_state_.joint_names.size() << " joints at time: "  
+                                    << current_state_.header.stamp.toSec() << " seconds");
   }
   else // only record at freq
   {

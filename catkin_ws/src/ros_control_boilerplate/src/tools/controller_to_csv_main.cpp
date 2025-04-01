@@ -38,37 +38,40 @@
 
 #include <ros_control_boilerplate/tools/controller_to_csv.h>
 
-// Command line arguments
-#include <gflags/gflags.h>
-
-DEFINE_string(csv_path, "/tmp/recorded_trajectory_1.csv", "File location to save recoded data to");
-DEFINE_string(topic, "/robot2/robot2_controller/state", "ROS topic to subscribe to");
-
 int main(int argc, char** argv)
 {
-  google::SetVersionString("0.0.1");
-  google::SetUsageMessage("Utility to record controller topic to a CSV");
-  google::ParseCommandLineFlags(&argc, &argv, true);
+    ros::init(argc, argv, "controller_to_csv_node");
+    ROS_INFO_STREAM_NAMED("main", "Starting ControllerToCSV...");
 
-  ros::init(argc, argv, "controller_to_csv_node");
-  ROS_INFO_STREAM_NAMED("main", "Starting ControllerToCSV...");
+    // 创建节点句柄
+    ros::NodeHandle nh;
+    ros::NodeHandle private_nh("~");
 
-  // 使用 MultiThreadedSpinner 替代 AsyncSpinner
-  ros::NodeHandle nh;
-  ros::MultiThreadedSpinner spinner(2);
+    // 从参数服务器读取参数
+    std::string csv_path;
+    std::string topic;
+    
+    // 获取参数,设置默认值
+    private_nh.param<std::string>("csv_path", csv_path, "/tmp/recorded_trajectory.csv");
+    private_nh.param<std::string>("topic", topic, "/robot2/robot2_controller/state");
 
-  const std::string topic = FLAGS_topic;
-  const std::string csv_path = FLAGS_csv_path;
-  ros_control_boilerplate::ControllerToCSV converter(topic);
-  converter.startRecording(csv_path);
+    ROS_INFO_STREAM_NAMED("main", "CSV path: " << csv_path);
+    ROS_INFO_STREAM_NAMED("main", "Recording topic: " << topic);
 
-  ROS_INFO_STREAM_NAMED("main","Type Ctrl-C to end and save");
+    // 使用多线程spinner
+    ros::MultiThreadedSpinner spinner(2);
+
+    // 创建转换器并开始记录
+    ros_control_boilerplate::ControllerToCSV converter(topic);
+    converter.startRecording(csv_path);
+
+    ROS_INFO_STREAM_NAMED("main","Type Ctrl-C to end and save");
   
-  // 使用 spinner.spin() 替代 ros::spin()
-  spinner.spin();
+    // 使用 spinner.spin() 替代 ros::spin()
+    spinner.spin();
 
-  ROS_INFO_STREAM_NAMED("main", "Shutting down.");
-  ros::shutdown();
+    ROS_INFO_STREAM_NAMED("main", "Shutting down.");
+    ros::shutdown();
 
   return 0;
 }

@@ -8,8 +8,10 @@
         <!-- 设置参数 -->
         <param name="controller_to_csv/record_hz" value="0" />  <!-- 录制频率，设为0表示记录所有消息 -->
         <!-- 设置话题参数 -->
-        <param name="topic" value="/robot2/robot2_controller/state" />
+        <!-- <param name="topic" value="/robot2/robot2_controller/state" /> -->
+        <param name="topic" value="/robot2_controller/state" />
         <!-- 设置CSV文件保存路径 -->
-        <param name="csv_path" value="/tmp/recorded_trajectory.csv" />
+        <param name="csv_path"
+            value="/home/lawkaho/workshop/zlab_robots/catkin_ws/data/recorded_paths/recorded_trajectory.csv" />
     </node>
 </launch>

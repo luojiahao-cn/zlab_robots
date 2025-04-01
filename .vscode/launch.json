@@ -8,7 +8,7 @@
         {
             "name": "ROS: Launch",
             "request": "launch",
-            "target": "/home/lawkaho/workshop/zlab_robots/catkin_ws/src/ros_control_boilerplate/launch/csv_to_controller.launch",
+            "target": "/home/lawkaho/workshop/zlab_robots/catkin_ws/src/ros_control_boilerplate/launch/controller_to_csv.launch",
             "launch": [
                 "rviz",
                 "gz",

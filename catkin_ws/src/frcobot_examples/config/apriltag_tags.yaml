@@ -26,9 +26,9 @@ standalone_tags:
     {id: 103, size: 0.03, name: 'tag_103'},
     {id: 104, size: 0.03, name: 'tag_104'},
     {id: 105, size: 0.03, name: 'tag_105'},
-    {id: 201, size: 0.03, name: 'tag_201'},
-    {id: 202, size: 0.03, name: 'tag_202'},
-    {id: 203, size: 0.03, name: 'tag_203'}
+    {id: 201, size: 0.032, name: 'tag_201'},
+    {id: 202, size: 0.032, name: 'tag_202'},
+    {id: 203, size: 0.032, name: 'tag_203'}
   ]
 # ## Tag bundle definitions
 # ### Remarks
