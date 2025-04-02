@@ -35,6 +35,7 @@ fr5v6_arm_controller:
       - frrobot_j6
    constraints:
       goal_time: 3.0
+      stopped_velocity_tolerance: 0.0 
       #stopped_position_tolerance: 0.4 # Defaults to 0.01
       frrobot_j1:
           trajectory: 0.60
