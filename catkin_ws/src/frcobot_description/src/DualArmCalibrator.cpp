@@ -27,6 +27,7 @@ public:
         // 订阅 AprilTag 检测结果
         tag_sub_ = nh_.subscribe(apriltag_topic_, 1,
                                  &DualArmCalibrator::apriltagCallback, this);
+        ROS_INFO("已订阅AprilTag话题: %s", apriltag_topic_.c_str());
 
         // 设置移动组接口
         left_arm_group_ = new moveit::planning_interface::MoveGroupInterface(left_arm_group_name_);
@@ -124,36 +125,74 @@ public:
     {
         ROS_INFO("开始双机械臂标定...");
 
-        // 先移动机械臂到标定位置
+        // 移动机械臂到标定位置
         if (!moveArmsToCalibrationPose())
         {
             ROS_ERROR("移动机械臂到标定位姿失败");
             return false;
         }
 
-        // 等待 AprilTag 检测结果
-        ROS_INFO("等待AprilTag检测结果...");
-        ros::Duration(2.0).sleep(); // 给相机一些时间检测tag
+        // 清空之前的测量结果
+        measurements_.clear();
+        
+        ROS_INFO("开始持续检测，将在%.1f秒内每隔%.1f秒进行一次检测...", 
+                 CALIBRATION_DURATION, DETECTION_INTERVAL);
+        
+        ros::Time start_time = ros::Time::now();
+        ros::Rate rate(1.0/DETECTION_INTERVAL); // 2Hz，每0.5秒一次
 
-        // 检查是否已经检测到两个tag
-        if (!left_tag_detected_ || !right_tag_detected_)
+        while (ros::ok())
         {
-            ROS_ERROR("未能检测到两个AprilTag。左臂: %s, 右臂: %s",
-                      left_tag_detected_ ? "已检测" : "未检测",
-                      right_tag_detected_ ? "已检测" : "未检测");
+            // 检查是否超时
+            if ((ros::Time::now() - start_time).toSec() > CALIBRATION_DURATION)
+            {
+                ROS_INFO("检测时间已到");
+                break;
+            }
+
+            // 等待新的AprilTag检测结果
+            ros::spinOnce();
+            
+            // 添加调试信息
+            ROS_INFO_THROTTLE(1.0, "左标签状态: %s, 右标签状态: %s", 
+                            left_tag_detected_ ? "已检测" : "未检测",
+                            right_tag_detected_ ? "已检测" : "未检测");
+            
+            if (!left_tag_detected_ || !right_tag_detected_)
+            {
+                ROS_WARN_THROTTLE(1.0, "未检测到标签，继续尝试...");
+                rate.sleep();
+                continue;
+            }
+            
+            // 计算两个tag之间的相对位置
+            tf2::Transform transform = calculateRelativeTransform();
+            
+            // 打印当前测量的相对位置
+            ROS_INFO("\n========== 第 %lu 次测量结果 ==========", measurements_.size() + 1);
+            printCalibrationResults(transform);
+            ROS_INFO("=====================================\n");
+            
+            // 保存测量结果
+            measurements_.push_back(transform);
+            
+            rate.sleep();
+        }
+
+        // 检查是否获得足够的测量数据
+        if (measurements_.size() < 10)  // 至少需要10次有效测量
+        {
+            ROS_ERROR("有效测量数据不足，标定失败。仅获得 %lu 次测量", measurements_.size());
             return false;
         }
 
-        // 计算两个tag之间的相对位置
-        tf2::Transform left_to_right_apriltag = calculateRelativeTransform();
+        // 计算平均变换
+        tf2::Transform average_transform = calculateAverageTransform(measurements_);
 
-        // 输出tag相对位置结果
-        printCalibrationResults(left_to_right_apriltag);
+        // 输出平均结果
+        ROS_INFO("总计完成%lu次有效测量", measurements_.size());
+        printCalibrationResults(average_transform);
         
-        // 记录关节角度 
-        std::vector<double> left_joint_values = left_arm_group_->getCurrentJointValues();
-        std::vector<double> right_joint_values = right_arm_group_->getCurrentJointValues();
-
         // 获取两个机械臂末端变换
         geometry_msgs::TransformStamped left_base_to_tool_transform, right_base_to_tool_transform;
         if (!getArmEndEffectorTransforms(left_base_to_tool_transform, right_base_to_tool_transform)) {
@@ -162,7 +201,7 @@ public:
         
         // 计算并打印两个机械臂基座之间的变换
         tf2::Transform left_to_right_base = calculateBaseTransform(
-            left_to_right_apriltag, left_base_to_tool_transform, right_base_to_tool_transform);
+            average_transform, left_base_to_tool_transform, right_base_to_tool_transform);
 
         printCalibrationResults(left_to_right_base);
 
@@ -234,20 +273,42 @@ private:
             calibration_result_path_ = "dual_arm_calibration.yaml";
             ROS_WARN("使用默认标定结果保存路径: %s", calibration_result_path_.c_str());
         }
+
+        // 获取测量次数
+        if (!nh_.getParam("required_measurements", required_measurements_))
+        {
+            required_measurements_ = 10;
+            ROS_WARN("使用默认测量次数: %d", required_measurements_);
+        }
+
+        // 获取测量间隔
+        if (!nh_.getParam("measurement_interval", measurement_interval_))
+        {
+            measurement_interval_ = 0.5;
+            ROS_WARN("使用默认测量间隔: %.1f秒", measurement_interval_);
+        }
     }
 
     // AprilTag检测回调函数
     void apriltagCallback(const apriltag_ros::AprilTagDetectionArray::ConstPtr &msg)
     {
+        ROS_INFO_THROTTLE(1.0, "收到AprilTag检测结果，检测到 %lu 个标签", msg->detections.size());
+        
+        // 重置检测状态
+        left_tag_detected_ = false;
+        right_tag_detected_ = false;
+
         for (const auto &detection : msg->detections)
         {
+            ROS_INFO_THROTTLE(1.0, "检测到ID为 %d 的标签", detection.id[0]);
+            
             // 检查是否是左臂tag
             if (detection.id[0] == left_arm_tag_id_)
             {
                 left_tag_pose_.header = detection.pose.header;
                 left_tag_pose_.pose = detection.pose.pose.pose;
                 left_tag_detected_ = true;
-                ROS_INFO_ONCE("左臂AprilTag已检测到");
+                ROS_INFO_THROTTLE(1.0, "识别到左臂标签 (ID: %d)", left_arm_tag_id_);
             }
             // 检查是否是右臂tag
             else if (detection.id[0] == right_arm_tag_id_)
@@ -255,13 +316,8 @@ private:
                 right_tag_pose_.header = detection.pose.header;
                 right_tag_pose_.pose = detection.pose.pose.pose;
                 right_tag_detected_ = true;
-                ROS_INFO_ONCE("右臂AprilTag已检测到");
+                ROS_INFO_THROTTLE(1.0, "识别到右臂标签 (ID: %d)", right_arm_tag_id_);
             }
-        }
-
-        if (left_tag_detected_ && right_tag_detected_)
-        {
-            ROS_INFO_ONCE("两个AprilTag均已检测到");
         }
     }
 
@@ -396,6 +452,73 @@ private:
         return left_base_to_tool * left_to_right_transform * right_base_to_tool.inverse();
     }
 
+    // 计算平均变换
+    tf2::Transform calculateAverageTransform(const std::vector<tf2::Transform>& transforms)
+    {
+        if (transforms.empty()) {
+            return tf2::Transform::getIdentity();
+        }
+
+        // 平均位置
+        tf2::Vector3 avg_translation(0, 0, 0);
+        
+        // 四元数平均
+        double avg_x = 0, avg_y = 0, avg_z = 0, avg_w = 0;
+
+        for (const auto& transform : transforms)
+        {
+            // 累加位置
+            avg_translation += transform.getOrigin();
+            
+            // 累加四元数
+            tf2::Quaternion q = transform.getRotation();
+            avg_x += q.x();
+            avg_y += q.y();
+            avg_z += q.z();
+            avg_w += q.w();
+        }
+
+        // 计算平均位置
+        avg_translation /= transforms.size();
+
+        // 计算平均四元数并归一化
+        tf2::Quaternion avg_rotation(
+            avg_x / transforms.size(),
+            avg_y / transforms.size(),
+            avg_z / transforms.size(),
+            avg_w / transforms.size()
+        );
+        avg_rotation.normalize();
+
+        // 构造平均变换
+        tf2::Transform avg_transform;
+        avg_transform.setOrigin(avg_translation);
+        avg_transform.setRotation(avg_rotation);
+
+        return avg_transform;
+    }
+
+    // 等待按键输入
+    bool waitForSpaceKey()
+    {
+        std::cout << "请按空格键进行下一次测量..." << std::endl;
+        char key;
+        while (ros::ok())
+        {
+            key = cv::waitKey(100);  // 100ms超时
+            if (key == ' ')
+            {
+                return true;
+            }
+            else if (key == 27)  // ESC键
+            {
+                return false;
+            }
+            ros::spinOnce();
+        }
+        return false;
+    }
+
     // ROS节点句柄
     ros::NodeHandle nh_;
 
@@ -425,6 +548,14 @@ private:
     geometry_msgs::PoseStamped right_tag_pose_;
     bool left_tag_detected_ = false;
     bool right_tag_detected_ = false;
+
+    // 添加变量用于存储多次测量结果
+    std::vector<tf2::Transform> measurements_;
+    int required_measurements_ = 10;  // 需要的测量次数
+    double measurement_interval_ = 0.5;  // 测量间隔(秒)
+
+    const double CALIBRATION_DURATION = 60.0; // 标定持续时间(秒)
+    const double DETECTION_INTERVAL = 0.5;    // 检测间隔(秒)
 };
 
 int main(int argc, char **argv)

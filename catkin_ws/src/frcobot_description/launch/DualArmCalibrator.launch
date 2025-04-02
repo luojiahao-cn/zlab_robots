@@ -16,7 +16,7 @@
   -->
 
     <!-- 标定程序节点 -->
-    <node name="dual_arm_calibrator" pkg="frcobot_examples" type="DualArmCalibrator"
+    <node name="dual_arm_calibrator" pkg="frcobot_description" type="dual_arm_calibrator"
         output="screen">
         <!-- AprilTag 设置 -->
         <param name="apriltag_topic" value="/tag_detections" />
@@ -33,7 +33,9 @@
 
         <!-- 结果保存路径 -->
         <param name="calibration_result_path"
-            value="$(find frcobot_examples)/config/dual_arm_calibration.yaml" />
+            value="$(find frcobot_description)/config/dual_arm_calibration.yaml" />
+        <param name="required_measurements" value="10" />
+        <param name="measurement_interval" value="0.5" />
     </node>
 
     <!-- 可选：RViz 可视化 -->

@@ -17,7 +17,6 @@
         <link name="robot1_j5_link"/>
         <link name="robot1_j6_link"/>
         <link name="robot1_tool_link"/>
-        <link name="robot1_tool_tcp_link"/>
         <joint name="robot1_j1"/>
         <joint name="robot1_j2"/>
         <joint name="robot1_j3"/>
@@ -33,7 +32,6 @@
         <link name="robot2_j5_link"/>
         <link name="robot2_j6_link"/>
         <link name="robot2_tool_link"/>
-        <link name="robot2_tool_tcp_link"/>
         <joint name="robot2_j1"/>
         <joint name="robot2_j2"/>
         <joint name="robot2_j3"/>
@@ -136,9 +134,6 @@
         <joint name="robot2_j5" value="0"/>
         <joint name="robot2_j6" value="0"/>
     </group_state>
-    <!--END EFFECTOR: Purpose: Represent information about an end effector.-->
-    <end_effector name="robot1_toolA" parent_link="robot1_tool_tcp_link" group="robot1" parent_group="dual_robots"/>
-    <end_effector name="robot2_toolA" parent_link="robot2_tool_tcp_link" group="robot2" parent_group="dual_robots"/>
     <!--VIRTUAL JOINT: Purpose: this element defines a virtual joint between a robot link and an external frame of reference (considered fixed with respect to the robot)-->
     <virtual_joint name="virtual_joint" type="fixed" parent_frame="virtual_world" child_link="world"/>
     <!--DISABLE COLLISIONS: By default it is assumed that any link of the robot could potentially come into collision with any other link in the robot. This tag disables collision checking between a specified pair of links. -->
@@ -150,8 +145,6 @@
     <disable_collisions link1="robot1_base0_link" link2="robot2_base2_link" reason="Never"/>
     <disable_collisions link1="robot1_base0_link" link2="robot2_j1_link" reason="Never"/>
     <disable_collisions link1="robot1_base0_link" link2="robot2_j2_link" reason="Never"/>
-    <disable_collisions link1="robot1_base0_link" link2="robot2_j3_link" reason="Never"/>
-    <disable_collisions link1="robot1_base0_link" link2="robot2_j4_link" reason="Never"/>
     <disable_collisions link1="robot1_base1_link" link2="robot1_base2_link" reason="Adjacent"/>
     <disable_collisions link1="robot1_base1_link" link2="robot1_j1_link" reason="Never"/>
     <disable_collisions link1="robot1_base1_link" link2="robot1_j2_link" reason="Never"/>
@@ -160,10 +153,6 @@
     <disable_collisions link1="robot1_base1_link" link2="robot2_base2_link" reason="Never"/>
     <disable_collisions link1="robot1_base1_link" link2="robot2_j1_link" reason="Never"/>
     <disable_collisions link1="robot1_base1_link" link2="robot2_j2_link" reason="Never"/>
-    <disable_collisions link1="robot1_base1_link" link2="robot2_j3_link" reason="Never"/>
-    <disable_collisions link1="robot1_base1_link" link2="robot2_j4_link" reason="Never"/>
-    <disable_collisions link1="robot1_base1_link" link2="robot2_j6_link" reason="Never"/>
-    <disable_collisions link1="robot1_base1_link" link2="robot2_tool_tcp_link" reason="Never"/>
     <disable_collisions link1="robot1_base2_link" link2="robot1_j1_link" reason="Adjacent"/>
     <disable_collisions link1="robot1_base2_link" link2="robot1_j2_link" reason="Never"/>
     <disable_collisions link1="robot1_base2_link" link2="robot2_base0_link" reason="Never"/>
@@ -171,10 +160,6 @@
     <disable_collisions link1="robot1_base2_link" link2="robot2_base2_link" reason="Never"/>
     <disable_collisions link1="robot1_base2_link" link2="robot2_j1_link" reason="Never"/>
     <disable_collisions link1="robot1_base2_link" link2="robot2_j2_link" reason="Never"/>
-    <disable_collisions link1="robot1_base2_link" link2="robot2_j3_link" reason="Never"/>
-    <disable_collisions link1="robot1_base2_link" link2="robot2_j4_link" reason="Never"/>
-    <disable_collisions link1="robot1_base2_link" link2="robot2_j5_link" reason="Never"/>
-    <disable_collisions link1="robot1_base2_link" link2="robot2_tool_tcp_link" reason="Never"/>
     <disable_collisions link1="robot1_j1_link" link2="robot1_j2_link" reason="Adjacent"/>
     <disable_collisions link1="robot1_j1_link" link2="robot1_j4_link" reason="Never"/>
     <disable_collisions link1="robot1_j1_link" link2="robot2_base0_link" reason="Never"/>
@@ -182,52 +167,16 @@
     <disable_collisions link1="robot1_j1_link" link2="robot2_base2_link" reason="Never"/>
     <disable_collisions link1="robot1_j1_link" link2="robot2_j1_link" reason="Never"/>
     <disable_collisions link1="robot1_j1_link" link2="robot2_j2_link" reason="Never"/>
-    <disable_collisions link1="robot1_j1_link" link2="robot2_j3_link" reason="Never"/>
-    <disable_collisions link1="robot1_j1_link" link2="robot2_j4_link" reason="Never"/>
-    <disable_collisions link1="robot1_j1_link" link2="robot2_tool_tcp_link" reason="Never"/>
     <disable_collisions link1="robot1_j2_link" link2="robot1_j3_link" reason="Adjacent"/>
     <disable_collisions link1="robot1_j2_link" link2="robot1_j4_link" reason="Never"/>
     <disable_collisions link1="robot1_j2_link" link2="robot2_base0_link" reason="Never"/>
     <disable_collisions link1="robot1_j2_link" link2="robot2_base1_link" reason="Never"/>
     <disable_collisions link1="robot1_j2_link" link2="robot2_base2_link" reason="Never"/>
     <disable_collisions link1="robot1_j2_link" link2="robot2_j1_link" reason="Never"/>
-    <disable_collisions link1="robot1_j2_link" link2="robot2_j2_link" reason="Never"/>
     <disable_collisions link1="robot1_j3_link" link2="robot1_j4_link" reason="Adjacent"/>
-    <disable_collisions link1="robot1_j3_link" link2="robot2_base0_link" reason="Never"/>
-    <disable_collisions link1="robot1_j3_link" link2="robot2_base1_link" reason="Never"/>
-    <disable_collisions link1="robot1_j3_link" link2="robot2_base2_link" reason="Never"/>
-    <disable_collisions link1="robot1_j3_link" link2="robot2_j1_link" reason="Never"/>
     <disable_collisions link1="robot1_j4_link" link2="robot1_j5_link" reason="Adjacent"/>
     <disable_collisions link1="robot1_j4_link" link2="robot1_j6_link" reason="Never"/>
-    <disable_collisions link1="robot1_j4_link" link2="robot1_tool_link" reason="Never"/>
-    <disable_collisions link1="robot1_j4_link" link2="robot1_tool_tcp_link" reason="Never"/>
-    <disable_collisions link1="robot1_j4_link" link2="robot2_base0_link" reason="Never"/>
-    <disable_collisions link1="robot1_j4_link" link2="robot2_base1_link" reason="Never"/>
-    <disable_collisions link1="robot1_j4_link" link2="robot2_base2_link" reason="Never"/>
-    <disable_collisions link1="robot1_j4_link" link2="robot2_j1_link" reason="Never"/>
-    <disable_collisions link1="robot1_j4_link" link2="robot2_tool_tcp_link" reason="Never"/>
     <disable_collisions link1="robot1_j5_link" link2="robot1_j6_link" reason="Adjacent"/>
-    <disable_collisions link1="robot1_j5_link" link2="robot1_tool_link" reason="Never"/>
-    <disable_collisions link1="robot1_j5_link" link2="robot1_tool_tcp_link" reason="Never"/>
-    <disable_collisions link1="robot1_j5_link" link2="robot2_base1_link" reason="Never"/>
-    <disable_collisions link1="robot1_j5_link" link2="robot2_base2_link" reason="Never"/>
-    <disable_collisions link1="robot1_j5_link" link2="robot2_j1_link" reason="Never"/>
-    <disable_collisions link1="robot1_j5_link" link2="robot2_tool_tcp_link" reason="Never"/>
-    <disable_collisions link1="robot1_j6_link" link2="robot1_tool_link" reason="Adjacent"/>
-    <disable_collisions link1="robot1_j6_link" link2="robot1_tool_tcp_link" reason="Never"/>
-    <disable_collisions link1="robot1_j6_link" link2="robot2_base1_link" reason="Never"/>
-    <disable_collisions link1="robot1_j6_link" link2="robot2_base2_link" reason="Never"/>
-    <disable_collisions link1="robot1_j6_link" link2="robot2_j1_link" reason="Never"/>
-    <disable_collisions link1="robot1_j6_link" link2="robot2_tool_tcp_link" reason="Never"/>
-    <disable_collisions link1="robot1_tool_link" link2="robot1_tool_tcp_link" reason="Adjacent"/>
-    <disable_collisions link1="robot1_tool_link" link2="robot2_tool_tcp_link" reason="Never"/>
-    <disable_collisions link1="robot1_tool_tcp_link" link2="robot2_base1_link" reason="Never"/>
-    <disable_collisions link1="robot1_tool_tcp_link" link2="robot2_base2_link" reason="Never"/>
-    <disable_collisions link1="robot1_tool_tcp_link" link2="robot2_j1_link" reason="Never"/>
-    <disable_collisions link1="robot1_tool_tcp_link" link2="robot2_j5_link" reason="Never"/>
-    <disable_collisions link1="robot1_tool_tcp_link" link2="robot2_j6_link" reason="Never"/>
-    <disable_collisions link1="robot1_tool_tcp_link" link2="robot2_tool_link" reason="Never"/>
-    <disable_collisions link1="robot1_tool_tcp_link" link2="robot2_tool_tcp_link" reason="Never"/>
     <disable_collisions link1="robot2_base0_link" link2="robot2_base1_link" reason="Adjacent"/>
     <disable_collisions link1="robot2_base0_link" link2="robot2_base2_link" reason="Never"/>
     <disable_collisions link1="robot2_base0_link" link2="robot2_j1_link" reason="Never"/>
@@ -243,12 +192,5 @@
     <disable_collisions link1="robot2_j3_link" link2="robot2_j4_link" reason="Adjacent"/>
     <disable_collisions link1="robot2_j4_link" link2="robot2_j5_link" reason="Adjacent"/>
     <disable_collisions link1="robot2_j4_link" link2="robot2_j6_link" reason="Never"/>
-    <disable_collisions link1="robot2_j4_link" link2="robot2_tool_link" reason="Never"/>
-    <disable_collisions link1="robot2_j4_link" link2="robot2_tool_tcp_link" reason="Never"/>
     <disable_collisions link1="robot2_j5_link" link2="robot2_j6_link" reason="Adjacent"/>
-    <disable_collisions link1="robot2_j5_link" link2="robot2_tool_link" reason="Never"/>
-    <disable_collisions link1="robot2_j5_link" link2="robot2_tool_tcp_link" reason="Never"/>
-    <disable_collisions link1="robot2_j6_link" link2="robot2_tool_link" reason="Adjacent"/>
-    <disable_collisions link1="robot2_j6_link" link2="robot2_tool_tcp_link" reason="Never"/>
-    <disable_collisions link1="robot2_tool_link" link2="robot2_tool_tcp_link" reason="Adjacent"/>
 </robot>

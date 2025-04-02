@@ -159,7 +159,7 @@ include_directories(
 add_executable(example_dual_arms_control src/example_dual_arms_control.cpp)
 add_executable(example_test src/example_test.cpp)
 add_executable(environment src/environment.cpp)
-add_executable(DualArmCalibrator src/DualArmCalibrator.cpp)
+
 
 ## Rename C++ executable without prefix
 ## The above recommended prefix causes long target names, the following renames the
@@ -178,10 +178,7 @@ add_executable(DualArmCalibrator src/DualArmCalibrator.cpp)
 target_link_libraries(example_dual_arms_control ${catkin_LIBRARIES})
 target_link_libraries(example_test ${catkin_LIBRARIES})
 target_link_libraries(environment ${catkin_LIBRARIES})
-target_link_libraries(DualArmCalibrator 
-  ${catkin_LIBRARIES}
-  ${OpenCV_LIBRARIES}
-)
+
 #############
 ## Install ##
 #############
