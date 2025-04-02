@@ -13,7 +13,10 @@ find_package(catkin REQUIRED COMPONENTS
   std_msgs
   serial
   message_generation
+  moveit_ros_planning_interface  # 添加这一行
 )
+
+find_package(Eigen3 REQUIRED)
 
 ## System dependencies are found with CMake's conventions
 # find_package(Boost REQUIRED COMPONENTS system)
@@ -121,6 +124,7 @@ link_directories(/opt/ros/noetic/lib)
 include_directories(
 # include
   ${catkin_INCLUDE_DIRS}
+  ${EIGEN3_INCLUDE_DIR}
 )
 
 ## Declare a C++ library
@@ -138,6 +142,7 @@ include_directories(
 ## The recommended prefix ensures that target names across packages don't collide
 # add_executable(${PROJECT_NAME}_node src/magnetic_localization_node.cpp)
 add_executable(serial_data_node src/serial_data_node.cpp)
+add_executable(magnetic_move src/magnetic_move.cpp)
 
 ## Rename C++ executable without prefix
 ## The above recommended prefix causes long target names, the following renames the
@@ -157,6 +162,9 @@ add_dependencies(serial_data_node ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_E
 target_link_libraries(serial_data_node
   ${catkin_LIBRARIES}
   serial
+)
+target_link_libraries(magnetic_move
+  ${catkin_LIBRARIES}
 )
 
 #############

@@ -54,6 +54,8 @@
   <build_depend>std_msgs</build_depend>
   <build_depend>serial</build_depend>
   <build_depend>message_generation</build_depend>
+  <build_depend>eigen</build_depend>
+  <build_depend>moveit_ros_planning_interface</build_depend>
   <build_export_depend>roscpp</build_export_depend>
   <build_export_depend>rospy</build_export_depend>
   <build_export_depend>std_msgs</build_export_depend>
@@ -63,6 +65,8 @@
   <exec_depend>std_msgs</exec_depend>
   <exec_depend>serial</exec_depend>
   <exec_depend>message_runtime</exec_depend>
+  <exec_depend>eigen</exec_depend>
+  <exec_depend>moveit_ros_planning_interface</exec_depend>
 
 
     <!-- The export tag contains other, unspecified, tags -->
