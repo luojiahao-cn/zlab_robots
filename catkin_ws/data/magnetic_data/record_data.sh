@@ -14,6 +14,7 @@ cd "$DATA_DIR"
 # 记录指定话题
 rosbag record -O "$FILENAME" \
     /magnetic_data \
-    /tf/world/tool_link
+    /tf \
+    /tf_static
 
 echo "数据已保存到: $DATA_DIR/$FILENAME"

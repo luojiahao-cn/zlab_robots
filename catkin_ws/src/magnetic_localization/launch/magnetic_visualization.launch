@@ -1,0 +1,13 @@
+<launch>
+    <!-- 启动磁场可视化节点 -->
+    <node name="magnetic_visualizer" pkg="magnetic_localization" type="magnetic_visualizer_node"
+        output="screen" />
+
+    <!-- 启动RViz -->
+    <node name="rviz" pkg="rviz" type="rviz"
+        args="-d $(find magnetic_localization)/rviz/magnetic_visualization.rviz" />
+
+    <!-- 如果要回放数据，取消下面的注释 -->
+    <!-- <node name="rosbag_play" pkg="rosbag" type="play" args="$(find
+    magnetic_localization)/data/magnetic_data/your_bag_file.bag" /> -->
+</launch>

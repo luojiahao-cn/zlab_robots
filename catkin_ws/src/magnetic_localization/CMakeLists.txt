@@ -143,6 +143,7 @@ include_directories(
 # add_executable(${PROJECT_NAME}_node src/magnetic_localization_node.cpp)
 add_executable(serial_data_node src/serial_data_node.cpp)
 add_executable(magnetic_move src/magnetic_move.cpp)
+add_executable(magnetic_visualizer_node src/magnetic_visualizer_node.cpp)
 
 ## Rename C++ executable without prefix
 ## The above recommended prefix causes long target names, the following renames the
@@ -164,6 +165,9 @@ target_link_libraries(serial_data_node
   serial
 )
 target_link_libraries(magnetic_move
+  ${catkin_LIBRARIES}
+)
+target_link_libraries(magnetic_visualizer_node
   ${catkin_LIBRARIES}
 )
 

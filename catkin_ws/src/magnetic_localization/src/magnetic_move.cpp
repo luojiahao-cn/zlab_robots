@@ -68,7 +68,7 @@ int main(int argc, char** argv)
 
     // 笛卡尔空间下的路径规划
     moveit_msgs::RobotTrajectory trajectory;
-    const double eef_step = 0.0001;                   // 末端执行器步长
+    const double eef_step = 0.00002;                   // 末端执行器步长
     double fraction = 0.0;                          // 规划成功的路径比例
 
     fraction = arm.computeCartesianPath(waypoints, eef_step, trajectory);   // 计算路径
