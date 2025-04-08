@@ -1,9 +1,12 @@
 #include <ros/ros.h>
 #include <visualization_msgs/MarkerArray.h>
 #include <magnetic_localization/MagneticData.h>
+#include <magnetic_localization/MagnetEstimation.h>
 #include <tf2/LinearMath/Quaternion.h>
 #include <geometry_msgs/Point.h>
 #include <vector>
+#include <yaml-cpp/yaml.h>
+#include <fstream>
 
 class MagneticVisualizer {
 public:
@@ -16,40 +19,67 @@ public:
         // 订阅磁场数据
         magnetic_sub = nh.subscribe("magnetic_data", 1000, 
             &MagneticVisualizer::magneticCallback, this);
+        // 订阅磁铁位置估计数据
+        magnet_sub = nh.subscribe("magnet_estimation", 10,
+                                  &MagneticVisualizer::magnetEstimationCallback, this);
     }
 
 private:
     ros::NodeHandle nh;
     ros::Publisher marker_pub;
     ros::Subscriber magnetic_sub;
-    
-    const int sensor_n = 5;  // 5x5矩阵
-    const double sensor_interval = 0.1;  // 间隔(米)
-    std::vector<geometry_msgs::Point> sensor_positions;
+    ros::Subscriber magnet_sub; // 磁铁位置订阅者
+
+    std::map<int, geometry_msgs::Point> sensor_positions; // 使用 map 存储标签和位置的对应关系
 
     void initializeSensorPositions()
     {
-        const int sensor_N = sensor_n * sensor_n;
-        sensor_positions.resize(sensor_N + 1);
+        // 定义 YAML 文件路径
+        std::string sensor_positions_file;
+        nh.param<std::string>("sensor_positions_file", sensor_positions_file, "sensor_positions.yaml");
 
-        // 从标签1开始初始化
-        for (int label = 1; label <= sensor_N; ++label)
+        // 加载 YAML 文件
+        YAML::Node config = YAML::LoadFile(sensor_positions_file);
+
+        // 检查是否包含传感器定义
+        if (!config["sensors"])
         {
-            // 计算行和列（row从0到4，col从0到4）
-            int row = (label - 1) / sensor_n; // 行号从上到下为0,1,2,3,4
-            int col = (label - 1) % sensor_n; // 列号从左到右为0,1,2,3,4
+            throw std::runtime_error("Sensor positions file does not contain 'sensors' key.");
+        }
 
-            // 直接使用标签作为索引存储位置
-            sensor_positions[label].x = col * sensor_interval;       // x从左到右增加
-            sensor_positions[label].y = (4 - row) * sensor_interval; // y从上到下减少
-            sensor_positions[label].z = 0.0;
+        // 读取传感器定义
+        const auto &sensors = config["sensors"];
+        sensor_positions.clear(); // 清空之前的内容
+
+        for (const auto &sensor : sensors)
+        {
+            if (!sensor["label"] || !sensor["position"])
+            {
+                throw std::runtime_error("Invalid sensor definition format in YAML file.");
+            }
+
+            int label = sensor["label"].as<int>();
+            auto position = sensor["position"].as<std::vector<double>>();
+
+            if (position.size() != 3)
+            {
+                throw std::runtime_error("Position must have exactly 3 elements (x, y, z).");
+            }
+
+            // 存储传感器位置
+            geometry_msgs::Point point;
+            point.x = position[0];
+            point.y = position[1];
+            point.z = position[2];
+            sensor_positions[label] = point;
         }
     }
 
-    void magneticCallback(const magnetic_localization::MagneticData::ConstPtr& msg) {
+    void magneticCallback(const magnetic_localization::MagneticData::ConstPtr &msg)
+    {
         visualization_msgs::MarkerArray marker_array;
         visualization_msgs::Marker marker;
-        
+
         // 设置箭头标记的基本属性
         marker.header.frame_id = "world";
         marker.header.stamp = ros::Time::now();
@@ -57,9 +87,9 @@ private:
         marker.id = msg->sensor_label;
         marker.type = visualization_msgs::Marker::ARROW;
         marker.action = visualization_msgs::Marker::ADD;
-        
-        // 使用预计算的传感器位置
-        if (msg->sensor_label > 0 && msg->sensor_label <= sensor_n * sensor_n)
+
+        // 使用从 YAML 文件读取的传感器位置
+        if (msg->sensor_label > 0 && msg->sensor_label < sensor_positions.size())
         {
             marker.pose.position = sensor_positions[msg->sensor_label];
         }
@@ -72,7 +102,6 @@ private:
         // 计算箭头方向和大小
         double magnitude = sqrt(pow(msg->x, 2) + pow(msg->y, 2) + pow(msg->z, 2));
         if (magnitude > 0) {
-            // 归一化向量
             // 归一化向量
             double dx = msg->x / magnitude;
             double dy = msg->y / magnitude;
@@ -136,7 +165,71 @@ private:
         marker_array.markers.push_back(marker);
         marker_pub.publish(marker_array);
     }
+
+    void magnetEstimationCallback(const magnetic_localization::MagnetEstimation::ConstPtr& msg)
+    {
+        visualization_msgs::MarkerArray marker_array;
+        visualization_msgs::Marker marker;
+
+        // 设置磁铁标记的基本属性
+        marker.header.frame_id = "world";
+        marker.header.stamp = ros::Time::now();
+        marker.ns = "magnet";
+        marker.id = 0;
+        marker.type = visualization_msgs::Marker::ARROW;
+        marker.action = visualization_msgs::Marker::ADD;
+
+        // 设置位置
+        marker.pose.position.x = msg->position.x;
+        marker.pose.position.y = msg->position.y;
+        marker.pose.position.z = msg->position.z;
+
+        // 计算方向四元数
+        tf2::Vector3 direction(msg->direction.x,
+                               msg->direction.y,
+                               msg->direction.z);
+        direction.normalize();
+
+        tf2::Vector3 axis_z(0, 0, 1);
+        tf2::Vector3 rotation_axis = axis_z.cross(direction);
+        
+        tf2::Quaternion q;
+        if (rotation_axis.length2() < 1e-6) {
+            if (direction.z() > 0) {
+                q.setRPY(0, 0, 0);
+            } else {
+                q.setRPY(M_PI, 0, 0);
+            }
+        } else {
+            double angle = acos(direction.dot(axis_z));
+            rotation_axis.normalize();
+            q.setRotation(rotation_axis, angle);
+        }
+
+        marker.pose.orientation.x = q.x();
+        marker.pose.orientation.y = q.y();
+        marker.pose.orientation.z = q.z();
+        marker.pose.orientation.w = q.w();
+
+        // 设置磁铁箭头的大小
+        marker.scale.x = 0.1;  // 长度
+        marker.scale.y = 0.02; // 宽度
+        marker.scale.z = 0.02; // 高度
+
+        // 设置磁铁标记的颜色（红色）
+        marker.color.r = 1.0;
+        marker.color.g = 0.0;
+        marker.color.b = 0.0;
+        marker.color.a = 1.0;
+
+        // 设置持续时间
+        marker.lifetime = ros::Duration(0.1);
+
+        marker_array.markers.push_back(marker);
+        marker_pub.publish(marker_array);
+    }
 };
+
 
 int main(int argc, char** argv) {
     ros::init(argc, argv, "magnetic_visualizer");

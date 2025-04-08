@@ -6,15 +6,12 @@
                 "limitSymbolsToIncludedHeaders": false
             },
             "includePath": [
-                "/usr/include/**",
-                "/opt/ros/noetic/include/**",
-                "/opt/ros/noetic/share/**",
-                "/opt/ros/noetic/lib/**",
-                "${workspaceFolder}/catkin_ws/devel/include/**",
-                "${workspaceFolder}/catkin_ws/src/frcobot_status/include/**",
-                "${workspaceFolder}/catkin_ws/src/ros_control_boilerplate/frrobot_control/include/**",
-                "${workspaceFolder}/catkin_ws/src/ros_control_boilerplate/include/**",
-                "${workspaceFolder}/catkin_ws/src/moveit_servo/include/**"
+              "/usr/include/**",
+              "/opt/ros/noetic/include/**",
+              "/opt/ros/noetic/share/**",
+              "/opt/ros/noetic/lib/**",
+              "${workspaceFolder}/catkin_ws/devel/include/**",
+              "${workspaceFolder}/catkin_ws/src/**/include/**"
             ],
             "name": "ROS",
             "intelliSenseMode": "gcc-x64",

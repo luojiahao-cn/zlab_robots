@@ -4,3 +4,4 @@ catkin_ws/devel/
 doc/.~*
 
 *.bag
+catkin_ws/src/magnetic_localization/script/*

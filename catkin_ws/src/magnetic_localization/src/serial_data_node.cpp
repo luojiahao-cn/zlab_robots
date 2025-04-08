@@ -15,10 +15,8 @@ public:
      * @brief 构造函数，初始化串口和ROS发布者
      * @param port 串口端口
      * @param baud_rate 波特率
-     * @param sensor_N 传感器数量
      */
-    SerialHandler(const std::string &port, uint32_t baud_rate, int sensor_N)
-        : sensor_N(sensor_N)
+    SerialHandler(const std::string &port, uint32_t baud_rate)
     {
         try
         {
@@ -51,7 +49,6 @@ private:
     ros::NodeHandle nh;
     ros::Publisher magnetic_data_pub;
     serial::Serial ser;      // 串口对象
-    int sensor_N;            // 传感器数量
     std::mutex data_mutex;   // 数据互斥锁
     std::thread read_thread; // 读取线程
 
@@ -87,17 +84,14 @@ private:
                 try
                 {
                     auto [sensor_label, raw_vector] = parseSerialLine(line); // 解析串口数据
-                    if (sensor_label >= 1 && sensor_label <= sensor_N) 
-                    {
-                        // 发布磁场数据
-                        magnetic_localization::MagneticData magnetic_msg;
-                        magnetic_msg.header.stamp = ros::Time::now();
-                        magnetic_msg.sensor_label = sensor_label;
-                        magnetic_msg.x = raw_vector[0];
-                        magnetic_msg.y = raw_vector[1];
-                        magnetic_msg.z = raw_vector[2];
-                        magnetic_data_pub.publish(magnetic_msg);
-                    }
+                    // 发布磁场数据
+                    magnetic_localization::MagneticData magnetic_msg;
+                    magnetic_msg.header.stamp = ros::Time::now();
+                    magnetic_msg.sensor_label = sensor_label;
+                    magnetic_msg.x = raw_vector[0];
+                    magnetic_msg.y = raw_vector[1];
+                    magnetic_msg.z = raw_vector[2];
+                    magnetic_data_pub.publish(magnetic_msg);
                 }
                 catch (const std::exception &e)
                 {
@@ -115,15 +109,13 @@ int main(int argc, char **argv)
 
     std::string port;
     int baud_rate;
-    int sensor_N;
 
     nh.param<std::string>("port", port, "/dev/ttyUSB0");
     nh.param<int>("baud_rate", baud_rate, 921600);
-    nh.param<int>("sensor_N", sensor_N, 25);
 
     try
     {
-        SerialHandler serial_handler(port, baud_rate, sensor_N);
+        SerialHandler serial_handler(port, baud_rate);
         serial_handler.startReading();
         ros::spin();
     }

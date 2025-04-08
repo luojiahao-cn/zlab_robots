@@ -45,6 +45,7 @@ To install and set up the project, follow these steps:
     sudo apt-get install ros-noetic-ros-controllers
     sudo apt-get install ros-noetic-realsense2-camera
     sudo apt-get install ros-noetic-realsense2-description
+    sudo apt-get install libceres-dev
     ```
 
 3. Build the workspace:

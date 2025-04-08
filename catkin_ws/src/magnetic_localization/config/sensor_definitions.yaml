@@ -1,0 +1,51 @@
+sensors:
+  - label: 1
+    position: [0.0, 0.4, 0.0]
+  - label: 2
+    position: [0.1, 0.4, 0.0]
+  - label: 3
+    position: [0.2, 0.4, 0.0]
+  - label: 4
+    position: [0.3, 0.4, 0.0]
+  - label: 5
+    position: [0.4, 0.4, 0.0]
+  - label: 6
+    position: [0.0, 0.3, 0.0]
+  - label: 7
+    position: [0.1, 0.3, 0.0]
+  - label: 8
+    position: [0.2, 0.3, 0.0]
+  - label: 9
+    position: [0.3, 0.3, 0.0]
+  - label: 10
+    position: [0.4, 0.3, 0.0]
+  - label: 11
+    position: [0.0, 0.2, 0.0]
+  - label: 12
+    position: [0.1, 0.2, 0.0]
+  - label: 13
+    position: [0.2, 0.2, 0.0]
+  - label: 14
+    position: [0.3, 0.2, 0.0]
+  - label: 15
+    position: [0.4, 0.2, 0.0]
+  - label: 16
+    position: [0.0, 0.1, 0.0]
+  - label: 17
+    position: [0.1, 0.1, 0.0]
+  - label: 18
+    position: [0.2, 0.1, 0.0]
+  - label: 19
+    position: [0.3, 0.1, 0.0]
+  - label: 20
+    position: [0.4, 0.1, 0.0]
+  - label: 21
+    position: [0.0, 0.0, 0.0]
+  - label: 22
+    position: [0.1, 0.0, 0.0]
+  - label: 23
+    position: [0.2, 0.0, 0.0]
+  - label: 24
+    position: [0.3, 0.0, 0.0]
+  - label: 25
+    position: [0.4, 0.0, 0.0]
