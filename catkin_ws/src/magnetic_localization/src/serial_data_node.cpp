@@ -33,7 +33,7 @@ public:
             throw e;                                           // 抛出异常
         }
 
-        magnetic_data_pub = nh.advertise<magnetic_localization::MagneticData>("magnetic_data", 1000); // 发布磁场数据话题
+        magnetic_data_pub = nh.advertise<magnetic_localization::MagneticData>("/magnetic/sensor_data", 1000); // 发布磁场数据话题
     }
 
     /**

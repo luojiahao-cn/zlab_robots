@@ -17,7 +17,7 @@
         <param name="debug" value="true"/>
 
         <!-- 重映射话题 -->
-        <!-- <remap from="/magnetic_data" to="/sensor/magnetic_raw" /> -->
+        <!-- <remap from="/magnetic/sensor_data" to="/magnetic_data" /> -->
         <!-- <remap from="/magnetic_estimation" to="/magnet/pose" /> -->
     </node>
 

@@ -7,6 +7,7 @@
 #include <vector>
 #include <yaml-cpp/yaml.h>
 #include <fstream>
+#include <ros/package.h>
 
 class MagneticVisualizer {
 public:
@@ -17,10 +18,10 @@ public:
         // 创建发布者用于发布标记
         marker_pub = nh.advertise<visualization_msgs::MarkerArray>("magnetic_markers", 10);
         // 订阅磁场数据
-        magnetic_sub = nh.subscribe("magnetic_data", 1000, 
-            &MagneticVisualizer::magneticCallback, this);
+        magnetic_sub = nh.subscribe("/magnetic/sensor_data", 1000,
+                                    &MagneticVisualizer::magneticCallback, this);
         // 订阅磁铁位置估计数据
-        magnet_sub = nh.subscribe("magnet_estimation", 10,
+        magnet_sub = nh.subscribe("/magnetic/magnet_pose", 10,
                                   &MagneticVisualizer::magnetEstimationCallback, this);
     }
 
@@ -34,9 +35,13 @@ private:
 
     void initializeSensorPositions()
     {
-        // 定义 YAML 文件路径
+        // 使用 ros::package 获取包路径
+        std::string package_path = ros::package::getPath("magnetic_localization");
+        std::string default_config_path = package_path + "/config/sensor_definitions.yaml";
+
+        // 定义 YAML 文件路径参数
         std::string sensor_positions_file;
-        nh.param<std::string>("sensor_positions_file", sensor_positions_file, "sensor_positions.yaml");
+        nh.param<std::string>("sensor_definition_file", sensor_positions_file, default_config_path);
 
         // 加载 YAML 文件
         YAML::Node config = YAML::LoadFile(sensor_positions_file);
@@ -88,17 +93,17 @@ private:
         marker.type = visualization_msgs::Marker::ARROW;
         marker.action = visualization_msgs::Marker::ADD;
 
-        // 使用从 YAML 文件读取的传感器位置
-        if (msg->sensor_label > 0 && msg->sensor_label < sensor_positions.size())
+        auto sensor_it = sensor_positions.find(msg->sensor_label);
+        if (sensor_it != sensor_positions.end())
         {
-            marker.pose.position = sensor_positions[msg->sensor_label];
+            marker.pose.position = sensor_it->second;
         }
         else
         {
-            ROS_WARN("Invalid sensor label: %d", msg->sensor_label);
+            ROS_WARN("Sensor label %d not found in configuration", msg->sensor_label);
             return;
         }
-
+        
         // 计算箭头方向和大小
         double magnitude = sqrt(pow(msg->x, 2) + pow(msg->y, 2) + pow(msg->z, 2));
         if (magnitude > 0) {

@@ -14,7 +14,7 @@ elif [ ${#BAG_FILES[@]} -eq 1 ]; then
     # 只有一个文件时自动播放
     FILENAME=$(basename "${BAG_FILES[0]}")
     echo "检测到单个数据文件，自动播放 $FILENAME..."
-    rosbag play --clock "$DATA_DIR/$FILENAME"
+    rosbag play --clock "$DATA_DIR/$FILENAME" /magnetic_data:=/magnetic/sensor_data
 else
     # 多个文件时让用户选择
     echo "可用的数据文件："
@@ -25,7 +25,7 @@ else
     
     if [ -f "$DATA_DIR/$FILENAME" ]; then
         echo "开始回放 $FILENAME..."
-        rosbag play --clock "$DATA_DIR/$FILENAME"
+        rosbag play --clock "$DATA_DIR/$FILENAME" /magnetic_data:=/magnetic/sensor_data
     else
         echo "错误：文件不存在"
         exit 1

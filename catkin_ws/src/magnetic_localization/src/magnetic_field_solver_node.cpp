@@ -15,11 +15,11 @@ public:
         // 初始化传感器布局和求解器
         solver_ = std::make_unique<MagnetFieldSolver>(initializeSensors());
 
-        // 设置ROS订阅和发布
-        sub_ = nh_.subscribe("/magnetic_data", 100,
+        // 订阅磁场数据
+        sub_ = nh_.subscribe("/magnetic/sensor_data", 100,
                              &MagneticFieldSolverNode::callback, this);
-        pub_ = nh_.advertise<magnetic_localization::MagnetEstimation>("/magnetic_estimation", 10);
-
+        // 发布磁体位置估计结果
+        pub_ = nh_.advertise<magnetic_localization::MagnetEstimation>("/magnetic/magnet_pose", 10);
     }
 
 private:

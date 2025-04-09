@@ -8,8 +8,20 @@
  * @param sensor_positions Nx3矩阵，存储N个传感器的位置坐标 [x, y, z]
  */
 MagnetFieldSolver::MagnetFieldSolver(const Eigen::MatrixXd &sensor_positions)
-    : sensor_positions_(sensor_positions)
+    : sensor_positions_(sensor_positions), has_initial_fields_(false)
 {
+}
+
+void MagnetFieldSolver::setInitialFields(const Eigen::MatrixXd &initial_fields)
+{
+    if (initial_fields.rows() != sensor_positions_.rows() || initial_fields.cols() != 3)
+    {
+        ROS_ERROR("Initial fields matrix dimensions do not match sensor positions");
+        return;
+    }
+    initial_fields_ = initial_fields;
+    has_initial_fields_ = true;
+    ROS_INFO("Initial fields (earth magnetic field) set");
 }
 
 /**
@@ -74,7 +86,7 @@ MagnetSolution MagnetFieldSolver::solve(const Eigen::MatrixXd &measured_fields)
         params.setZero();
         params.segment<3>(0) = Eigen::Vector3d(0, 0, 1);    // 位置初始值
         params.segment<3>(3) = Eigen::Vector3d(0, 0, 1);    // 方向初始值
-        params[6] = 3000.0;                                 // 磁矩大小初始值
+        params[6] = 10000.0;                                 // 磁矩大小初始值
     }
 
     // Levenberg-Marquardt 优化

@@ -13,6 +13,9 @@ struct MagnetSolution {
 
 class MagnetFieldSolver {
 public:
+    // 添加设置初始磁场的方法
+    void setInitialFields(const Eigen::MatrixXd &initial_fields);
+
     explicit MagnetFieldSolver(const Eigen::MatrixXd& sensor_positions);
 
     // 计算给定位置和方向的磁偶极子产生的磁场
@@ -34,4 +37,6 @@ private:
     static constexpr double MU0 = 1.25663706212e-6; // 真空磁导率
     Eigen::VectorXd previous_solution_;
     bool has_previous_solution_{false};
+    Eigen::MatrixXd initial_fields_; // 存储初始磁场值
+    bool has_initial_fields_;
 };
