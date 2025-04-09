@@ -71,6 +71,9 @@ add_executable(magnetic_field_solver_node
 add_executable(magnetic_solver_node 
   src/magnetic_field_solver_node.cpp
 )
+add_executable(magnetic_simulation_node 
+    src/magnetic_simulation_node.cpp
+    src/magnetic_simulation.cpp)
 
 
 add_dependencies(serial_data_node ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
@@ -104,4 +107,7 @@ target_link_libraries(magnetic_solver_node
   ${catkin_LIBRARIES}
   yaml-cpp
 )
+target_link_libraries(magnetic_simulation_node
+    ${catkin_LIBRARIES}
+    ${EIGEN3_LIBRARIES})
 

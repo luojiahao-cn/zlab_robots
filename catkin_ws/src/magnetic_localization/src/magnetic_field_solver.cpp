@@ -10,8 +10,19 @@
 MagnetFieldSolver::MagnetFieldSolver(const Eigen::MatrixXd &sensor_positions)
     : sensor_positions_(sensor_positions), has_initial_fields_(false)
 {
+    // 初始化默认参数向量 [x, y, z, mx, my, mz, |m|]
+    default_params_.resize(7);
+    default_params_.setZero();
+    default_params_.segment<3>(0) = Eigen::Vector3d(0, 0, 1); // 默认位置
+    default_params_.segment<3>(3) = Eigen::Vector3d(0, 0, 1); // 默认方向
+    default_params_[6] = 3000.0;                             // 默认磁矩大小
 }
 
+/**
+ * @brief 设置初始磁场（如地磁场）
+ * 
+ * @param initial_fields Nx3矩阵，N个传感器位置处的背景磁场
+ */
 void MagnetFieldSolver::setInitialFields(const Eigen::MatrixXd &initial_fields)
 {
     if (initial_fields.rows() != sensor_positions_.rows() || initial_fields.cols() != 3)
@@ -72,69 +83,51 @@ Eigen::Vector3d MagnetFieldSolver::calculateField(
 MagnetSolution MagnetFieldSolver::solve(const Eigen::MatrixXd &measured_fields)
 {
     MagnetSolution solution;
-    const int max_iterations = 100;
+    const int max_iterations = 1000;
     const double convergence_threshold = 1e-6;
 
-    // 初始猜测值设置
-    Eigen::VectorXd params(7); // [x, y, z, mx, my, mz, |m|]
-    
-    if (has_previous_solution_) {
-        // 使用上一次的解作为初始值
-        params = previous_solution_;
-    } else {
-        // 默认初始值
-        params.setZero();
-        params.segment<3>(0) = Eigen::Vector3d(0, 0, 1);    // 位置初始值
-        params.segment<3>(3) = Eigen::Vector3d(0, 0, 1);    // 方向初始值
-        params[6] = 10000.0;                                 // 磁矩大小初始值
-    }
+    // 1. 初始化优化参数向量 [x, y, z, mx, my, mz, |m|]
+    Eigen::VectorXd params(7);
+    params = has_previous_solution_ ? previous_solution_ : default_params_; // 使用上一次解或默认参数
 
-    // Levenberg-Marquardt 优化
-    double lambda = 0.01;
+    // 2. Levenberg-Marquardt 优化主循环
+    double lambda = 0.01; // 阻尼因子
     Eigen::VectorXd residual;
     Eigen::MatrixXd jacobian;
 
     for (int iter = 0; iter < max_iterations; ++iter)
     {
+        // 2.1 计算当前参数下的残差和雅可比矩阵
         calculateResidualAndJacobian(params, residual, jacobian, measured_fields);
 
-        // 打印当前预测位置
-        Eigen::Vector3d current_position = params.segment<3>(0);
-        ROS_INFO_STREAM("Iteration " << iter 
-                        << " Position: [" << current_position.x() 
-                        << ", " << current_position.y() 
-                        << ", " << current_position.z() << "]");
-
+        // 2.2 构造并求解LM方程
         Eigen::MatrixXd H = jacobian.transpose() * jacobian;
         H.diagonal() += lambda * H.diagonal();
-
         Eigen::VectorXd g = -jacobian.transpose() * residual;
         Eigen::VectorXd delta = H.ldlt().solve(g);
 
+        // 2.3 检查收敛性
         if (delta.norm() < convergence_threshold)
         {
             solution.success = true;
-            // 打印最终收敛位置
-            ROS_INFO_STREAM("Converged! Final position: [" 
-                            << current_position.x() 
-                            << ", " << current_position.y() 
-                            << ", " << current_position.z() << "]");
             break;
         }
 
-        // 更新参数
+        // 2.4 更新参数
         params += delta;
     }
 
-    // 保存本次结果作为下次的初始值
+    // 3. 保存结果
     previous_solution_ = params;
-    has_previous_solution_ = true;
+    has_previous_solution_ = false;
 
-    // 设置结果
+    // 4. 设置返回结果
     solution.position = params.segment<3>(0);
-    solution.orientation = params.segment<3>(3).normalized();
+    solution.orientation = params.segment<3>(3).normalized(); 
     solution.moment = params[6];
     solution.error = residual.norm();
+
+    ROS_INFO("Iteration: %d, Error: %f", max_iterations, solution.error);
 
     return solution;
 }
@@ -159,103 +152,121 @@ void MagnetFieldSolver::calculateResidualAndJacobian(
     Eigen::MatrixXd &jacobian,
     const Eigen::MatrixXd &measured_fields) const
 {
+    // 1. 初始化残差向量和雅可比矩阵
     const int n_sensors = sensor_positions_.rows();
     residual.resize(n_sensors * 3);
     jacobian.resize(n_sensors * 3, 7);
 
-    // 添加参数有效性检查
-    if (params.size() != 7) {
+    if (params.size() != 7)
+    {
         ROS_ERROR("Invalid parameter vector size");
         return;
     }
 
+    // 2. 提取当前参数
     Eigen::Vector3d position = params.segment<3>(0);
     Eigen::Vector3d moment_dir = params.segment<3>(3);
-    double moment_magnitude = std::abs(params[6]); // 确保磁矩大小为正
-    
-    // 检查磁矩方向向量是否为零向量
-    double dir_norm = moment_dir.norm();
-    if (dir_norm < 1e-10) {
-        moment_dir = Eigen::Vector3d(0, 0, 1); // 设置默认方向
-    } else {
-        moment_dir.normalize();
-    }
-    
+    double moment_magnitude = std::abs(params[6]);
+
+    // 规范化磁矩方向
+    moment_dir = moment_dir.norm() < 1e-10 ? Eigen::Vector3d(0, 0, 1) : moment_dir.normalized();
     Eigen::Vector3d moment = moment_dir * moment_magnitude;
 
-    // 打印初始参数信息
-    ROS_DEBUG_STREAM("Parameters: ");
-    ROS_DEBUG_STREAM("Position: [" << position.transpose() << "]");
-    ROS_DEBUG_STREAM("Moment direction: [" << moment_dir.transpose() << "]");
-    ROS_DEBUG_STREAM("Moment magnitude: " << moment_magnitude);
-
-    for (int i = 0; i < n_sensors; ++i) {
+    // 3. 计算每个传感器的残差和雅可比矩阵
+    const double eps = 1e-7; // 数值微分步长
+    for (int i = 0; i < n_sensors; ++i)
+    {
+        // 3.1 计算传感器到磁体的位移向量
         Eigen::Vector3d sensor_pos = sensor_positions_.row(i);
         Eigen::Vector3d r = sensor_pos - position;
-        
-        // 打印传感器相关信息
-        ROS_DEBUG_STREAM("Sensor " << i << ":");
-        ROS_DEBUG_STREAM("  Position: [" << sensor_pos.transpose() << "]");
-        ROS_DEBUG_STREAM("  Distance to magnet: " << r.norm());
-
-        if (r.norm() < 1e-10) {
-            ROS_WARN("Sensor and magnet positions are too close");
-            r = Eigen::Vector3d(0, 0, 1e-10); // 添加小偏移
+        if (r.norm() < 1e-10)
+        {
+            r = Eigen::Vector3d(0, 0, 1e-10);
         }
-        
+
+        // 3.2 计算预测磁场和残差
         Eigen::Vector3d predicted_field = calculateField(position, moment, sensor_pos);
-        Eigen::Vector3d measured_field = measured_fields.row(i);
-
-        // 打印磁场信息
-        ROS_DEBUG_STREAM("  Predicted field: [" << predicted_field.transpose() << "]");
-        ROS_DEBUG_STREAM("  Measured field: [" << measured_field.transpose() << "]");
-        ROS_DEBUG_STREAM("  Residual: [" << (predicted_field - measured_field).transpose() << "]");
-
-        // 检查预测磁场是否有效
-        if (!predicted_field.allFinite()) {
-            ROS_ERROR("Invalid predicted field");
+        if (!predicted_field.allFinite())  
             continue;
-        }
 
+        Eigen::Vector3d measured_field = measured_fields.row(i);
+        // 减去地磁场的影响
+        if (has_initial_fields_) {
+            measured_field -= initial_fields_.row(i);
+        }
         residual.segment<3>(i * 3) = predicted_field - measured_field;
 
-        // 数值计算雅可比矩阵时添加保护
-        const double eps = 1e-7;
-        for (int j = 0; j < 7; ++j) {
+        // 3.3 数值计算雅可比矩阵
+        for (int j = 0; j < 7; ++j)
+        {
+            // 对参数进行扰动
             Eigen::VectorXd params_perturbed = params;
             params_perturbed[j] += eps;
 
+            // 计算扰动后的磁矩
             Eigen::Vector3d position_p = params_perturbed.segment<3>(0);
             Eigen::Vector3d moment_dir_p = params_perturbed.segment<3>(3);
-            
-            // 确保扰动后的磁矩方向也是规范化的
-            if (moment_dir_p.norm() > 1e-10) {
-                moment_dir_p.normalize();
-            } else {
-                moment_dir_p = Eigen::Vector3d(0, 0, 1);
-            }
-            
+            moment_dir_p = moment_dir_p.norm() > 1e-10 ? moment_dir_p.normalized() : Eigen::Vector3d(0, 0, 1);
             double moment_magnitude_p = std::abs(params_perturbed[6]);
             Eigen::Vector3d moment_p = moment_dir_p * moment_magnitude_p;
 
+            // 计算扰动后的磁场和雅可比矩阵元素
             Eigen::Vector3d field_perturbed = calculateField(position_p, moment_p, sensor_pos);
-            
-            // 检查计算结果是否有效
-            if (field_perturbed.allFinite() && predicted_field.allFinite()) {
+            if (field_perturbed.allFinite())
+            {
                 jacobian.block<3, 1>(i * 3, j) = (field_perturbed - predicted_field) / eps;
-            } else {
+            }
+            else
+            {
                 jacobian.block<3, 1>(i * 3, j).setZero();
             }
         }
     }
+}
 
-    // 打印优化相关信息
-    double res_norm = residual.norm();
-    if (std::isfinite(res_norm)) {
-        ROS_INFO("Residual norm: %f", res_norm);
-    } else {
-        ROS_ERROR("Invalid residual norm");
+/** 
+* @brief 通过前N次测量值计算背景磁场
+* 
+* 计算平均值并设置为初始磁场。
+* 
+* @param n_samples 采样次数
+* @return 是否成功设置背景磁场  
+*/
+bool MagnetFieldSolver::calibrateInitialFields(int n_samples)
+{
+    if (calibration_samples_.empty() || calibration_samples_.size() < n_samples) {
+        ROS_WARN("Not enough calibration samples");
+        return false;
     }
-    ROS_DEBUG_STREAM("Residual norm: " << res_norm);
 
+    // 计算平均值
+    Eigen::MatrixXd avg_fields = Eigen::MatrixXd::Zero(sensor_positions_.rows(), 3);
+    for (const auto& sample : calibration_samples_) {
+        avg_fields += sample;
+    }
+    avg_fields /= calibration_samples_.size();
+
+    // 设置为初始磁场
+    setInitialFields(avg_fields);
+    ROS_INFO("Background magnetic field calibrated using %d samples", (int)calibration_samples_.size());
+
+    // 清空校准数据
+    calibration_samples_.clear();
+    is_calibrating_ = false;
+    
+    return true;
+}
+
+/**
+ * @brief 添加校准样本
+ * 
+ * @param sample 校准样本
+ */
+void MagnetFieldSolver::addCalibrationSample(const Eigen::MatrixXd &sample) 
+{
+    if (sample.rows() != sensor_positions_.rows() || sample.cols() != 3) {
+        ROS_ERROR("Invalid calibration sample dimensions");
+        return;
+    }
+    calibration_samples_.push_back(sample);
 }
