@@ -4,7 +4,6 @@
 #include <memory>
 #include <string>
 #include "magnetic_localization/magnetic_field_solver.h"
-#include <fstream>
 
 class MagneticSimulation {
 public:
@@ -24,16 +23,7 @@ private:
     Eigen::Vector3d start_position_;
     Eigen::Vector3d end_position_;
     std::unique_ptr<MagnetFieldSolver> solver_;
-    std::ofstream log_file_;
     
     // 辅助函数
     Eigen::MatrixXd initializeSensorPositions();
-    void writeLogHeader();
-    void writeLogData(const Eigen::Vector3d& true_pos, 
-                     const Eigen::Vector3d& est_pos,
-                     const Eigen::Vector3d& true_dir,
-                     const Eigen::Vector3d& est_dir,
-                     double true_strength,
-                     double est_strength,
-                     double error);
 };

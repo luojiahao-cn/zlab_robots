@@ -60,6 +60,12 @@ add_library(magnetic_field_solver
   src/magnetic_field_solver.cpp
 )
 
+add_library(magnetic_localization
+  src/magnetic_field_solver.cpp
+  src/magnetic_simulation.cpp
+  src/sensor_array.cpp
+)
+
 
 add_executable(serial_data_node src/serial_data_node.cpp)
 add_executable(magnetic_move src/magnetic_move.cpp)
