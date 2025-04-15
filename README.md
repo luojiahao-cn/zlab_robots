@@ -108,6 +108,16 @@ To install and set up the project, follow these steps:
     This will launch the status feedback interface, allowing you to view real-time information about the robot arm's state, including joint positions, tool positions, and error codes.
 
 
+## Example
+
+### 磁定位测试
+    ```bash
+        roslaunch frcobot_examples connect_single_arm.launch 
+        rosrun frcobot_examples environment
+        roslaunch magnetic_pose_estimation magnet_pose_estimation.launch 
+        rosrun frcobot_examples magnet_move
+    ```
+
 ## Common Issues
 
 ### Robot Arm Motion Stuttering
