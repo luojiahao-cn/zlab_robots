@@ -5,13 +5,8 @@
 #include "frcobot_examples/path_library.h"
 #include <visualization_msgs/Marker.h>
 
-/**
- * @brief 发布末端轨迹到RViz
- * @param pub Marker发布器
- * @param waypoints 路径点
- * @param frame_id 坐标系
- */
-void publish_end_effector_trajectory(ros::Publisher& pub, const std::vector<geometry_msgs::Pose>& waypoints, const std::string& frame_id)
+// 发布末端轨迹到RViz
+void publish_end_effector_trajectory(ros::Publisher &pub, const std::vector<geometry_msgs::Pose> &waypoints, const std::string &frame_id)
 {
     visualization_msgs::Marker line_strip;
     line_strip.header.frame_id = frame_id;
@@ -20,13 +15,13 @@ void publish_end_effector_trajectory(ros::Publisher& pub, const std::vector<geom
     line_strip.id = 0;
     line_strip.type = visualization_msgs::Marker::LINE_STRIP;
     line_strip.action = visualization_msgs::Marker::ADD;
-    line_strip.scale.x = 0.002; // 线宽
+    line_strip.scale.x = 0.002;
     line_strip.color.r = 1.0;
     line_strip.color.g = 0.0;
     line_strip.color.b = 0.0;
     line_strip.color.a = 1.0;
 
-    for (const auto& pose : waypoints)
+    for (const auto &pose : waypoints)
     {
         geometry_msgs::Point p;
         p.x = pose.position.x;
@@ -39,6 +34,35 @@ void publish_end_effector_trajectory(ros::Publisher& pub, const std::vector<geom
     ROS_INFO("End effector trajectory published to RViz");
 }
 
+// 初始化目标位姿
+geometry_msgs::Pose init_target_pose()
+{
+    geometry_msgs::Pose pose;
+    pose.position.x = 0.6;
+    pose.position.y = 0.0;
+    pose.position.z = 1.01;
+    tf::Quaternion q;
+    q.setRPY(M_PI, 0, 0);
+    pose.orientation.x = q.x();
+    pose.orientation.y = q.y();
+    pose.orientation.z = q.z();
+    pose.orientation.w = q.w();
+    return pose;
+}
+
+// 初始化MoveIt接口
+void init_moveit(moveit::planning_interface::MoveGroupInterface &arm, const std::string &reference_frame)
+{
+    arm.setPoseReferenceFrame(reference_frame);
+    arm.allowReplanning(true);
+    arm.setGoalPositionTolerance(0.001);
+    arm.setGoalOrientationTolerance(0.01);
+    arm.setMaxVelocityScalingFactor(0.1);
+    arm.setNamedTarget("ready");
+    arm.move();
+    ros::Duration(1.0).sleep();
+}
+
 int main(int argc, char **argv)
 {
     ros::init(argc, argv, "magnetic_move");
@@ -46,36 +70,13 @@ int main(int argc, char **argv)
     ros::AsyncSpinner spinner(1);
     spinner.start();
 
-    // 发布末端轨迹的Publisher
     ros::Publisher marker_pub = nh.advertise<visualization_msgs::Marker>("end_effector_trajectory", 1, true);
 
-    // 初始化MoveIt接口
     moveit::planning_interface::MoveGroupInterface arm("fr5v6_arm");
     std::string reference_frame = "world";
-    arm.setPoseReferenceFrame(reference_frame);
-    arm.allowReplanning(true);
-    arm.setGoalPositionTolerance(0.001);
-    arm.setGoalOrientationTolerance(0.01);
-    arm.setMaxVelocityScalingFactor(0.1);
+    init_moveit(arm, reference_frame);
 
-    // 回到初始化位置
-    arm.setMaxVelocityScalingFactor(0.1);
-    arm.setNamedTarget("ready");
-    arm.move();
-    ros::Duration(1.0).sleep();
-
-    // 设置目标位姿
-    geometry_msgs::Pose target_pose;
-    target_pose.position.x = 0.6;
-    target_pose.position.y = 0.0;
-    target_pose.position.z = 1.01;
-    tf::Quaternion q;
-    q.setRPY(M_PI, 0, 0); // 末端朝下
-    target_pose.orientation.x = q.x();
-    target_pose.orientation.y = q.y();
-    target_pose.orientation.z = q.z();
-    target_pose.orientation.w = q.w();
-
+    geometry_msgs::Pose target_pose = init_target_pose();
     double current_z = target_pose.position.z;
 
     while (ros::ok() && current_z <= 1.5)
