@@ -72,18 +72,26 @@ std::vector<geometry_msgs::Pose> generate_archimedean_spiral_waypoints(const geo
     geometry_msgs::Pose pose = start_pose;
 
     double theta = 0.0;
-    double d_theta = 2 * M_PI / points_per_turn;
-    int total_points = num_turns * points_per_turn;
-
-    for (int i = 0; i < total_points; ++i)
+    for (int turn = 0; turn < num_turns; ++turn)
     {
+        // 当前圈的半径
         double r = a + b * theta;
-        pose.position.x = start_pose.position.x + r * cos(theta);
-        pose.position.y = start_pose.position.y + r * sin(theta);
-        pose.position.z = start_pose.position.z + pitch * theta / (2 * M_PI);
+        // 本圈的采样点数，随半径线性增加
+        int points_this_turn = static_cast<int>(points_per_turn * (1.0 + r / a));
+        if (points_this_turn < points_per_turn)
+            points_this_turn = points_per_turn;
+        double d_theta = 2 * M_PI / points_this_turn;
 
-        waypoints.push_back(pose);
-        theta += d_theta;
+        for (int i = 0; i < points_this_turn; ++i)
+        {
+            double r_now = a + b * theta;
+            pose.position.x = start_pose.position.x + r_now * cos(theta);
+            pose.position.y = start_pose.position.y + r_now * sin(theta);
+            pose.position.z = start_pose.position.z + pitch * theta / (2 * M_PI);
+
+            waypoints.push_back(pose);
+            theta += d_theta;
+        }
     }
     return waypoints;
 }
