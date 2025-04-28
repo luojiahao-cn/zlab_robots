@@ -117,6 +117,12 @@ To install and set up the project, follow these steps:
         roslaunch magnetic_pose_estimation magnet_pose_estimation.launch 
         rosrun frcobot_examples magnet_move
     ```
+    ```bash
+        cd ./catkin_ws/data/magnetic_data
+        rosbag record /tf /tf_static
+        python3 ./temp.py 
+        python3 ./plot_traj.py 
+    ```
 
 ## Common Issues
 

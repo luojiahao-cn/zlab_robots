@@ -136,7 +136,7 @@ catkin_package(
 ## Specify additional locations of header files
 ## Your package locations should be listed before other locations
 include_directories(
-# include
+  include
   ${catkin_INCLUDE_DIRS}
   ${OpenCV_INCLUDE_DIRS}
 )
@@ -159,7 +159,7 @@ include_directories(
 add_executable(example_dual_arms_control src/example_dual_arms_control.cpp)
 add_executable(example_test src/example_test.cpp)
 add_executable(environment src/environment.cpp)
-add_executable(magnet_move src/magnet_move.cpp)
+add_executable(magnet_move src/magnet_move.cpp src/path_library.cpp)
 
 ## Rename C++ executable without prefix
 ## The above recommended prefix causes long target names, the following renames the
