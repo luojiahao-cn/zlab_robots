@@ -90,11 +90,11 @@ int main(int argc, char **argv)
         // 生成路径（可切换不同路径类型）
         // std::vector<geometry_msgs::Pose> waypoints = generate_square_waypoints(target_pose);
         // std::vector<geometry_msgs::Pose> waypoints = generate_spiral_waypoints(target_pose, 0.02, 0.01, 5, 100);
-        std::vector<geometry_msgs::Pose> waypoints = generate_archimedean_spiral_waypoints(target_pose, 0.01, 0.001, 0.00, 13, 200);
+        std::vector<geometry_msgs::Pose> waypoints = generate_archimedean_spiral_waypoints(target_pose, 0.01, 0.001, 0.00, 13, 500);
 
         // 笛卡尔空间路径规划
         moveit_msgs::RobotTrajectory trajectory;
-        const double eef_step = 0.00002;
+        const double eef_step = 0.00003; 
         double fraction = arm.computeCartesianPath(waypoints, eef_step, trajectory);
         ROS_INFO("Path planning fraction: %.2f%%", fraction * 100.0);
         if (fraction < 0.9)
@@ -107,16 +107,15 @@ int main(int argc, char **argv)
         publish_end_effector_trajectory(marker_pub, waypoints, reference_frame);
 
         // 构造以current_z为名的bag文件
-        char bag_name[64];
-        snprintf(bag_name, sizeof(bag_name), "tf_record_%.3f", current_z);
+        char bag_name[128];
+        snprintf(bag_name, sizeof(bag_name), "/home/lawkaho/workshop/zlab_robots/catkin_ws/data/magnetic_data/tf_record_%.3f", current_z);
         std::string bag_cmd = "rosbag record -O " + std::string(bag_name) + " /tf /tf_static __name:=tf_bag_recorder_" + std::to_string(int(current_z * 1000)) + " &";
         system(bag_cmd.c_str());
         ROS_INFO("Started rosbag recording: %s.bag", bag_name);
 
         // 执行运动
         moveit::planning_interface::MoveGroupInterface::Plan plan;
-        plan.trajectory_ = trajectory;
-        arm.setMaxVelocityScalingFactor(0.01);
+        plan.trajectory_ = trajectory; 
         arm.execute(plan);
         ROS_INFO("Executed trajectory");
         ros::Duration(1.0).sleep();
@@ -129,6 +128,7 @@ int main(int argc, char **argv)
         // 增加高度
         current_z += 0.01;
         target_pose.position.z = current_z;
+        arm.setMaxVelocityScalingFactor(0.01);
     }
 
     // 回到初始化位置

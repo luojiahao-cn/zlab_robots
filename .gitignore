@@ -5,4 +5,7 @@ doc/.~*
 
 *.bag
 catkin_ws/data/magnetic_data/*.csv
+catkin_ws/data/magnetic_data/*.png
+catkin_ws/data/magnetic_data/*/*.csv
+catkin_ws/data/magnetic_data/*/*.png
 catkin_ws/src/magnetic_localization/script/*
