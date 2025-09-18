@@ -22,7 +22,7 @@ file_n_map = {
 
 if mode == 1:
     # 单文件绘图
-    csv_file = 'catkin_ws/data/magnetic_data/tf_record_1.090.csv'
+    csv_file = 'catkin_ws/data/magnetic_data/tf_record_1.020.csv'
     N = file_n_map.get(os.path.basename(csv_file), 100)
     df = pd.read_csv(csv_file)
     df = df[df['frame'] == 'magnet_predicted']
