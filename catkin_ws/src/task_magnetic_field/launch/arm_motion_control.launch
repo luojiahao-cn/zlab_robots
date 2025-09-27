@@ -1,4 +1,0 @@
-<launch>
-  <rosparam file="$(find task_magnetic_field)/config/scan_area.yaml" command="load" />
-  <node pkg="task_magnetic_field" type="arm_motion_control" name="arm_motion_control" output="screen"/>
-</launch>
