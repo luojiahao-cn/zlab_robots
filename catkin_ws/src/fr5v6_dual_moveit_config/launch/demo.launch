@@ -3,6 +3,9 @@
   <!-- specify the planning pipeline -->
   <arg name="pipeline" default="ompl" />
 
+  <!-- move_group output type -->
+  <arg name="move_group_output" default="screen" />
+
   <!-- By default, we do not start a database (it can be large) -->
   <arg name="db" default="false" />
   <!-- Allow user to specify database location -->
@@ -51,6 +54,7 @@
     <arg name="debug" value="$(arg debug)"/>
     <arg name="pipeline" value="$(arg pipeline)"/>
     <arg name="load_robot_description" value="$(arg load_robot_description)"/>
+    <arg name="move_group_output" value="$(arg move_group_output)"/>
   </include>
 
   <!-- Run Rviz and load the default config to see the state of the move_group node -->
