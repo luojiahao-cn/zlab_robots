@@ -64,9 +64,14 @@ To install and set up the project, follow these steps:
 
 - To start the single arm controller, use the following command:
 
-    ```bash
-    roslaunch frcobot_examples connect_single_arm.launch
-    ```
+    - Default arm1 (IP: 192.168.31.202):
+        ```bash
+        roslaunch frcobot_examples connect_single_arm.launch
+        ```
+    - Select arm2 (IP: 192.168.31.203):
+        ```bash
+        roslaunch frcobot_examples connect_single_arm.launch arm_selection:=arm2
+        ```
     ![connect_single_arm Image](images/connect_single_arm.png)
 
 - To start the dual-robot arm controller, use the following command:
@@ -109,20 +114,6 @@ To install and set up the project, follow these steps:
 
 
 ## Example
-
-### 磁定位测试
-    ```bash
-        roslaunch frcobot_examples connect_single_arm.launch 
-        rosrun frcobot_examples environment
-        roslaunch magnetic_pose_estimation magnet_pose_estimation.launch 
-        rosrun frcobot_examples magnet_move
-    ```
-    ```bash
-        cd ./catkin_ws/data/magnetic_data
-        rosbag record /tf /tf_static
-        python3 ./temp.py 
-        python3 ./plot_traj.py 
-    ```
 
 ## Common Issues
 
