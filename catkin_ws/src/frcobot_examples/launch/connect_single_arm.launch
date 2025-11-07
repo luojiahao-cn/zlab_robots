@@ -16,7 +16,7 @@
     <!-- <arg name="use_gui" default="false" /> -->
     <arg name="use_rviz" default="true" />
     <!-- arm1: 192.168.31.202, arm2: 192.168.31.203 -->
-    <arg name="robot_ip" value="$(eval arg('arm') == 'arm1' ? '192.168.31.202' : '192.168.31.203')" />
+    <arg name="robot_ip" value="$(eval '192.168.31.202' if arg('arm') == 'arm1' else '192.168.31.203')" />
 
     <!-- Load the URDF, SRDF and other .yaml configuration files on the param server -->
     <include file="$(find fr5v6_single_moveit_config)/launch/planning_context.launch">
