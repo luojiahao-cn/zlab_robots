@@ -18,9 +18,13 @@
     <!-- arm1: 192.168.31.202, arm2: 192.168.31.203 -->
     <arg name="robot_ip" value="$(eval '192.168.31.202' if arg('arm') == 'arm1' else '192.168.31.203')" />
 
+    <!-- Tool parameter (default: permanent_magnet) -->
+    <arg name="tool_name" default="permanent_magnet" doc="Tool name to use (e.g., permanent_magnet, electronic_magnet, tool_250mm, none)"/>
+
     <!-- Load the URDF, SRDF and other .yaml configuration files on the param server -->
     <include file="$(find fr5v6_single_moveit_config)/launch/planning_context.launch">
         <arg name="load_robot_description" value="true" />
+        <arg name="tool_name" value="$(arg tool_name)" />
     </include>
 
     <!-- Run the main MoveIt! executable without trajectory execution (we do not have controllers

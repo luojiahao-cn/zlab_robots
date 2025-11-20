@@ -8,9 +8,17 @@
 
     <!-- 加载工具配置 -->
     <!-- 优先从工具包加载，如果工具包不存在则从旧的tools.yaml加载 -->
-    <xacro:property name="tool_package_path" 
-                    value="$(find frcobot_tools)/tools/$(arg tool_name)/config/tool.yaml"/>
+    <!-- 注意：当tool_name为"none"时，实际目录名是"tool_none" -->
     <xacro:property name="tool_config" value="${None}"/>
+    
+    <!-- 根据tool_name确定实际工具目录名 -->
+    <!-- 使用Python表达式来处理条件：如果tool_name是"none"则使用"tool_none"，否则使用tool_name -->
+    <xacro:property name="tool_name_arg" value="$(arg tool_name)"/>
+    <xacro:property name="actual_tool_name" 
+                    value="${'tool_none' if tool_name_arg == 'none' else tool_name_arg}"/>
+    
+    <xacro:property name="tool_package_path" 
+                    value="$(find frcobot_tools)/tools/${actual_tool_name}/config/tool.yaml"/>
     
     <!-- 尝试加载工具包配置 -->
     <!-- 如果工具包存在，使用工具包配置；否则需要在下面取消注释使用旧配置 -->
