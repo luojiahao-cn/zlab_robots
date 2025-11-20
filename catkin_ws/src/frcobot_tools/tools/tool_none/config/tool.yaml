@@ -13,7 +13,7 @@ tool_info:
 tool_type: "simple"
 
 # 工具相对于法兰的安装位置 (相对于j6_link)
-# 注意：当前系统在tool_joint中已有0.1m的法兰偏移
+# 注意：当前系统在ee_joint中已有0.1m的法兰偏移
 origin:
   xyz: [0, 0, 0]  # 相对于法兰中心的位置
   rpy: [0, 0, 0]
@@ -46,6 +46,6 @@ collision:
 
 # MoveIt配置
 moveit:
-  end_effector_link: "tool_link"  # 默认使用tool_link，如果有TCP则使用tcp_link
+  end_effector_link: "ee_link"  # 默认使用ee_link（机器人本体末端执行器链接），如果有TCP则使用tcp_link
   planning_frame_offset: [0, 0, 0]  # 规划框架偏移（通常不需要）
 

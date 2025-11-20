@@ -55,6 +55,6 @@ urdf_package:
     rpy: [0, 0, 0]
 
 moveit:
-  end_effector_link: "tcp_link"  # 或 "tool_link"，取决于您想使用哪个作为末端执行器
+  end_effector_link: "tcp_link"  # 或 "ee_link"（机器人本体末端执行器链接），取决于您想使用哪个作为末端执行器
   planning_frame_offset: [0, 0, 0]
 

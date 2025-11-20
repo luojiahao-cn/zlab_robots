@@ -46,7 +46,7 @@
             <xacro:property name="collision_mesh_path" value="${tool_collision.get('mesh_path', '')}"/>
             <xacro:property name="collision_scale" value="${tool_collision.get('scale', [1,1,1])}"/>
             
-            <!-- 创建工具链接（使用工具名称作为链接名，避免与tool_link冲突） -->
+            <!-- 创建工具链接（使用工具名称作为链接名，避免与ee_link冲突） -->
             <link name="${arm_id}_${tool_name}_link">
                 <!-- 可视化 -->
                 <xacro:if value="${visual_mesh_path}">
@@ -88,12 +88,12 @@
                 </inertial>
             </link>
             
-            <!-- 创建工具关节（连接到tool_link，而不是j6_link） -->
-            <!-- 注意：tool_link已经在fr5v6_library.xacro中创建并连接到j6_link -->
+            <!-- 创建工具关节（连接到ee_link，而不是j6_link） -->
+            <!-- 注意：ee_link已经在fr5v6_library.xacro中创建并连接到j6_link -->
             <joint name="${arm_id}_${tool_name}_joint" type="fixed">
-                <parent link="${arm_id}_tool_link" />
+                <parent link="${arm_id}_ee_link" />
                 <child link="${arm_id}_${tool_name}_link" />
-                <!-- 工具偏移（tool_link已经包含了0.1m的法兰偏移） -->
+                <!-- 工具偏移（ee_link已经包含了0.1m的法兰偏移） -->
                 <origin 
                     xyz="${tool_origin_xyz[0]} ${tool_origin_xyz[1]} ${tool_origin_xyz[2]}"
                     rpy="${tool_origin_rpy[0]} ${tool_origin_rpy[1]} ${tool_origin_rpy[2]}" />
@@ -137,12 +137,12 @@
             <!-- 加载外部URDF文件 -->
             <xacro:include filename="${full_urdf_path}"/>
             
-            <!-- 创建从tool_link到工具根链接的关节（而不是j6_link） -->
-            <!-- 注意：tool_link已经在fr5v6_library.xacro中创建并连接到j6_link -->
+            <!-- 创建从ee_link到工具根链接的关节（而不是j6_link） -->
+            <!-- 注意：ee_link已经在fr5v6_library.xacro中创建并连接到j6_link -->
             <joint name="${arm_id}_${tool_name}_joint" type="fixed">
-                <parent link="${arm_id}_tool_link" />
+                <parent link="${arm_id}_ee_link" />
                 <child link="${root_link_name}" />
-                <!-- 工具安装偏移（tool_link已经包含了0.1m的法兰偏移） -->
+                <!-- 工具安装偏移（ee_link已经包含了0.1m的法兰偏移） -->
                 <xacro:property name="mount_xyz" value="${mount_offset['xyz']}"/>
                 <xacro:property name="mount_rpy" value="${mount_offset['rpy']}"/>
                 <origin 

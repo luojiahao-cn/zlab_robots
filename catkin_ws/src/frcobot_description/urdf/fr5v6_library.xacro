@@ -221,10 +221,10 @@
         <!-- 检查是否使用工具包系统 -->
         <xacro:property name="use_tool_package" value="${'tool_type' in tool_config}"/>
         
-        <!-- 如果使用工具包系统，先创建tool_link作为中间链接 -->
+        <!-- 如果使用工具包系统，先创建ee_link作为中间链接 -->
         <xacro:if value="${use_tool_package and tool_name != 'none'}">
-            <!-- 创建tool_link（连接到j6_link） -->
-            <link name="${arm_id}_tool_link">
+            <!-- 创建ee_link（连接到j6_link） -->
+            <link name="${arm_id}_ee_link">
                 <inertial>
                     <origin xyz="0 0 0" rpy="0 0 0"/>
                     <mass value="0.1" />
@@ -234,22 +234,22 @@
                 </inertial>
             </link>
             
-            <!-- 创建从j6_link到tool_link的关节 -->
-            <joint name="${arm_id}_tool_joint" type="fixed">
+            <!-- 创建从j6_link到ee_link的关节 -->
+            <joint name="${arm_id}_ee_joint" type="fixed">
                 <parent link="${arm_id}_j6_link" />
-                <child link="${arm_id}_tool_link" />
+                <child link="${arm_id}_ee_link" />
                 <!-- 先应用固定的法兰偏移 -->
                 <origin xyz="0 0 0.1" rpy="0 0 0" />
             </joint>
             
-            <!-- 使用新的工具加载器，工具将连接到tool_link -->
+            <!-- 使用新的工具加载器，工具将连接到ee_link -->
             <xacro:load_tool arm_id="${arm_id}" tool_name="${tool_name}" tool_config="${tool_config}"/>
         </xacro:if>
         
         <!-- 否则使用旧的工具配置方式（向后兼容） -->
         <xacro:unless value="${use_tool_package}">
             <!-- 添加工具链接 - 始终创建 -->
-            <link name="${arm_id}_tool_link">
+            <link name="${arm_id}_ee_link">
                 <xacro:if value="${tool_name != 'none'}">
                     <visual>
                         <origin 
@@ -298,9 +298,9 @@
             </link>
 
             <!-- 总是创建工具关节 -->
-            <joint name="${arm_id}_tool_joint" type="fixed">
+            <joint name="${arm_id}_ee_joint" type="fixed">
                 <parent link="${arm_id}_j6_link" />
-                <child link="${arm_id}_tool_link" />
+                <child link="${arm_id}_ee_link" />
                 <!-- 先应用固定的法兰偏移 -->
                 <origin xyz="0 0 0.1" rpy="0 0 0" />
             </joint>
@@ -320,7 +320,7 @@
                 </link>
 
                 <joint name="${arm_id}_tcp_joint" type="fixed">
-                    <parent link="${arm_id}_tool_link" />
+                    <parent link="${arm_id}_ee_link" />
                     <child link="${arm_id}_tcp_link" />
                     <origin
                         xyz="${tool_config['tcp']['xyz'][0]} 

@@ -108,7 +108,7 @@ Visualization Manager:
           Show Axes: false
           Show Trail: false
           Value: true
-        frrobot_tool_link:
+        frrobot_ee_link:
           Alpha: 1
           Show Axes: false
           Show Trail: false

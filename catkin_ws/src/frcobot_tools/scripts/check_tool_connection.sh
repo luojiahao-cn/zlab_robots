@@ -40,16 +40,16 @@ echo "工具根链接 (base_link):"
 grep -q "name=\"base_link\"" $TEMP_URDF && echo "  ✓ 存在" || echo "  ✗ 不存在"
 
 echo ""
-echo "末端执行器链接 (tool_link):"
-grep -q "name=\"tool_link\"" $TEMP_URDF && echo "  ✓ 存在" || echo "  ✗ 不存在"
+echo "末端执行器链接 (ee_link):"
+grep -q "name=\"frrobot_ee_link\"" $TEMP_URDF && echo "  ✓ 存在" || grep -q "name=\"robot1_ee_link\"" $TEMP_URDF && echo "  ✓ 存在" || echo "  ✗ 不存在"
 
 echo ""
-echo "TCP链接 (tcp_link) - 旧命名:"
-grep -q "name=\"tcp_link\"" $TEMP_URDF && echo "  ⚠ 仍存在（应使用tool_link）" || echo "  ✓ 已重命名为tool_link"
+echo "TCP链接 (tcp_link):"
+grep -q "name=\"tcp_link\"" $TEMP_URDF && echo "  ✓ 存在" || echo "  - 不存在"
 
 echo ""
-echo "工具链接 (frrobot_tool_link) - 仅用于simple类型:"
-grep -q "name=\"frrobot_tool_link\"" $TEMP_URDF && echo "  ✓ 存在" || echo "  - 不存在（urdf_package类型不使用此链接）"
+echo "工具链接 (frrobot_ee_link) - 机器人本体末端执行器链接:"
+grep -q "name=\"frrobot_ee_link\"" $TEMP_URDF && echo "  ✓ 存在" || grep -q "name=\"robot1_ee_link\"" $TEMP_URDF && echo "  ✓ 存在" || echo "  - 不存在"
 
 # 检查关节连接
 echo ""
@@ -67,17 +67,17 @@ else
 fi
 
 echo ""
-echo "检查 base_link -> tool_link 的连接:"
-JOINT_BASE_TO_TOOL=$(grep -A 10 "parent.*link.*base_link" $TEMP_URDF | grep -A 5 "child.*link.*tool_link")
-if [ -n "$JOINT_BASE_TO_TOOL" ]; then
+echo "检查 j6_link -> ee_link 的连接:"
+JOINT_J6_TO_EE=$(grep -A 10 "parent.*link.*frrobot_j6_link\|parent.*link.*robot1_j6_link\|parent.*link.*robot2_j6_link" $TEMP_URDF | grep -A 5 "child.*link.*ee_link")
+if [ -n "$JOINT_J6_TO_EE" ]; then
     echo "  ✓ 找到连接关节:"
-    echo "$JOINT_BASE_TO_TOOL" | head -8 | sed 's/^/    /'
+    echo "$JOINT_J6_TO_EE" | head -8 | sed 's/^/    /'
 else
-    echo "  ⚠ 未找到 base_link -> tool_link 的连接（可能使用其他链接名）"
-    # 也检查tcp_link（向后兼容）
-    JOINT_BASE_TO_TCP=$(grep -A 10 "parent.*link.*base_link" $TEMP_URDF | grep -A 5 "child.*link.*tcp_link")
-    if [ -n "$JOINT_BASE_TO_TCP" ]; then
-        echo "  ⚠ 找到 base_link -> tcp_link 连接（应使用tool_link）"
+    echo "  ⚠ 未找到 j6_link -> ee_link 的连接（可能使用其他链接名）"
+    # 也检查tool_link（向后兼容）
+    JOINT_J6_TO_TOOL=$(grep -A 10 "parent.*link.*frrobot_j6_link\|parent.*link.*robot1_j6_link\|parent.*link.*robot2_j6_link" $TEMP_URDF | grep -A 5 "child.*link.*tool_link")
+    if [ -n "$JOINT_J6_TO_TOOL" ]; then
+        echo "  ⚠ 找到 j6_link -> tool_link 连接（应使用ee_link）"
     fi
 fi
 
@@ -97,11 +97,11 @@ grep -E "joint.*name.*tool|joint.*name.*permanent_magnet|joint.*name.*tcp" $TEMP
 echo ""
 echo "5. 末端执行器链接检查:"
 echo "----------------------------------------"
-if grep -q "name=\"tool_link\"" $TEMP_URDF; then
-    echo "  ✓ tool_link存在（符合MoveIt默认命名）"
+if grep -q "name=\"frrobot_ee_link\"" $TEMP_URDF || grep -q "name=\"robot1_ee_link\"" $TEMP_URDF || grep -q "name=\"robot2_ee_link\"" $TEMP_URDF; then
+    echo "  ✓ ee_link存在（机器人本体末端执行器链接）"
     echo "  ✓ 无需在代码中额外设置末端执行器链接"
 else
-    echo "  ⚠ tool_link不存在，可能需要设置末端执行器链接"
+    echo "  ⚠ ee_link不存在，可能需要设置末端执行器链接"
 fi
 
 # 检查链接层次结构

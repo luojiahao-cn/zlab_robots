@@ -16,7 +16,7 @@
         <link name="frrobot_j4_link"/>
         <link name="frrobot_j5_link"/>
         <link name="frrobot_j6_link"/>
-        <link name="frrobot_tool_link"/>
+        <link name="frrobot_ee_link"/>
         <joint name="frrobot_j1"/>
         <joint name="frrobot_j2"/>
         <joint name="frrobot_j3"/>
