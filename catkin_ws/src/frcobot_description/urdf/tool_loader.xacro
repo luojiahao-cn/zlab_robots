@@ -1,0 +1,176 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    工具加载器 - 用于从工具包加载工具配置
+    支持两种工具类型：
+    1. simple: 使用mesh文件的简单工具
+    2. urdf_package: 使用完整URDF包的工具（如SolidWorks导出）
+-->
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+    <!--
+        从工具包加载工具配置
+        参数:
+        - arm_id: 机械臂ID
+        - tool_name: 工具名称（对应工具包目录名）
+        - tool_config: 工具配置字典（从tool.yaml加载）
+    -->
+    <xacro:macro name="load_tool" params="arm_id tool_name tool_config">
+        
+        <xacro:property name="tool_type" value="${tool_config['tool_type']}"/>
+        <xacro:property name="tool_info" value="${tool_config['tool_info']}"/>
+        
+        <!-- 获取工具安装位置 -->
+        <xacro:property name="tool_origin" value="${tool_config['origin']}"/>
+        <xacro:property name="tool_origin_xyz" value="${tool_origin['xyz']}"/>
+        <xacro:property name="tool_origin_rpy" value="${tool_origin['rpy']}"/>
+        
+        <!-- 获取TCP配置 -->
+        <xacro:property name="tool_tcp" value="${tool_config['tcp']}"/>
+        <xacro:property name="tool_tcp_xyz" value="${tool_tcp['xyz']}"/>
+        <xacro:property name="tool_tcp_rpy" value="${tool_tcp['rpy']}"/>
+        
+        <!-- 获取物理属性 -->
+        <xacro:property name="tool_physical" value="${tool_config['physical_properties']}"/>
+        <xacro:property name="tool_mass" value="${tool_physical['mass']}"/>
+        <xacro:property name="tool_inertia" value="${tool_physical['inertia']}"/>
+        
+        <!-- ========== Simple类型工具 ========== -->
+        <xacro:if value="${tool_type == 'simple'}">
+            <!-- 获取可视化配置 -->
+            <xacro:property name="tool_visual" value="${tool_config.get('visual', {})}"/>
+            <xacro:property name="visual_mesh_path" value="${tool_visual.get('mesh_path', '')}"/>
+            <xacro:property name="visual_scale" value="${tool_visual.get('scale', [1,1,1])}"/>
+            
+            <!-- 获取碰撞配置 -->
+            <xacro:property name="tool_collision" value="${tool_config.get('collision', {})}"/>
+            <xacro:property name="collision_mesh_path" value="${tool_collision.get('mesh_path', '')}"/>
+            <xacro:property name="collision_scale" value="${tool_collision.get('scale', [1,1,1])}"/>
+            
+            <!-- 创建工具链接 -->
+            <link name="${arm_id}_tool_link">
+                <!-- 可视化 -->
+                <xacro:if value="${visual_mesh_path}">
+                    <visual>
+                        <origin 
+                            xyz="${tool_origin_xyz[0]} ${tool_origin_xyz[1]} ${tool_origin_xyz[2]}"
+                            rpy="${tool_origin_rpy[0]} ${tool_origin_rpy[1]} ${tool_origin_rpy[2]}" />
+                        <geometry>
+                            <mesh filename="${visual_mesh_path}" 
+                                  scale="${visual_scale[0]} ${visual_scale[1]} ${visual_scale[2]}" />
+                        </geometry>
+                    </visual>
+                </xacro:if>
+                
+                <!-- 碰撞 -->
+                <xacro:if value="${collision_mesh_path}">
+                    <collision>
+                        <origin 
+                            xyz="${tool_origin_xyz[0]} ${tool_origin_xyz[1]} ${tool_origin_xyz[2]}"
+                            rpy="${tool_origin_rpy[0]} ${tool_origin_rpy[1]} ${tool_origin_rpy[2]}" />
+                        <geometry>
+                            <mesh filename="${collision_mesh_path}" 
+                                  scale="${collision_scale[0]} ${collision_scale[1]} ${collision_scale[2]}" />
+                        </geometry>
+                    </collision>
+                </xacro:if>
+                
+                <!-- 惯性 -->
+                <inertial>
+                    <origin xyz="0 0 0" rpy="0 0 0"/>
+                    <mass value="${tool_mass}" />
+                    <inertia 
+                        ixx="${tool_inertia['ixx']}"
+                        ixy="${tool_inertia['ixy']}"
+                        ixz="${tool_inertia['ixz']}"
+                        iyy="${tool_inertia['iyy']}"
+                        iyz="${tool_inertia['iyz']}"
+                        izz="${tool_inertia['izz']}" />
+                </inertial>
+            </link>
+            
+            <!-- 创建工具关节（连接到j6_link） -->
+            <joint name="${arm_id}_tool_joint" type="fixed">
+                <parent link="${arm_id}_j6_link" />
+                <child link="${arm_id}_tool_link" />
+                <!-- 先应用固定的法兰偏移（0.1m），然后加上工具偏移 -->
+                <origin 
+                    xyz="${0.1 + tool_origin_xyz[0]} ${tool_origin_xyz[1]} ${tool_origin_xyz[2]}"
+                    rpy="${tool_origin_rpy[0]} ${tool_origin_rpy[1]} ${tool_origin_rpy[2]}" />
+            </joint>
+            
+            <!-- 创建TCP链接 -->
+            <link name="${arm_id}_tcp_link">
+                <visual>
+                    <origin xyz="0 0 0" rpy="0 0 0" />
+                    <geometry>
+                        <sphere radius="0.005" />
+                    </geometry>
+                    <material name="">
+                        <color rgba="1 0 0 1" />
+                    </material>
+                </visual>
+            </link>
+            
+            <joint name="${arm_id}_tcp_joint" type="fixed">
+                <parent link="${arm_id}_tool_link" />
+                <child link="${arm_id}_tcp_link" />
+                <origin
+                    xyz="${tool_tcp_xyz[0]} ${tool_tcp_xyz[1]} ${tool_tcp_xyz[2]}"
+                    rpy="${tool_tcp_rpy[0]} ${tool_tcp_rpy[1]} ${tool_tcp_rpy[2]}" />
+            </joint>
+        </xacro:if>
+        
+        <!-- ========== URDF Package类型工具 ========== -->
+        <xacro:if value="${tool_type == 'urdf_package'}">
+            <xacro:property name="urdf_config" value="${tool_config['urdf_package']}"/>
+            <xacro:property name="urdf_file" value="${urdf_config['urdf_file']}"/>
+            <xacro:property name="root_link_name" value="${urdf_config['root_link_name']}"/>
+            <xacro:property name="tcp_link_name" value="${urdf_config['tcp_link_name']}"/>
+            <xacro:property name="mount_offset" value="${urdf_config['mount_offset']}"/>
+            
+            <!-- 构建URDF文件路径 -->
+            <xacro:property name="tool_package_path" value="package://frcobot_tools/tools/${tool_name}"/>
+            <xacro:property name="full_urdf_path" value="${tool_package_path}/${urdf_file}"/>
+            
+            <!-- 加载外部URDF文件 -->
+            <xacro:include filename="${full_urdf_path}"/>
+            
+            <!-- 创建从j6_link到工具根链接的关节 -->
+            <joint name="${arm_id}_tool_joint" type="fixed">
+                <parent link="${arm_id}_j6_link" />
+                <child link="${root_link_name}" />
+                <!-- 法兰偏移 + 工具安装偏移 -->
+                <xacro:property name="mount_xyz" value="${mount_offset['xyz']}"/>
+                <xacro:property name="mount_rpy" value="${mount_offset['rpy']}"/>
+                <origin 
+                    xyz="${0.1 + mount_xyz[0]} ${mount_xyz[1]} ${mount_xyz[2]}"
+                    rpy="${mount_rpy[0]} ${mount_rpy[1]} ${mount_rpy[2]}" />
+            </joint>
+            
+            <!-- 如果URDF中没有TCP链接，创建一个 -->
+            <xacro:if value="${not tcp_link_name}">
+                <link name="${arm_id}_tcp_link">
+                    <visual>
+                        <origin xyz="0 0 0" rpy="0 0 0" />
+                        <geometry>
+                            <sphere radius="0.005" />
+                        </geometry>
+                        <material name="">
+                            <color rgba="1 0 0 1" />
+                        </material>
+                    </visual>
+                </link>
+                <joint name="${arm_id}_tcp_joint" type="fixed">
+                    <parent link="${root_link_name}" />
+                    <child link="${arm_id}_tcp_link" />
+                    <origin
+                        xyz="${tool_tcp_xyz[0]} ${tool_tcp_xyz[1]} ${tool_tcp_xyz[2]}"
+                        rpy="${tool_tcp_rpy[0]} ${tool_tcp_rpy[1]} ${tool_tcp_rpy[2]}" />
+                </joint>
+            </xacro:if>
+        </xacro:if>
+        
+    </xacro:macro>
+
+</robot>
+

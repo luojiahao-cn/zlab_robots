@@ -11,9 +11,6 @@
     <!-- 导入标定参数 -->
     <xacro:property name="calibration_file" value="$(find frcobot_description)/config/dual_arm_calibration.yaml"/>
     <xacro:property name="calib" value="${xacro.load_yaml(calibration_file)}"/>
-    <!-- 加载工具配置文件 -->
-    <xacro:property name="tools_config" value="$(find frcobot_description)/config/tools.yaml"/>
-    <xacro:property name="tools" value="${xacro.load_yaml(tools_config)}"/>
     
     <!-- 获取标定参数 -->
     <xacro:property name="trans_x" value="${calib['left_to_right_transform']['translation']['x']}"/>
@@ -23,9 +20,43 @@
     <xacro:property name="pitch" value="${calib['left_to_right_transform']['rpy']['pitch']}"/>
     <xacro:property name="yaw" value="${calib['left_to_right_transform']['rpy']['yaw']}"/>
 
-    <!-- 获取工具配置 -->
-    <xacro:property name="robot1_tool_config" value="${tools['tools']['$(arg robot1_tool)']}"/>
-    <xacro:property name="robot2_tool_config" value="${tools['tools']['$(arg robot2_tool)']}"/>
+    <!-- 加载工具配置 -->
+    <!-- 优先从工具包加载，如果工具包不存在则从旧的tools.yaml加载 -->
+    <!-- 注意：如果工具包不存在，xacro会报错，此时需要确保旧的tools.yaml中有对应配置 -->
+    
+    <!-- 获取robot1工具配置 -->
+    <!-- 首先尝试从工具包加载 -->
+    <xacro:property name="robot1_tool_package_path" 
+                    value="$(find frcobot_tools)/tools/$(arg robot1_tool)/config/tool.yaml"/>
+    <xacro:property name="robot1_tool_config" value="${None}"/>
+    
+    <!-- 尝试加载工具包配置 -->
+    <!-- 如果工具包存在，使用工具包配置；否则需要在下面取消注释使用旧配置 -->
+    <xacro:property name="robot1_tool_package_config" 
+                    value="${xacro.load_yaml(robot1_tool_package_path)}"/>
+    <xacro:property name="robot1_tool_config" value="${robot1_tool_package_config}"/>
+    
+    <!-- 如果工具包不存在，取消下面注释使用旧配置 -->
+    <!--
+    <xacro:property name="old_tools_config" value="$(find frcobot_description)/config/tools.yaml"/>
+    <xacro:property name="old_tools" value="${xacro.load_yaml(old_tools_config)}"/>
+    <xacro:property name="robot1_tool_config" value="${old_tools['tools']['$(arg robot1_tool)']}"/>
+    -->
+    
+    <!-- 获取robot2工具配置 -->
+    <xacro:property name="robot2_tool_package_path" 
+                    value="$(find frcobot_tools)/tools/$(arg robot2_tool)/config/tool.yaml"/>
+    <xacro:property name="robot2_tool_config" value="${None}"/>
+    <xacro:property name="robot2_tool_package_config" 
+                    value="${xacro.load_yaml(robot2_tool_package_path)}"/>
+    <xacro:property name="robot2_tool_config" value="${robot2_tool_package_config}"/>
+    
+    <!-- 如果工具包不存在，取消下面注释使用旧配置 -->
+    <!--
+    <xacro:property name="old_tools_config" value="$(find frcobot_description)/config/tools.yaml"/>
+    <xacro:property name="old_tools" value="${xacro.load_yaml(old_tools_config)}"/>
+    <xacro:property name="robot2_tool_config" value="${old_tools['tools']['$(arg robot2_tool)']}"/>
+    -->
 
     <!-- 添加虚拟根链接 -->
     <xacro:include filename="$(find frcobot_description)/urdf/fr5v6_library.xacro" />

@@ -3,6 +3,27 @@
 
     <!-- 定义参数 -->
     <xacro:arg name="arm_id" default="frrobot" />
+    <!-- 定义工具参数 -->
+    <xacro:arg name="tool_name" default="none"/>
+
+    <!-- 加载工具配置 -->
+    <!-- 优先从工具包加载，如果工具包不存在则从旧的tools.yaml加载 -->
+    <xacro:property name="tool_package_path" 
+                    value="$(find frcobot_tools)/tools/$(arg tool_name)/config/tool.yaml"/>
+    <xacro:property name="tool_config" value="${None}"/>
+    
+    <!-- 尝试加载工具包配置 -->
+    <!-- 如果工具包存在，使用工具包配置；否则需要在下面取消注释使用旧配置 -->
+    <xacro:property name="tool_package_config" 
+                    value="${xacro.load_yaml(tool_package_path)}"/>
+    <xacro:property name="tool_config" value="${tool_package_config}"/>
+    
+    <!-- 如果工具包不存在，取消下面注释使用旧配置 -->
+    <!--
+    <xacro:property name="old_tools_config" value="$(find frcobot_description)/config/tools.yaml"/>
+    <xacro:property name="old_tools" value="${xacro.load_yaml(old_tools_config)}"/>
+    <xacro:property name="tool_config" value="${old_tools['tools']['$(arg tool_name)']}"/>
+    -->
 
     <!-- 添加虚拟根链接 -->
     <xacro:include filename="$(find frcobot_description)/urdf/fr5v6_library.xacro" />
@@ -11,7 +32,13 @@
     <link name="world" />
 
     <!-- 实例化机械臂 -->
-    <xacro:fr5v6_arm arm_id="$(arg arm_id)" connected_to="world" xyz="0 0 0" rpy="0 0 0" />
+    <xacro:fr5v6_arm 
+        arm_id="$(arg arm_id)" 
+        connected_to="world" 
+        xyz="0 0 0" 
+        rpy="0 0 0"
+        tool_name="$(arg tool_name)"
+        tool_config="${tool_config}" />
 
     <xacro:gazebo-joint joint="$(arg arm_id)_j1" />
     <xacro:gazebo-joint joint="$(arg arm_id)_j2" />
