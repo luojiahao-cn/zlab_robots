@@ -10,11 +10,11 @@
     <arg name="debug" default="false" />
 
     <!-- Define which arm to use: arm1 or arm2 -->
-    <arg name="arm" default="arm1" />
+    <arg name="arm" default="arm2" />
 
     <!-- Define whether to use real robot or simulation -->
     <!-- <arg name="use_gui" default="false" /> -->
-    <arg name="use_rviz" default="true" />
+    <arg name="use_rviz" default="false" />
     <!-- arm1: 192.168.31.202, arm2: 192.168.31.203 -->
     <arg name="robot_ip" value="$(eval '192.168.31.202' if arg('arm') == 'arm1' else '192.168.31.203')" />
 

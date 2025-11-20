@@ -5,60 +5,20 @@
 <robot
   name="permanent_magnet">
   <link
-    name="base_link">
+    name="pm_base_link">
     <inertial>
       <origin
-        xyz="-1.45891925355649E-05 0.000974710969544189 0.0547438582198864"
-        rpy="0 0 0" />
-      <mass
-        value="0.135995886319531" />
-      <inertia
-        ixx="0.000223988389824018"
-        ixy="1.69406787033995E-08"
-        ixz="-9.64640893593206E-09"
-        iyy="0.000188145840465917"
-        iyz="1.43755105424183E-05"
-        izz="0.000105977351305304" />
-    </inertial>
-    <visual>
-      <origin
-        xyz="0 0 0"
-        rpy="0 0 0" />
-      <geometry>
-        <mesh
-          filename="package://frcobot_tools/tools/permanent_magnet/meshes/base_link.STL" />
-      </geometry>
-      <material
-        name="">
-        <color
-          rgba="1 1 1 1" />
-      </material>
-    </visual>
-    <collision>
-      <origin
-        xyz="0 0 0"
-        rpy="0 0 0" />
-      <geometry>
-        <mesh
-          filename="package://frcobot_tools/tools/permanent_magnet/meshes/base_link.STL" />
-      </geometry>
-    </collision>
-  </link>
-  <link
-    name="tcp_link">
-    <inertial>
-      <origin
-        xyz="-1.4583E-05 0.00097477 -0.026256"
+        xyz="-1.4589E-05 0.00097471 0.054744"
         rpy="0 0 0" />
       <mass
         value="0.136" />
       <inertia
-        ixx="0.00026656"
-        ixy="7.0025E-08"
-        ixz="1.9501E-08"
-        iyy="0.00019801"
-        iyz="-3.5836E-06"
-        izz="0.00013869" />
+        ixx="0.00022399"
+        ixy="1.6941E-08"
+        ixz="-9.6464E-09"
+        iyy="0.00018815"
+        iyz="1.4376E-05"
+        izz="0.00010598" />
     </inertial>
     <visual>
       <origin
@@ -66,7 +26,7 @@
         rpy="0 0 0" />
       <geometry>
         <mesh
-          filename="package://frcobot_tools/tools/permanent_magnet/meshes/tcp_link.STL" />
+          filename="package://permanent_magnet/meshes/pm_base_link.STL" />
       </geometry>
       <material
         name="">
@@ -80,7 +40,47 @@
         rpy="0 0 0" />
       <geometry>
         <mesh
-          filename="package://frcobot_tools/tools/permanent_magnet/meshes/tcp_link.STL" />
+          filename="package://permanent_magnet/meshes/pm_base_link.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <link
+    name="pm_tcp_link">
+    <inertial>
+      <origin
+        xyz="-1.4589E-05 0.00097471 -0.026256"
+        rpy="0 0 0" />
+      <mass
+        value="0.136" />
+      <inertia
+        ixx="0.00022399"
+        ixy="1.6941E-08"
+        ixz="-9.6464E-09"
+        iyy="0.00018815"
+        iyz="1.4376E-05"
+        izz="0.00010598" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://permanent_magnet/meshes/pm_tcp_link.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="1 1 1 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://permanent_magnet/meshes/pm_tcp_link.STL" />
       </geometry>
     </collision>
   </link>
@@ -91,9 +91,9 @@
       xyz="0 0 0.081"
       rpy="0 0 0" />
     <parent
-      link="base_link" />
+      link="pm_base_link" />
     <child
-      link="tcp_link" />
+      link="pm_tcp_link" />
     <axis
       xyz="0 0 0" />
   </joint>

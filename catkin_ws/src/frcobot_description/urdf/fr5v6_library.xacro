@@ -221,8 +221,28 @@
         <!-- 检查是否使用工具包系统 -->
         <xacro:property name="use_tool_package" value="${'tool_type' in tool_config}"/>
         
-        <!-- 如果使用工具包系统，使用新的工具加载器 -->
+        <!-- 如果使用工具包系统，先创建tool_link作为中间链接 -->
         <xacro:if value="${use_tool_package and tool_name != 'none'}">
+            <!-- 创建tool_link（连接到j6_link） -->
+            <link name="${arm_id}_tool_link">
+                <inertial>
+                    <origin xyz="0 0 0" rpy="0 0 0"/>
+                    <mass value="0.1" />
+                    <inertia 
+                        ixx="0.1" ixy="0.0" ixz="0.0"
+                        iyy="0.1" iyz="0.0" izz="0.1" />
+                </inertial>
+            </link>
+            
+            <!-- 创建从j6_link到tool_link的关节 -->
+            <joint name="${arm_id}_tool_joint" type="fixed">
+                <parent link="${arm_id}_j6_link" />
+                <child link="${arm_id}_tool_link" />
+                <!-- 先应用固定的法兰偏移 -->
+                <origin xyz="0 0 0.1" rpy="0 0 0" />
+            </joint>
+            
+            <!-- 使用新的工具加载器，工具将连接到tool_link -->
             <xacro:load_tool arm_id="${arm_id}" tool_name="${tool_name}" tool_config="${tool_config}"/>
         </xacro:if>
         
