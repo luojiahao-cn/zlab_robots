@@ -37,42 +37,43 @@
         <!-- ========== Simple类型工具 ========== -->
         <xacro:if value="${tool_type == 'simple'}">
             <!-- 获取可视化配置 -->
-            <xacro:property name="tool_visual" value="${tool_config.get('visual', {})}"/>
-            <xacro:property name="visual_mesh_path" value="${tool_visual.get('mesh_path', '')}"/>
-            <xacro:property name="visual_scale" value="${tool_visual.get('scale', [1,1,1])}"/>
+            <xacro:property name="tool_visual" value="${tool_config['visual']}"/>
+            <xacro:property name="visual_mesh_path" value="${tool_visual['mesh_path']}"/>
+            <xacro:property name="visual_scale" value="${tool_visual['scale']}"/>
+            <!-- 获取颜色配置（从配置文件中读取，如果不存在则使用默认值） -->
+            <xacro:property name="visual_color" value="${tool_visual['color']}"/>
             
             <!-- 获取碰撞配置 -->
-            <xacro:property name="tool_collision" value="${tool_config.get('collision', {})}"/>
-            <xacro:property name="collision_mesh_path" value="${tool_collision.get('mesh_path', '')}"/>
-            <xacro:property name="collision_scale" value="${tool_collision.get('scale', [1,1,1])}"/>
+            <xacro:property name="tool_collision" value="${tool_config['collision']}"/>
+            <xacro:property name="collision_mesh_path" value="${tool_collision['mesh_path']}"/>
+            <xacro:property name="collision_scale" value="${tool_collision['scale']}"/>
             
             <!-- 创建工具链接（使用工具名称作为链接名，避免与ee_link冲突） -->
             <link name="${arm_id}_${tool_name}_link">
                 <!-- 可视化 -->
-                <xacro:if value="${visual_mesh_path}">
-                    <visual>
-                        <origin 
-                            xyz="${tool_origin_xyz[0]} ${tool_origin_xyz[1]} ${tool_origin_xyz[2]}"
-                            rpy="${tool_origin_rpy[0]} ${tool_origin_rpy[1]} ${tool_origin_rpy[2]}" />
-                        <geometry>
-                            <mesh filename="${visual_mesh_path}" 
-                                  scale="${visual_scale[0]} ${visual_scale[1]} ${visual_scale[2]}" />
-                        </geometry>
-                    </visual>
-                </xacro:if>
+                <visual>
+                    <origin 
+                        xyz="${tool_origin_xyz[0]} ${tool_origin_xyz[1]} ${tool_origin_xyz[2]}"
+                        rpy="${tool_origin_rpy[0]} ${tool_origin_rpy[1]} ${tool_origin_rpy[2]}" />
+                    <geometry>
+                        <mesh filename="${visual_mesh_path}" 
+                              scale="${visual_scale[0]} ${visual_scale[1]} ${visual_scale[2]}" />
+                    </geometry>
+                    <material name="">
+                        <color rgba="${visual_color[0]} ${visual_color[1]} ${visual_color[2]} ${visual_color[3]}" />
+                    </material>
+                </visual>
                 
                 <!-- 碰撞 -->
-                <xacro:if value="${collision_mesh_path}">
-                    <collision>
-                        <origin 
-                            xyz="${tool_origin_xyz[0]} ${tool_origin_xyz[1]} ${tool_origin_xyz[2]}"
-                            rpy="${tool_origin_rpy[0]} ${tool_origin_rpy[1]} ${tool_origin_rpy[2]}" />
-                        <geometry>
-                            <mesh filename="${collision_mesh_path}" 
-                                  scale="${collision_scale[0]} ${collision_scale[1]} ${collision_scale[2]}" />
-                        </geometry>
-                    </collision>
-                </xacro:if>
+                <collision>
+                    <origin 
+                        xyz="${tool_origin_xyz[0]} ${tool_origin_xyz[1]} ${tool_origin_xyz[2]}"
+                        rpy="${tool_origin_rpy[0]} ${tool_origin_rpy[1]} ${tool_origin_rpy[2]}" />
+                    <geometry>
+                        <mesh filename="${collision_mesh_path}" 
+                              scale="${collision_scale[0]} ${collision_scale[1]} ${collision_scale[2]}" />
+                    </geometry>
+                </collision>
                 
                 <!-- 惯性 -->
                 <inertial>

@@ -1,0 +1,48 @@
+# 工具包配置文件 - 磁传感器支架
+tool_info:
+  name: "magnetic_sensor_bracket"
+  display_name: "磁传感器支架"
+  description: "磁传感器支架末端执行器工具"
+  version: "1.0.0"
+
+# 使用URDF包类型（从SolidWorks导出）
+tool_type: "urdf_package"
+
+# URDF包配置
+urdf_package:
+  # URDF文件路径（相对于工具包目录）
+  urdf_file: "urdf/bracket.urdf"
+  # 工具根链接名称（在URDF中定义的链接名，连接到机械臂的ee_link）
+  root_link_name: "bracket_base_link"
+  # TCP链接名称（URDF中已定义TCP链接）
+  tcp_link_name: "bracket_tcp_link"
+  # 工具相对于法兰的安装偏移（如果需要微调）
+  mount_offset:
+    xyz: [0, 0, 0]  # 根据实际安装位置调整
+    rpy: [0, 0, 0]
+
+# 工具相对于法兰的安装位置（如果需要在mount_offset基础上再调整）
+origin:
+  xyz: [0, 0, 0]  # 相对于法兰中心的位置
+  rpy: [0, 0, 0]
+
+# TCP配置（如果URDF中已有tcp_link，这个配置会被忽略）
+tcp:
+  xyz: [0, 0, 0]
+  rpy: [0, 0, 0]
+
+# 物理属性（如果URDF中已定义，这些会被忽略）
+physical_properties:
+  mass: 0.058  # kg（从URDF中获取，bracket_base_link的质量）
+  inertia:
+    ixx: 0.000211769
+    ixy: 0.0
+    ixz: 0.0
+    iyy: 0.000209505
+    iyz: 0.0
+    izz: 0.000023034
+
+moveit:
+  end_effector_link: "bracket_tcp_link"  # 使用URDF中定义的bracket_tcp_link作为末端执行器
+  planning_frame_offset: [0, 0, 0]
+

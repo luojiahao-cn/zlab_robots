@@ -35,6 +35,7 @@ physical_properties:
 visual:
   mesh_path: "package://frcobot_description/meshes/fr5v6/visual/your_tool.DAE"
   scale: [0.001, 0.001, 0.001]  # 如果模型单位是mm，使用0.001缩放
+  color: [0.89804, 0.91765, 0.92941, 1]  # RGBA颜色值（默认浅灰色，与机器人本体一致）
 
 collision:
   mesh_path: "package://frcobot_description/meshes/fr5v6/collision/your_tool.STL"

@@ -38,6 +38,7 @@ physical_properties:
 visual:
   mesh_path: ""  # 如果为空，则不显示可视化模型
   scale: [1, 1, 1]
+  color: [0.89804, 0.91765, 0.92941, 1]  # RGBA颜色值（默认浅灰色，与机器人本体一致）
 
 # 碰撞配置（可选，如果tool_type为simple）
 collision:
