@@ -246,92 +246,24 @@
             <xacro:load_tool arm_id="${arm_id}" tool_name="${tool_name}" tool_config="${tool_config}"/>
         </xacro:if>
         
-        <!-- 否则使用旧的工具配置方式（向后兼容） -->
-        <xacro:unless value="${use_tool_package}">
-            <!-- 添加工具链接 - 始终创建 -->
+        <!-- 如果工具名称为none，创建空的ee_link -->
+        <xacro:if value="${tool_name == 'none'}">
             <link name="${arm_id}_ee_link">
-                <xacro:if value="${tool_name != 'none'}">
-                    <visual>
-                        <origin 
-                            xyz="${tool_config['origin']['xyz'][0]} 
-                                ${tool_config['origin']['xyz'][1]} 
-                                ${tool_config['origin']['xyz'][2]}"
-                            rpy="${tool_config['origin']['rpy'][0]}
-                                ${tool_config['origin']['rpy'][1]}
-                                ${tool_config['origin']['rpy'][2]}" />
-                        <geometry>
-                            <mesh filename="${tool_config['mesh_path']}" scale="0.001 0.001 0.001" />
-                        </geometry>
-                    </visual>
-                    <collision>
-                        <origin 
-                            xyz="${tool_config['origin']['xyz'][0]} 
-                                ${tool_config['origin']['xyz'][1]} 
-                                ${tool_config['origin']['xyz'][2]}"
-                            rpy="${tool_config['origin']['rpy'][0]}
-                                ${tool_config['origin']['rpy'][1]}
-                                ${tool_config['origin']['rpy'][2]}" />
-                        <geometry>
-                            <mesh filename="${tool_config['collision_mesh']}" scale="0.001 0.001 0.001" />
-                        </geometry>
-                    </collision>
-                </xacro:if>
                 <inertial>
                     <origin xyz="0 0 0" rpy="0 0 0"/>
-                    <xacro:if value="${tool_name == 'none'}">
-                        <mass value="0.1" />
-                        <inertia 
-                            ixx="0.1" ixy="0.0" ixz="0.0"
-                            iyy="0.1" iyz="0.0" izz="0.1" />
-                    </xacro:if>
-                    <xacro:unless value="${tool_name == 'none'}">
-                        <mass value="${tool_config['mass']}" />
-                        <inertia 
-                            ixx="${tool_config['inertia']['ixx']}"
-                            ixy="${tool_config['inertia']['ixy']}"
-                            ixz="${tool_config['inertia']['ixz']}"
-                            iyy="${tool_config['inertia']['iyy']}"
-                            iyz="${tool_config['inertia']['iyz']}"
-                            izz="${tool_config['inertia']['izz']}" />
-                    </xacro:unless>
+                    <mass value="0.1" />
+                    <inertia 
+                        ixx="0.1" ixy="0.0" ixz="0.0"
+                        iyy="0.1" iyz="0.0" izz="0.1" />
                 </inertial>
             </link>
-
-            <!-- 总是创建工具关节 -->
+            
             <joint name="${arm_id}_ee_joint" type="fixed">
                 <parent link="${arm_id}_j6_link" />
                 <child link="${arm_id}_ee_link" />
-                <!-- 先应用固定的法兰偏移 -->
                 <origin xyz="0 0 0.1" rpy="0 0 0" />
             </joint>
-
-            <!-- 只在有tool时创建TCP链接和关节 -->
-            <xacro:if value="${tool_name != 'none'}">
-                <link name="${arm_id}_tcp_link">
-                    <visual>
-                        <origin xyz="0 0 0" rpy="0 0 0" />
-                        <geometry>
-                            <sphere radius="0.005" />
-                        </geometry>
-                        <material name="">
-                            <color rgba="1 0 0 1" />
-                        </material>
-                    </visual>
-                </link>
-
-                <joint name="${arm_id}_tcp_joint" type="fixed">
-                    <parent link="${arm_id}_ee_link" />
-                    <child link="${arm_id}_tcp_link" />
-                    <origin
-                        xyz="${tool_config['tcp']['xyz'][0]} 
-                            ${tool_config['tcp']['xyz'][1]} 
-                            ${tool_config['tcp']['xyz'][2]}"
-                        rpy="${tool_config['tcp']['rpy'][0]}
-                            ${tool_config['tcp']['rpy'][1]}
-                            ${tool_config['tcp']['rpy'][2]}" />
-                </joint>
-            </xacro:if>
-        </xacro:unless>
+        </xacro:if>
 
     </xacro:macro>
 

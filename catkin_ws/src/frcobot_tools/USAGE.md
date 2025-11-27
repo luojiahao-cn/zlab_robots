@@ -149,7 +149,6 @@ rosrun frcobot_tools list_tools.py
 2. `config/tool.yaml` 文件是必需的
 3. 确保所有路径使用 `package://` 格式
 4. 工具包路径: `package://frcobot_tools/tools/tool_name/`
-5. 如果工具包不存在，系统会尝试从旧的 `tools.yaml` 加载配置
 
 ## 故障排除
 
@@ -166,8 +165,4 @@ rosrun frcobot_tools list_tools.py
 - YAML语法正确
 - 所有必需字段都存在
 - 路径格式正确（使用 `package://`）
-
-### 向后兼容
-
-如果工具包不存在，系统会自动回退到旧的 `tools.yaml` 配置。确保旧的 `tools.yaml` 中有对应的工具配置。
 

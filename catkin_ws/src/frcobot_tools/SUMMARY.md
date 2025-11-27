@@ -18,7 +18,6 @@
 - ✅ 创建了 `tool_loader.xacro` 用于加载工具
 - ✅ 修改了 `fr5v6_library.xacro` 支持工具包系统
 - ✅ 修改了 `fr5v6_single_arm.xacro` 和 `fr5v6_dual_arms.xacro` 支持工具参数
-- ✅ 保持向后兼容，支持旧的 `tools.yaml` 配置
 
 ### 4. 工具管理工具
 - ✅ 创建了 `list_tools.py` 脚本列出所有可用工具
@@ -83,13 +82,6 @@ roslaunch fr5v6_dual_moveit_config demo.launch robot1_tool:=tool_250mm robot2_to
 - `fr5v6_single_arm.xacro`: 添加了tool_name参数
 - `fr5v6_dual_arms.xacro`: 添加了robot1_tool和robot2_tool参数
 
-## 向后兼容
-
-系统保持向后兼容：
-- 如果工具包不存在，会自动尝试从旧的 `tools.yaml` 加载
-- 旧的工具配置仍然可以使用
-- 可以逐步迁移到新的工具包系统
-
 ## 下一步
 
 1. **添加SolidWorks工具**:
@@ -113,7 +105,7 @@ roslaunch fr5v6_dual_moveit_config demo.launch robot1_tool:=tool_250mm robot2_to
 2. **工具名称**: 必须与目录名一致
 3. **配置文件**: `config/tool.yaml` 是必需的
 4. **编译**: 添加新工具后需要重新编译 `catkin_make`
-5. **xacro限制**: xacro无法检查文件是否存在，如果工具包不存在会报错，需要确保工具包存在或使用旧配置
+5. **xacro限制**: xacro无法检查文件是否存在，如果工具包不存在会报错，需要确保工具包存在
 
 ## 支持
 

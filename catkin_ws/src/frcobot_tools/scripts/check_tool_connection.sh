@@ -74,11 +74,6 @@ if [ -n "$JOINT_J6_TO_EE" ]; then
     echo "$JOINT_J6_TO_EE" | head -8 | sed 's/^/    /'
 else
     echo "  ⚠ 未找到 j6_link -> ee_link 的连接（可能使用其他链接名）"
-    # 也检查tool_link（向后兼容）
-    JOINT_J6_TO_TOOL=$(grep -A 10 "parent.*link.*frrobot_j6_link\|parent.*link.*robot1_j6_link\|parent.*link.*robot2_j6_link" $TEMP_URDF | grep -A 5 "child.*link.*tool_link")
-    if [ -n "$JOINT_J6_TO_TOOL" ]; then
-        echo "  ⚠ 找到 j6_link -> tool_link 连接（应使用ee_link）"
-    fi
 fi
 
 # 检查所有与j6_link相关的关节

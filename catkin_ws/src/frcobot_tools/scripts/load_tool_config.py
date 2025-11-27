@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 """
 工具配置加载器 - 用于在launch文件中加载工具配置
-优先从工具包加载，如果不存在则从旧的tools.yaml加载
+从工具包加载配置
 """
 
 import os
@@ -14,7 +14,7 @@ def load_tool_config(tool_name):
     """加载工具配置"""
     rospack = rospkg.RosPack()
     
-    # 首先尝试从工具包加载
+    # 从工具包加载
     try:
         tools_path = rospack.get_path('frcobot_tools')
         tool_config_path = os.path.join(tools_path, 'tools', tool_name, 'config', 'tool.yaml')
@@ -26,21 +26,7 @@ def load_tool_config(tool_name):
     except (rospkg.ResourceNotFound, IOError):
         pass
     
-    # 如果工具包不存在，尝试从旧配置加载
-    try:
-        desc_path = rospack.get_path('frcobot_description')
-        old_tools_path = os.path.join(desc_path, 'config', 'tools.yaml')
-        
-        if os.path.exists(old_tools_path):
-            with open(old_tools_path, 'r') as f:
-                old_tools = yaml.safe_load(f)
-            
-            if tool_name in old_tools.get('tools', {}):
-                return old_tools['tools'][tool_name], 'legacy'
-    except (rospkg.ResourceNotFound, IOError, KeyError):
-        pass
-    
-    # 如果都不存在，返回none配置
+    # 如果工具包不存在，返回none配置
     return {
         'tool_type': 'simple',
         'origin': {'xyz': [0,0,0], 'rpy': [0,0,0]},
