@@ -8,9 +8,15 @@
 
     <arg name="robot_ip" default="192.168.31.202" />
 
-    <!-- Load example URDF -->
-    <param name="robot_description"
-        textfile="$(find fr5v6_single_moveit_config)/config/gazebo_fr5v6_single_arm.urdf" />
+    <!-- Tool parameter (optional, defaults to none) -->
+    <arg name="tool_name" default="none" doc="Tool name to use (e.g., permanent_magnet, electronic_magnet, tool_250mm, none)"/>
+
+    <!-- Whether to load robot_description (set to false if already loaded by planning_context.launch) -->
+    <arg name="load_robot_description" default="true" />
+
+    <!-- Load example URDF with tool support -->
+    <param if="$(arg load_robot_description)" name="robot_description"
+        command="$(find xacro)/xacro '$(find frcobot_description)/urdf/fr5v6_single_arm.xacro' tool_name:=$(arg tool_name)" />
 
     <group ns="frrobot">
 

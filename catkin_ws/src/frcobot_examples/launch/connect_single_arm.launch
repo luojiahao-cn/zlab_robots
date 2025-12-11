@@ -10,11 +10,11 @@
     <arg name="debug" default="false" />
 
     <!-- Define which arm to use: arm1 or arm2 -->
-    <arg name="arm" default="arm2" />
+    <arg name="arm" default="arm1" />
 
     <!-- Define whether to use real robot or simulation -->
-    <!-- <arg name="use_gui" default="false" /> -->
-    <arg name="use_rviz" default="false" />
+    <!-- <arg name="use_gui" default="true" /> -->
+    <arg name="use_rviz" default="true" />
     <!-- arm1: 192.168.31.202, arm2: 192.168.31.203 -->
     <arg name="robot_ip" value="$(eval '192.168.31.202' if arg('arm') == 'arm1' else '192.168.31.203')" />
 
@@ -33,6 +33,8 @@
         <arg name="allow_trajectory_execution" value="true" />
         <arg name="info" value="true" />
         <arg name="debug" value="$(arg debug)" />
+        <arg name="load_robot_description" value="false" />
+        <arg name="tool_name" value="$(arg tool_name)" />
     </include>
 
     <!-- Run Rviz and load the default config to see the state of the move_group node -->
@@ -50,6 +52,8 @@
 
     <include file="$(find ros_control_boilerplate)/frrobot_control/launch/fr5v6_hardware.launch">
         <arg name="robot_ip" value="$(arg robot_ip)" />
+        <arg name="tool_name" value="$(arg tool_name)" />
+        <arg name="load_robot_description" value="false" />
     </include>
 
 </launch>
