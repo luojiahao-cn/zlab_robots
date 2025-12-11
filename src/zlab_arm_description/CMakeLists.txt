@@ -49,7 +49,7 @@ install(TARGETS dual_arm_calibrator
 )
 
 # 安装目录
-install(DIRECTORY urdf meshes config launch
+install(DIRECTORY zlab_arm config launch tools
   DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}
   FILES_MATCHING PATTERN "*.xacro" PATTERN "*.urdf" PATTERN "*.dae" PATTERN "*.stl" PATTERN "*.yaml" PATTERN "*.launch" PATTERN "*.rviz"
 )

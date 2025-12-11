@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- This URDF was automatically created by SolidWorks to URDF Exporter! Originally created by Stephen Brawner (brawner@gmail.com) 
+     Commit Version: 1.6.0-4-g7f85cfe  Build Version: 1.6.7995.38578
+     For more information, please see http://wiki.ros.org/sw_urdf_exporter -->
+<robot
+  name="permanent_magnet">
+  <link
+    name="pm_base_link">
+    <inertial>
+      <origin
+        xyz="-1.4589E-05 0.00097471 0.054744"
+        rpy="0 0 0" />
+      <mass
+        value="0.136" />
+      <inertia
+        ixx="0.00022399"
+        ixy="1.6941E-08"
+        ixz="-9.6464E-09"
+        iyy="0.00018815"
+        iyz="1.4376E-05"
+        izz="0.00010598" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://frcobot_tools/tools/permanent_magnet/meshes/visual/pm_base_link.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="1 1 1 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://frcobot_tools/tools/permanent_magnet/meshes/collision/pm_base_link.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <link
+    name="pm_tcp_link">
+    <inertial>
+      <origin
+        xyz="-1.4589E-05 0.00097471 -0.026256"
+        rpy="0 0 0" />
+      <mass
+        value="0.136" />
+      <inertia
+        ixx="0.00022399"
+        ixy="1.6941E-08"
+        ixz="-9.6464E-09"
+        iyy="0.00018815"
+        iyz="1.4376E-05"
+        izz="0.00010598" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://frcobot_tools/tools/permanent_magnet/meshes/visual/pm_tcp_link.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="1 1 1 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://frcobot_tools/tools/permanent_magnet/meshes/collision/pm_tcp_link.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="permanent_magnet"
+    type="fixed">
+    <origin
+      xyz="0 0 0.081"
+      rpy="0 0 0" />
+    <parent
+      link="pm_base_link" />
+    <child
+      link="pm_tcp_link" />
+    <axis
+      xyz="0 0 0" />
+  </joint>
+</robot>

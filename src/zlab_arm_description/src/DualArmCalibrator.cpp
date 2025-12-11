@@ -30,8 +30,8 @@ public:
         ROS_INFO("已订阅AprilTag话题: %s", apriltag_topic_.c_str());
 
         // 设置移动组接口
-        left_arm_group_ = new moveit::planning_interface::MoveGroupInterface(left_arm_group_name_);
-        right_arm_group_ = new moveit::planning_interface::MoveGroupInterface(right_arm_group_name_);
+        arm1_group_ = new moveit::planning_interface::MoveGroupInterface(arm1_group_name_);
+        arm2_group_ = new moveit::planning_interface::MoveGroupInterface(arm2_group_name_);
 
         // 初始化 TF 监听器
         tf_listener_ = new tf2_ros::TransformListener(tf_buffer_);
@@ -41,10 +41,10 @@ public:
 
     ~DualArmCalibrator()
     {
-        if (left_arm_group_)
-            delete left_arm_group_;
-        if (right_arm_group_)
-            delete right_arm_group_;
+        if (arm1_group_)
+            delete arm1_group_;
+        if (arm2_group_)
+            delete arm2_group_;
         if (tf_listener_)
             delete tf_listener_;
     }
@@ -59,58 +59,58 @@ public:
         }
         
         // 设置左臂标定位姿
-        geometry_msgs::PoseStamped left_pose;
-        left_pose.header.frame_id = "robot1_base2_link";
-        left_pose.pose.position.x = left_calibration_pose_[0];
-        left_pose.pose.position.y = left_calibration_pose_[1];
-        left_pose.pose.position.z = left_calibration_pose_[2];
-        left_pose.pose.orientation.x = left_calibration_pose_[3];
-        left_pose.pose.orientation.y = left_calibration_pose_[4];
-        left_pose.pose.orientation.z = left_calibration_pose_[5];
-        left_pose.pose.orientation.w = left_calibration_pose_[6];
+        geometry_msgs::PoseStamped arm1_pose;
+        arm1_pose.header.frame_id = "arm1_base_link";
+        arm1_pose.pose.position.x = arm1_calibration_pose_[0];
+        arm1_pose.pose.position.y = arm1_calibration_pose_[1];
+        arm1_pose.pose.position.z = arm1_calibration_pose_[2];
+        arm1_pose.pose.orientation.x = arm1_calibration_pose_[3];
+        arm1_pose.pose.orientation.y = arm1_calibration_pose_[4];
+        arm1_pose.pose.orientation.z = arm1_calibration_pose_[5];
+        arm1_pose.pose.orientation.w = arm1_calibration_pose_[6];
 
         // 设置右臂标定位姿
-        geometry_msgs::PoseStamped right_pose;
-        right_pose.header.frame_id = "robot2_base2_link";
-        right_pose.pose.position.x = right_calibration_pose_[0];
-        right_pose.pose.position.y = right_calibration_pose_[1];
-        right_pose.pose.position.z = right_calibration_pose_[2];
-        right_pose.pose.orientation.x = right_calibration_pose_[3];
-        right_pose.pose.orientation.y = right_calibration_pose_[4];
-        right_pose.pose.orientation.z = right_calibration_pose_[5];
-        right_pose.pose.orientation.w = right_calibration_pose_[6];
+        geometry_msgs::PoseStamped arm2_pose;
+        arm2_pose.header.frame_id = "arm2_base_link";
+        arm2_pose.pose.position.x = arm2_calibration_pose_[0];
+        arm2_pose.pose.position.y = arm2_calibration_pose_[1];
+        arm2_pose.pose.position.z = arm2_calibration_pose_[2];
+        arm2_pose.pose.orientation.x = arm2_calibration_pose_[3];
+        arm2_pose.pose.orientation.y = arm2_calibration_pose_[4];
+        arm2_pose.pose.orientation.z = arm2_calibration_pose_[5];
+        arm2_pose.pose.orientation.w = arm2_calibration_pose_[6];
 
         ROS_INFO("正在移动机械臂到标定位姿...");
 
         // 设置规划时间
-        left_arm_group_->setPlanningTime(2.0);
+        arm1_group_->setPlanningTime(2.0);
         // 设置左臂目标位姿
-        left_arm_group_->setPoseTarget(left_pose);
+        arm1_group_->setPoseTarget(arm1_pose);
 
         // 规划并执行左臂移动
-        moveit::planning_interface::MoveGroupInterface::Plan left_plan;
-        if (!left_arm_group_->plan(left_plan))
+        moveit::planning_interface::MoveGroupInterface::Plan arm1_plan;
+        if (!arm1_group_->plan(arm1_plan))
         {
             ROS_ERROR("左臂运动规划失败");
             return false;
         }
-        if (!left_arm_group_->execute(left_plan))
+        if (!arm1_group_->execute(arm1_plan))
         {
             ROS_ERROR("左臂运动执行失败");
             // return false;
         }
 
         // 设置右臂目标位姿
-        right_arm_group_->setPoseTarget(right_pose);
+        arm2_group_->setPoseTarget(arm2_pose);
 
         // 规划并执行右臂移动
-        moveit::planning_interface::MoveGroupInterface::Plan right_plan;
-        if (!right_arm_group_->plan(right_plan))
+        moveit::planning_interface::MoveGroupInterface::Plan arm2_plan;
+        if (!arm2_group_->plan(arm2_plan))
         {
             ROS_ERROR("右臂运动规划失败");
             return false;
         }
-        if (!right_arm_group_->execute(right_plan))
+        if (!arm2_group_->execute(arm2_plan))
         {
             ROS_ERROR("右臂运动执行失败");
             // return false;
@@ -155,10 +155,10 @@ public:
             
             // 添加调试信息
             ROS_INFO_THROTTLE(1.0, "左标签状态: %s, 右标签状态: %s", 
-                            left_tag_detected_ ? "已检测" : "未检测",
-                            right_tag_detected_ ? "已检测" : "未检测");
+                            arm1_tag_detected_ ? "已检测" : "未检测",
+                            arm2_tag_detected_ ? "已检测" : "未检测");
             
-            if (!left_tag_detected_ || !right_tag_detected_)
+            if (!arm1_tag_detected_ || !arm2_tag_detected_)
             {
                 ROS_WARN_THROTTLE(1.0, "未检测到标签，继续尝试...");
                 rate.sleep();
@@ -194,19 +194,19 @@ public:
         printCalibrationResults(average_transform);
         
         // 获取两个机械臂末端变换
-        geometry_msgs::TransformStamped left_base_to_tool_transform, right_base_to_tool_transform;
-        if (!getArmEndEffectorTransforms(left_base_to_tool_transform, right_base_to_tool_transform)) {
+        geometry_msgs::TransformStamped arm1_base_to_tool_transform, arm2_base_to_tool_transform;
+        if (!getArmEndEffectorTransforms(arm1_base_to_tool_transform, arm2_base_to_tool_transform)) {
             return false;
         }
         
         // 计算并打印两个机械臂基座之间的变换
-        tf2::Transform left_to_right_base = calculateBaseTransform(
-            average_transform, left_base_to_tool_transform, right_base_to_tool_transform);
+        tf2::Transform arm1_to_arm2_base = calculateBaseTransform(
+            average_transform, arm1_base_to_tool_transform, arm2_base_to_tool_transform);
 
-        printCalibrationResults(left_to_right_base);
+        printCalibrationResults(arm1_to_arm2_base);
 
         // 保存标定结果
-        saveCalibrationResults(left_to_right_base);
+        saveCalibrationResults(arm1_to_arm2_base);
 
         ROS_INFO("标定成功完成");
         return true;
@@ -224,46 +224,46 @@ private:
         }
 
         // 获取左臂组名称
-        if (!nh_.getParam("left_arm_group", left_arm_group_name_))
+        if (!nh_.getParam("arm1_group", arm1_group_name_))
         {
-            left_arm_group_name_ = "left_arm";
-            ROS_WARN("使用默认左臂组名称: %s", left_arm_group_name_.c_str());
+            arm1_group_name_ = "arm1";
+            ROS_WARN("使用默认左臂组名称: %s", arm1_group_name_.c_str());
         }
 
         // 获取右臂组名称
-        if (!nh_.getParam("right_arm_group", right_arm_group_name_))
+        if (!nh_.getParam("arm2_group", arm2_group_name_))
         {
-            right_arm_group_name_ = "right_arm";
-            ROS_WARN("使用默认右臂组名称: %s", right_arm_group_name_.c_str());
+            arm2_group_name_ = "arm2";
+            ROS_WARN("使用默认右臂组名称: %s", arm2_group_name_.c_str());
         }
 
         // 获取左臂tag ID
-        if (!nh_.getParam("left_arm_tag_id", left_arm_tag_id_))
+        if (!nh_.getParam("arm1_tag_id", arm1_tag_id_))
         {
-            left_arm_tag_id_ = 0;
-            ROS_WARN("使用默认左臂tag ID: %d", left_arm_tag_id_);
+            arm1_tag_id_ = 0;
+            ROS_WARN("使用默认左臂tag ID: %d", arm1_tag_id_);
         }
 
         // 获取右臂tag ID
-        if (!nh_.getParam("right_arm_tag_id", right_arm_tag_id_))
+        if (!nh_.getParam("arm2_tag_id", arm2_tag_id_))
         {
-            right_arm_tag_id_ = 1;
-            ROS_WARN("使用默认右臂tag ID: %d", right_arm_tag_id_);
+            arm2_tag_id_ = 1;
+            ROS_WARN("使用默认右臂tag ID: %d", arm2_tag_id_);
         }
 
         // 获取左臂标定位姿
-        if (!nh_.getParam("left_calibration_pose", left_calibration_pose_))
+        if (!nh_.getParam("arm1_calibration_pose", arm1_calibration_pose_))
         {
             // 默认位姿 [x, y, z, qx, qy, qz, qw]
-            left_calibration_pose_ = {0.4, 0.1, 0.5, 0.0, 1.0, 0.0, 0.0};
+            arm1_calibration_pose_ = {0.4, 0.1, 0.5, 0.0, 1.0, 0.0, 0.0};
             ROS_WARN("使用默认左臂标定位姿");
         }
 
         // 获取右臂标定位姿
-        if (!nh_.getParam("right_calibration_pose", right_calibration_pose_))
+        if (!nh_.getParam("arm2_calibration_pose", arm2_calibration_pose_))
         {
             // 默认位姿 [x, y, z, qx, qy, qz, qw]
-            right_calibration_pose_ = {0.4, -0.1, 0.5, 0.0, 1.0, 0.0, 0.0};
+            arm2_calibration_pose_ = {0.4, -0.1, 0.5, 0.0, 1.0, 0.0, 0.0};
             ROS_WARN("使用默认右臂标定位姿");
         }
 
@@ -295,28 +295,28 @@ private:
         ROS_INFO_THROTTLE(1.0, "收到AprilTag检测结果，检测到 %lu 个标签", msg->detections.size());
         
         // 重置检测状态
-        left_tag_detected_ = false;
-        right_tag_detected_ = false;
+        arm1_tag_detected_ = false;
+        arm2_tag_detected_ = false;
 
         for (const auto &detection : msg->detections)
         {
             ROS_INFO_THROTTLE(1.0, "检测到ID为 %d 的标签", detection.id[0]);
             
             // 检查是否是左臂tag
-            if (detection.id[0] == left_arm_tag_id_)
+            if (detection.id[0] == arm1_tag_id_)
             {
-                left_tag_pose_.header = detection.pose.header;
-                left_tag_pose_.pose = detection.pose.pose.pose;
-                left_tag_detected_ = true;
-                ROS_INFO_THROTTLE(1.0, "识别到左臂标签 (ID: %d)", left_arm_tag_id_);
+                arm1_tag_pose_.header = detection.pose.header;
+                arm1_tag_pose_.pose = detection.pose.pose.pose;
+                arm1_tag_detected_ = true;
+                ROS_INFO_THROTTLE(1.0, "识别到左臂标签 (ID: %d)", arm1_tag_id_);
             }
             // 检查是否是右臂tag
-            else if (detection.id[0] == right_arm_tag_id_)
+            else if (detection.id[0] == arm2_tag_id_)
             {
-                right_tag_pose_.header = detection.pose.header;
-                right_tag_pose_.pose = detection.pose.pose.pose;
-                right_tag_detected_ = true;
-                ROS_INFO_THROTTLE(1.0, "识别到右臂标签 (ID: %d)", right_arm_tag_id_);
+                arm2_tag_pose_.header = detection.pose.header;
+                arm2_tag_pose_.pose = detection.pose.pose.pose;
+                arm2_tag_detected_ = true;
+                ROS_INFO_THROTTLE(1.0, "识别到右臂标签 (ID: %d)", arm2_tag_id_);
             }
         }
     }
@@ -324,32 +324,32 @@ private:
     // 计算两个tag之间的相对变换
     tf2::Transform calculateRelativeTransform()
     {
-        // 使用TF系统查询从左标签到右标签的变换
-        tf2::Transform left_to_right;
+        // 使用TF系统查询从arm1标签到arm2标签的变换
+        tf2::Transform arm1_to_arm2;
         try
         {
             // 将标签ID转换为TF框架名称
-            std::string left_frame = "tag_" + std::to_string(left_arm_tag_id_);
-            std::string right_frame = "tag_" + std::to_string(right_arm_tag_id_);
+            std::string arm1_frame = "tag_" + std::to_string(arm1_tag_id_);
+            std::string arm2_frame = "tag_" + std::to_string(arm2_tag_id_);
 
             // 等待一段时间确保TF树更新
-            if (!tf_buffer_.canTransform(left_frame, right_frame, ros::Time(0), ros::Duration(1.0)))
+            if (!tf_buffer_.canTransform(arm1_frame, arm2_frame, ros::Time(0), ros::Duration(1.0)))
             {
-                ROS_WARN("无法找到从 %s 到 %s 的变换，使用手动计算", left_frame.c_str(), right_frame.c_str());
+                ROS_WARN("无法找到从 %s 到 %s 的变换，使用手动计算", arm1_frame.c_str(), arm2_frame.c_str());
 
                 // 回退到手动计算
-                tf2::Transform left_tag_tf, right_tag_tf;
-                tf2::fromMsg(left_tag_pose_.pose, left_tag_tf);
-                tf2::fromMsg(right_tag_pose_.pose, right_tag_tf);
-                return left_tag_tf.inverse() * right_tag_tf;
+                tf2::Transform arm1_tag_tf, arm2_tag_tf;
+                tf2::fromMsg(arm1_tag_pose_.pose, arm1_tag_tf);
+                tf2::fromMsg(arm2_tag_pose_.pose, arm2_tag_tf);
+                return arm1_tag_tf.inverse() * arm2_tag_tf;
             }
 
             // 查询TF变换
             geometry_msgs::TransformStamped transform_stamped =
-                tf_buffer_.lookupTransform(left_frame, right_frame, ros::Time(0));
+                tf_buffer_.lookupTransform(arm1_frame, arm2_frame, ros::Time(0));
 
             // 转换为tf2::Transform
-            tf2::fromMsg(transform_stamped.transform, left_to_right);
+            tf2::fromMsg(transform_stamped.transform, arm1_to_arm2);
 
             ROS_INFO("使用TF系统获取的标签间变换");
         }
@@ -358,13 +358,13 @@ private:
             ROS_WARN("TF查询异常: %s，使用手动计算", ex.what());
 
             // 回退到手动计算
-            tf2::Transform left_tag_tf, right_tag_tf;
-            tf2::fromMsg(left_tag_pose_.pose, left_tag_tf);
-            tf2::fromMsg(right_tag_pose_.pose, right_tag_tf);
-            left_to_right = left_tag_tf.inverse() * right_tag_tf;
+            tf2::Transform arm1_tag_tf, arm2_tag_tf;
+            tf2::fromMsg(arm1_tag_pose_.pose, arm1_tag_tf);
+            tf2::fromMsg(arm2_tag_pose_.pose, arm2_tag_tf);
+            arm1_to_arm2 = arm1_tag_tf.inverse() * arm2_tag_tf;
         }
 
-        return left_to_right;
+        return arm1_to_arm2;
     }
 
     // 打印标定结果
@@ -407,8 +407,8 @@ private:
         }
 
         // 写入标定结果
-        file << "# 双机械臂标定结果 - 左臂到右臂的变换\n";
-        file << "left_to_right_transform:\n";
+        file << "# 双机械臂标定结果 - arm1到arm2的变换\n";
+        file << "arm1_to_arm2_transform:\n";
         file << "  translation:\n";
         file << "    x: " << translation.x() << "\n";
         file << "    y: " << translation.y() << "\n";
@@ -432,24 +432,24 @@ private:
     }
 
     // 获取两个机械臂末端变换
-    bool getArmEndEffectorTransforms(geometry_msgs::TransformStamped &left_transform, geometry_msgs::TransformStamped &right_transform)
+    bool getArmEndEffectorTransforms(geometry_msgs::TransformStamped &arm1_transform, geometry_msgs::TransformStamped &arm2_transform)
     {
-        left_transform = tf_buffer_.lookupTransform("robot1_base2_link", "robot1_ee_link", ros::Time(0));
-        right_transform = tf_buffer_.lookupTransform("robot2_base2_link", "robot2_ee_link", ros::Time(0));
+        arm1_transform = tf_buffer_.lookupTransform("arm1_base2_link", "arm1_ee_link", ros::Time(0));
+        arm2_transform = tf_buffer_.lookupTransform("arm2_base2_link", "arm2_ee_link", ros::Time(0));
         return true;
     }
 
     // 计算两个机械臂基座之间的变换
-    tf2::Transform calculateBaseTransform(const tf2::Transform &left_to_right_transform,
-                                          const geometry_msgs::TransformStamped &left_base_to_tool_transform,
-                                          const geometry_msgs::TransformStamped &right_base_to_tool_transform)
+    tf2::Transform calculateBaseTransform(const tf2::Transform &arm1_to_arm2_transform,
+                                          const geometry_msgs::TransformStamped &arm1_base_to_tool_transform,
+                                          const geometry_msgs::TransformStamped &arm2_base_to_tool_transform)
     {
-        tf2::Transform left_base_to_tool, right_base_to_tool;
-        tf2::fromMsg(left_base_to_tool_transform.transform, left_base_to_tool);
-        tf2::fromMsg(right_base_to_tool_transform.transform, right_base_to_tool);
+        tf2::Transform arm1_base_to_tool, arm2_base_to_tool;
+        tf2::fromMsg(arm1_base_to_tool_transform.transform, arm1_base_to_tool);
+        tf2::fromMsg(arm2_base_to_tool_transform.transform, arm2_base_to_tool);
 
-        // return left_to_right_transform * right_base_to_tool.inverse() * left_base_to_tool;
-        return left_base_to_tool * left_to_right_transform * right_base_to_tool.inverse();
+        // return arm1_to_arm2_transform * arm2_base_to_tool.inverse() * arm1_base_to_tool;
+        return arm1_base_to_tool * arm1_to_arm2_transform * arm2_base_to_tool.inverse();
     }
 
     // 计算平均变换
@@ -526,8 +526,8 @@ private:
     ros::Subscriber tag_sub_;
 
     // MoveIt移动组接口
-    moveit::planning_interface::MoveGroupInterface *left_arm_group_;
-    moveit::planning_interface::MoveGroupInterface *right_arm_group_;
+    moveit::planning_interface::MoveGroupInterface *arm1_group_;
+    moveit::planning_interface::MoveGroupInterface *arm2_group_;
 
     // TF缓冲和监听器
     tf2_ros::Buffer tf_buffer_;
@@ -535,19 +535,19 @@ private:
 
     // 参数
     std::string apriltag_topic_;
-    std::string left_arm_group_name_;
-    std::string right_arm_group_name_;
+    std::string arm1_group_name_;
+    std::string arm2_group_name_;
     std::string calibration_result_path_;
-    int left_arm_tag_id_;
-    int right_arm_tag_id_;
-    std::vector<double> left_calibration_pose_;
-    std::vector<double> right_calibration_pose_;
+    int arm1_tag_id_;
+    int arm2_tag_id_;
+    std::vector<double> arm1_calibration_pose_;
+    std::vector<double> arm2_calibration_pose_;
 
     // 检测到的AprilTag位姿
-    geometry_msgs::PoseStamped left_tag_pose_;
-    geometry_msgs::PoseStamped right_tag_pose_;
-    bool left_tag_detected_ = false;
-    bool right_tag_detected_ = false;
+    geometry_msgs::PoseStamped arm1_tag_pose_;
+    geometry_msgs::PoseStamped arm2_tag_pose_;
+    bool arm1_tag_detected_ = false;
+    bool arm2_tag_detected_ = false;
 
     // 添加变量用于存储多次测量结果
     std::vector<tf2::Transform> measurements_;

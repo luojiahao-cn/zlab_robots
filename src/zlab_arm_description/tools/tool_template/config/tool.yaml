@@ -1,0 +1,65 @@
+# 工具包配置文件模板
+# 复制此文件并修改以创建新工具
+
+tool_info:
+  name: "tool_template"  # 工具名称（必须与目录名一致）
+  display_name: "工具模板"
+  description: "工具描述"
+  version: "1.0.0"
+  author: "Your Name"
+
+# 工具类型选择：
+# - "builtin": 使用简单的mesh文件配置（推荐）
+# - "urdf_package": 使用完整的URDF包（适用于SolidWorks导出的工具）
+tool_type: "builtin"  # 或 "urdf_package"
+
+# ========== 如果 tool_type == "builtin" ==========
+origin:
+  xyz: [0, 0, 0]  # 工具相对于法兰的位置（米）
+  rpy: [0, 0, 0]  # 工具相对于法兰的旋转（弧度）
+
+tcp:
+  xyz: [0, 0, 0.1]  # TCP相对于工具坐标系的位置（米）
+  rpy: [0, 0, 0]    # TCP相对于工具坐标系的旋转（弧度）
+
+physical_properties:
+  mass: 0.1  # 质量（kg）
+  inertia:
+    ixx: 0.001
+    ixy: 0.0
+    ixz: 0.0
+    iyy: 0.001
+    iyz: 0.0
+    izz: 0.001
+
+visual:
+  mesh_path: "package://zlab_arm_description/tools/tool_template/meshes/tool_visual.STL"
+  scale: [0.001, 0.001, 0.001]  # 如果模型单位是mm，使用0.001缩放
+  color: [0.89804, 0.91765, 0.92941, 1]  # RGBA颜色值（默认浅灰色，与机器人本体一致）
+
+collision:
+  mesh_path: "package://zlab_arm_description/tools/tool_template/meshes/tool_collision.STL"
+  scale: [0.001, 0.001, 0.001]
+
+# ========== 如果 tool_type == "urdf_package" ==========
+# 以下配置仅在 tool_type == "urdf_package" 时使用
+urdf_package:
+  # URDF文件路径（相对于工具包目录）
+  urdf_file: "urdf/tool.urdf.xacro"  # 或 "urdf/tool.urdf"
+  # 工具根链接名称（在URDF中定义的链接名）
+  root_link_name: "tool_base_link"
+  # TCP链接名称（如果URDF中已定义TCP链接，否则使用tcp配置）
+  tcp_link_name: ""  # 如果为空，则使用上面的tcp配置创建TCP链接
+  # 工具相对于法兰的安装偏移（如果需要微调）
+  mount_offset:
+    xyz: [0, 0, 0]
+    rpy: [0, 0, 0]
+
+# 网格文件路径（相对于工具包目录，作为顶级配置项）
+# 注意：TCP链接不应该有可视化内容，只用于运动学计算
+visual_mesh: "meshes/tool_visual.STL"
+collision_mesh: "meshes/tool_collision.STL"
+
+moveit:
+  end_effector_link: "tcp_link"  # 或 "ee_link"（机器人本体末端执行器链接），取决于您想使用哪个作为末端执行器
+  planning_frame_offset: [0, 0, 0]

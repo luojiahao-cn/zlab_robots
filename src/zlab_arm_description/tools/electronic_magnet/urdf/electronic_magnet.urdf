@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- This URDF was automatically created by SolidWorks to URDF Exporter! Originally created by Stephen Brawner (brawner@gmail.com) 
+     Commit Version: 1.6.0-4-g7f85cfe  Build Version: 1.6.7995.38578
+     For more information, please see http://wiki.ros.org/sw_urdf_exporter -->
+<robot
+  name="electronic_magnet">
+  <link
+    name="em_base_link">
+    <inertial>
+      <origin
+        xyz="-8.3267E-17 0.00012355 0.0077014"
+        rpy="0 0 0" />
+      <mass
+        value="0.12279" />
+      <inertia
+        ixx="2.413E-05"
+        ixy="-5.9292E-21"
+        ixz="6.5341E-20"
+        iyy="2.4481E-05"
+        iyz="-7.2797E-08"
+        izz="3.9841E-05" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://frcobot_tools/tools/electronic_magnet/meshes/visual/em_base_link.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="1 0.94902 0.89804 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://frcobot_tools/tools/electronic_magnet/meshes/collision/em_base_link.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <link
+    name="em_tcp_link">
+    <inertial>
+      <origin
+        xyz="2.7756E-17 2.7756E-17 9.5087E-05"
+        rpy="0 0 0" />
+      <mass
+        value="4.7133" />
+      <inertia
+        ixx="0.024838"
+        ixy="0"
+        ixz="-1.1723E-18"
+        iyy="0.024838"
+        iyz="2.1387E-19"
+        izz="0.0017594" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://frcobot_tools/tools/electronic_magnet/meshes/visual/em_tcp_link.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.53725 0.34902 0.33725 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://frcobot_tools/tools/electronic_magnet/meshes/collision/em_tcp_link.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="electro_magnet"
+    type="continuous">
+    <origin
+      xyz="0 0.00023753 0.145"
+      rpy="0 0 0" />
+    <parent
+      link="em_base_link" />
+    <child
+      link="em_tcp_link" />
+    <axis
+      xyz="0 0 1" />
+  </joint>
+  <link
+    name="em_ee_link">
+    <inertial>
+      <origin
+        xyz="2.7756E-17 2.7756E-17 -0.1249"
+        rpy="0 0 0" />
+      <mass
+        value="4.7133" />
+      <inertia
+        ixx="0.024838"
+        ixy="0"
+        ixz="-1.1723E-18"
+        iyy="0.024838"
+        iyz="2.1387E-19"
+        izz="0.0017594" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://frcobot_tools/tools/electronic_magnet/meshes/visual/em_ee_link.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.53725 0.34902 0.33725 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://frcobot_tools/tools/electronic_magnet/meshes/collision/em_ee_link.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="electromagnet_ee"
+    type="fixed">
+    <origin
+      xyz="0 0 0.125"
+      rpy="0 0 0" />
+    <parent
+      link="em_tcp_link" />
+    <child
+      link="em_ee_link" />
+    <axis
+      xyz="0 0 0" />
+  </joint>
+</robot>

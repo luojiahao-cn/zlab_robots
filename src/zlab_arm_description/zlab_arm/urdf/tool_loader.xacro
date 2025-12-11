@@ -1,0 +1,200 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+    <!-- ========== 加载工具宏 ========== -->
+    <xacro:macro name="load_tool" params="arm_id tool_name tool_config">
+        <!-- 解析工具配置 -->
+        <xacro:property name="tool_type" value="${tool_config['tool_type']}" />
+
+        <!-- ========== 内置工具类型 ========== -->
+        <xacro:if value="${tool_type == 'builtin'}">
+            <!-- 解析工具信息 -->
+            <xacro:property name="tool_info" value="${tool_config['tool_info']}"/>
+            <xacro:property name="tool_origin" value="${tool_config['origin']}"/>
+            <!-- 设置默认值 -->
+            <xacro:property name="tool_tcp" value="{'xyz': [0, 0, 0], 'rpy': [0, 0, 0]}"/>
+            <xacro:property name="tool_mass" value="0.1"/>
+            <xacro:property name="tool_inertia" value="{'ixx': 0.1, 'ixy': 0.0, 'ixz': 0.0, 'iyy': 0.1, 'iyz': 0.0, 'izz': 0.1}"/>
+            <xacro:property name="tool_visual" value="{}"/>
+            <xacro:property name="tool_collision" value="{}"/>
+            <xacro:property name="moveit_config" value="{}"/>
+
+            <!-- 如果配置中有相应字段，则覆盖默认值 -->
+            <xacro:if value="${'tcp' in tool_config}">
+                <xacro:property name="tool_tcp" value="${tool_config['tcp']}"/>
+            </xacro:if>
+            <xacro:if value="${'physical_properties' in tool_config}">
+                <xacro:property name="tool_mass" value="${tool_config['physical_properties']['mass']}"/>
+                <xacro:property name="tool_inertia" value="${tool_config['physical_properties']['inertia']}"/>
+            </xacro:if>
+            <xacro:if value="${'visual' in tool_config}">
+                <xacro:property name="tool_visual" value="${tool_config['visual']}"/>
+            </xacro:if>
+            <xacro:if value="${'collision' in tool_config}">
+                <xacro:property name="tool_collision" value="${tool_config['collision']}"/>
+            </xacro:if>
+            <xacro:if value="${'moveit' in tool_config}">
+                <xacro:property name="moveit_config" value="${tool_config['moveit']}"/>
+            </xacro:if>
+
+            <!-- 提取参数 -->
+            <xacro:property name="tool_origin_xyz" value="${tool_origin['xyz']}"/>
+            <xacro:property name="tool_origin_rpy" value="${tool_origin['rpy']}"/>
+            <xacro:property name="tool_tcp_xyz" value="${tool_tcp['xyz']}"/>
+            <xacro:property name="tool_tcp_rpy" value="${tool_tcp['rpy']}"/>
+            <xacro:property name="tool_inertia_ixx" value="${tool_inertia['ixx']}"/>
+            <xacro:property name="tool_inertia_ixy" value="${tool_inertia['ixy']}"/>
+            <xacro:property name="tool_inertia_ixz" value="${tool_inertia['ixz']}"/>
+            <xacro:property name="tool_inertia_iyy" value="${tool_inertia['iyy']}"/>
+            <xacro:property name="tool_inertia_iyz" value="${tool_inertia['iyz']}"/>
+            <xacro:property name="tool_inertia_izz" value="${tool_inertia['izz']}"/>
+
+            <!-- 创建工具链接（使用工具名称作为链接名，避免与ee_link冲突） -->
+            <link name="${arm_id}_${tool_name}_link">
+                <inertial>
+                    <origin xyz="${tool_origin_xyz[0]} ${tool_origin_xyz[1]} ${tool_origin_xyz[2]}" rpy="${tool_origin_rpy[0]} ${tool_origin_rpy[1]} ${tool_origin_rpy[2]}"/>
+                    <mass value="${tool_mass}" />
+                    <inertia ixx="${tool_inertia_ixx}" ixy="${tool_inertia_ixy}" ixz="${tool_inertia_ixz}" iyy="${tool_inertia_iyy}" iyz="${tool_inertia_iyz}" izz="${tool_inertia_izz}" />
+                </inertial>
+
+                <!-- 可视化 -->
+                <xacro:if value="${tool_visual}">
+                    <xacro:property name="visual_mesh_path" value="${tool_visual.get('mesh_path', '')}"/>
+                    <xacro:property name="visual_scale" value="${tool_visual.get('scale', [1, 1, 1])}"/>
+                    <xacro:property name="visual_color" value="${tool_visual.get('color', [0.8, 0.8, 0.8, 1.0])}"/>
+                    <visual>
+                        <origin xyz="${tool_origin_xyz[0]} ${tool_origin_xyz[1]} ${tool_origin_xyz[2]}" rpy="${tool_origin_rpy[0]} ${tool_origin_rpy[1]} ${tool_origin_rpy[2]}" />
+                        <geometry>
+                            <mesh filename="${visual_mesh_path}" scale="${visual_scale[0]} ${visual_scale[1]} ${visual_scale[2]}" />
+                        </geometry>
+                        <material name="">
+                            <color rgba="${visual_color[0]} ${visual_color[1]} ${visual_color[2]} ${visual_color[3]}" />
+                        </material>
+                    </visual>
+                </xacro:if>
+
+                <!-- 碰撞 -->
+                <xacro:if value="${tool_collision}">
+                    <xacro:property name="collision_mesh_path" value="${tool_collision.get('mesh_path', '')}"/>
+                    <xacro:property name="collision_scale" value="${tool_collision.get('scale', [1, 1, 1])}"/>
+                    <collision>
+                        <origin xyz="${tool_origin_xyz[0]} ${tool_origin_xyz[1]} ${tool_origin_xyz[2]}" rpy="${tool_origin_rpy[0]} ${tool_origin_rpy[1]} ${tool_origin_rpy[2]}" />
+                        <geometry>
+                            <mesh filename="${collision_mesh_path}" scale="${collision_scale[0]} ${collision_scale[1]} ${collision_scale[2]}" />
+                        </geometry>
+                    </collision>
+                </xacro:if>
+            </link>
+
+            <!-- 创建从ee_link到工具链接的关节 -->
+            <joint name="${arm_id}_${tool_name}_joint" type="fixed">
+                <parent link="${arm_id}_ee_link" />
+                <child link="${arm_id}_${tool_name}_link" />
+                <origin xyz="0 0 0" rpy="0 0 0" />
+            </joint>
+
+            <!-- 如果需要，创建TCP链接 -->
+            <xacro:if value="${tool_tcp and (tool_tcp_xyz[0] != 0 or tool_tcp_xyz[1] != 0 or tool_tcp_xyz[2] != 0)}">
+                <link name="${arm_id}_${tool_name}_tcp_link">
+                    <visual>
+                        <origin xyz="0 0 0" rpy="0 0 0" />
+                        <geometry>
+                            <sphere radius="0.005" />
+                        </geometry>
+                        <material name="">
+                            <color rgba="1 0 0 1" />
+                        </material>
+                    </visual>
+                </link>
+                <joint name="${arm_id}_${tool_name}_tcp_joint" type="fixed">
+                    <parent link="${arm_id}_${tool_name}_link" />
+                    <child link="${arm_id}_${tool_name}_tcp_link" />
+                    <origin xyz="${tool_tcp_xyz[0]} ${tool_tcp_xyz[1]} ${tool_tcp_xyz[2]}" rpy="${tool_tcp_rpy[0]} ${tool_tcp_rpy[1]} ${tool_tcp_rpy[2]}" />
+                </joint>
+            </xacro:if>
+        </xacro:if>
+
+        <!-- ========== URDF Package类型工具 ========== -->
+        <xacro:if value="${tool_type == 'urdf_package'}">
+            <xacro:property name="urdf_config" value="${tool_config['urdf_package']}"/>
+            <xacro:property name="urdf_file" value="${urdf_config['urdf_file']}"/>
+            <xacro:property name="root_link_name" value="${urdf_config['root_link_name']}"/>
+            <xacro:property name="tcp_link_name" value="${urdf_config['tcp_link_name']}"/>
+            <!-- 从配置中提取参数 -->
+            <xacro:property name="tool_origin_xyz" value="${tool_config['origin']['xyz']}"/>
+            <xacro:property name="tool_origin_rpy" value="${tool_config['origin']['rpy']}"/>
+            <xacro:property name="tool_tcp_xyz" value="${tool_config['tcp']['xyz']}"/>
+            <xacro:property name="tool_tcp_rpy" value="${tool_config['tcp']['rpy']}"/>
+            <xacro:property name="tool_mass" value="${tool_config['physical_properties']['mass']}"/>
+            <xacro:property name="tool_inertia" value="${tool_config['physical_properties']['inertia']}"/>
+            <xacro:property name="tool_inertia_ixx" value="${tool_inertia['ixx']}"/>
+            <xacro:property name="tool_inertia_ixy" value="${tool_inertia['ixy']}"/>
+            <xacro:property name="tool_inertia_ixz" value="${tool_inertia['ixz']}"/>
+            <xacro:property name="tool_inertia_iyy" value="${tool_inertia['iyy']}"/>
+            <xacro:property name="tool_inertia_iyz" value="${tool_inertia['iyz']}"/>
+            <xacro:property name="tool_inertia_izz" value="${tool_inertia['izz']}"/>
+
+            <!-- 获取安装偏移配置 -->
+            <xacro:property name="mount_offset" value="${urdf_config['mount_offset']}"/>
+
+            <!-- 直接从配置文件读取网格文件路径 -->
+            <xacro:property name="visual_path" value="${tool_config['visual_mesh']}"/>
+            <xacro:property name="collision_path" value="${tool_config['collision_mesh']}"/>
+
+            <!-- 完整网格文件路径 -->
+            <xacro:property name="visual_mesh_path" value="package://zlab_arm_description/tools/${tool_name}/${visual_path}"/>
+            <xacro:property name="collision_mesh_path" value="package://zlab_arm_description/tools/${tool_name}/${collision_path}"/>
+
+            <!-- 内联定义工具链接以避免命名冲突 -->
+            <link name="${arm_id}_${root_link_name}">
+                <inertial>
+                    <origin xyz="${tool_origin_xyz[0]} ${tool_origin_xyz[1]} ${tool_origin_xyz[2]}" rpy="${tool_origin_rpy[0]} ${tool_origin_rpy[1]} ${tool_origin_rpy[2]}" />
+                    <mass value="${tool_mass}" />
+                    <inertia ixx="${tool_inertia_ixx}" ixy="${tool_inertia_ixy}" ixz="${tool_inertia_ixz}" iyy="${tool_inertia_iyy}" iyz="${tool_inertia_iyz}" izz="${tool_inertia_izz}" />
+                </inertial>
+                <visual>
+                    <origin xyz="0 0 0" rpy="0 0 0" />
+                    <geometry>
+                        <mesh filename="${visual_mesh_path}" />
+                    </geometry>
+                    <material name="">
+                        <color rgba="1 1 1 1" />
+                    </material>
+                </visual>
+                <collision>
+                    <origin xyz="0 0 0" rpy="0 0 0" />
+                    <geometry>
+                        <mesh filename="${collision_mesh_path}" />
+                    </geometry>
+                </collision>
+            </link>
+
+            <link name="${arm_id}_${tcp_link_name}">
+                <inertial>
+                    <origin xyz="${tool_tcp_xyz[0]} ${tool_tcp_xyz[1]} ${tool_tcp_xyz[2]}" rpy="${tool_tcp_rpy[0]} ${tool_tcp_rpy[1]} ${tool_tcp_rpy[2]}" />
+                    <mass value="0.001" />
+                    <inertia ixx="1e-6" ixy="0.0" ixz="0.0" iyy="1e-6" iyz="0.0" izz="1e-6" />
+                </inertial>
+                <!-- TCP链接不显示任何可视化内容，只用于运动学计算 -->
+            </link>
+
+            <joint name="${arm_id}_${tcp_link_name}_joint" type="fixed">
+                <parent link="${arm_id}_${root_link_name}" />
+                <child link="${arm_id}_${tcp_link_name}" />
+                <origin xyz="${tool_tcp_xyz[0]} ${tool_tcp_xyz[1]} ${tool_tcp_xyz[2]}" rpy="${tool_tcp_rpy[0]} ${tool_tcp_rpy[1]} ${tool_tcp_rpy[2]}" />
+            </joint>
+
+            <!-- 创建从ee_link到工具根链接的关节 -->
+            <joint name="${arm_id}_${tool_name}_joint" type="fixed">
+                <parent link="${arm_id}_ee_link" />
+                <child link="${arm_id}_${root_link_name}" />
+                <xacro:property name="mount_xyz" value="${mount_offset['xyz']}"/>
+                <xacro:property name="mount_rpy" value="${mount_offset['rpy']}"/>
+                <origin
+                    xyz="${mount_xyz[0]} ${mount_xyz[1]} ${mount_xyz[2]}"
+                    rpy="${mount_rpy[0]} ${mount_rpy[1]} ${mount_rpy[2]}" />
+            </joint>
+        </xacro:if>
+    </xacro:macro>
+
+</robot>

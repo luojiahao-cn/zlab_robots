@@ -1,5 +1,5 @@
 # 双机械臂标定结果 - 左臂到右臂的变换
-left_to_right_transform:
+arm1_to_arm2_transform:
   translation:
     x: -0.0313854
     y: 0.753229

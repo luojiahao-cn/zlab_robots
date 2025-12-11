@@ -1,0 +1,42 @@
+<?xml version="1.0"?>
+<robot name="tool_template" xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+  <!-- 工具根链接 -->
+  <link name="tool_base_link">
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <mesh filename="package://zlab_arm_description/tools/tool_template/meshes/tool_visual.STL" scale="0.001 0.001 0.001"/>
+      </geometry>
+      <material name="tool_material">
+        <color rgba="0.89804 0.91765 0.92941 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <mesh filename="package://zlab_arm_description/tools/tool_template/meshes/tool_collision.STL" scale="0.001 0.001 0.001"/>
+      </geometry>
+    </collision>
+    <inertial>
+      <mass value="0.1"/>
+      <inertia ixx="0.001" ixy="0.0" ixz="0.0" iyy="0.001" iyz="0.0" izz="0.001"/>
+    </inertial>
+  </link>
+
+  <!-- TCP链接（纯虚拟，不显示） -->
+  <link name="tool_tcp_link">
+    <inertial>
+      <mass value="0.001"/>
+      <inertia ixx="1e-6" ixy="0.0" ixz="0.0" iyy="1e-6" iyz="0.0" izz="1e-6"/>
+    </inertial>
+  </link>
+
+  <!-- 从根链接到TCP链接的关节 -->
+  <joint name="tool_tcp_joint" type="fixed">
+    <parent link="tool_base_link"/>
+    <child link="tool_tcp_link"/>
+    <origin xyz="0 0 0.1" rpy="0 0 0"/>
+  </joint>
+
+</robot>
