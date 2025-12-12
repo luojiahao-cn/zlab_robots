@@ -24,13 +24,17 @@
          command="$(find xacro)/xacro '$(find zlab_arm_description)/zlab_arm/urdf/zlab_arm.xacro'
                  arm_id:=$(arg arm_id) tool_name:=$(arg tool_name)"/>
 
+  <!-- Load controller yaml based on arm_id -->
+  <arg if="$(eval arg('arm_id') == 'arm1')" name="controller_yaml" value="$(find zlab_arm_hardware)/config/arm1_controllers.yaml"/>
+  <arg if="$(eval arg('arm_id') == 'arm2')" name="controller_yaml" value="$(find zlab_arm_hardware)/config/arm2_controllers.yaml"/>
+
   <!-- Hardware interface node -->
   <node name="zlab_arm_hardware" pkg="zlab_arm_hardware" type="zlab_arm_hw_main" output="screen">
     <param name="robot_ip" value="$(arg actual_robot_ip)"/>
     <param name="loop_hz" value="$(arg loop_hz)"/>
     
     <!-- Set joints based on arm_id -->
-    <rosparam param="hardware_interface/joints">
+    <rosparam param="hardware_interface/joints" subst_value="true">
       - $(arg arm_id)_j1
       - $(arg arm_id)_j2
       - $(arg arm_id)_j3
@@ -39,11 +43,9 @@
       - $(arg arm_id)_j6
     </rosparam>
     
-    <!-- Load controller configuration -->
-    <rosparam file="$(find zlab_arm_hardware)/config/arm_controllers.yaml" command="load" ns="~"/>
     
     <!-- Override controller name and joints based on arm_id -->
-    <rosparam param="$(arg arm_id)_controller/joints">
+    <rosparam param="$(arg arm_id)_controller/joints" subst_value="true">
       - $(arg arm_id)_j1
       - $(arg arm_id)_j2
       - $(arg arm_id)_j3
@@ -53,31 +55,67 @@
     </rosparam>
     
     <!-- Set joint constraints -->
-    <rosparam param="$(arg arm_id)_controller/constraints/$(arg arm_id)_j1">
+    <rosparam param="$(arg arm_id)_controller/constraints/$(arg arm_id)_j1" subst_value="true">
       trajectory: 0.60
       goal: 0.15
     </rosparam>
-    <rosparam param="$(arg arm_id)_controller/constraints/$(arg arm_id)_j2">
+    <rosparam param="$(arg arm_id)_controller/constraints/$(arg arm_id)_j2" subst_value="true">
       trajectory: 0.60
       goal: 0.15
     </rosparam>
-    <rosparam param="$(arg arm_id)_controller/constraints/$(arg arm_id)_j3">
+    <rosparam param="$(arg arm_id)_controller/constraints/$(arg arm_id)_j3" subst_value="true">
       trajectory: 0.60
       goal: 0.15
     </rosparam>
-    <rosparam param="$(arg arm_id)_controller/constraints/$(arg arm_id)_j4">
+    <rosparam param="$(arg arm_id)_controller/constraints/$(arg arm_id)_j4" subst_value="true">
       trajectory: 0.60
       goal: 0.15
     </rosparam>
-    <rosparam param="$(arg arm_id)_controller/constraints/$(arg arm_id)_j5">
+    <rosparam param="$(arg arm_id)_controller/constraints/$(arg arm_id)_j5" subst_value="true">
       trajectory: 0.60
       goal: 0.15
     </rosparam>
-    <rosparam param="$(arg arm_id)_controller/constraints/$(arg arm_id)_j6">
+    <rosparam param="$(arg arm_id)_controller/constraints/$(arg arm_id)_j6" subst_value="true">
       trajectory: 0.60
       goal: 0.15
     </rosparam>
   </node>
+
+  <!-- Load controller configurations to global namespace for controller_manager -->
+  <rosparam file="$(arg controller_yaml)" command="load" subst_value="true"/>
+  
+  <!-- Override controller configuration in global namespace -->
+  <rosparam param="joint_state_controller" subst_value="true">
+    type: joint_state_controller/JointStateController
+    publish_rate: 50
+  </rosparam>
+  
+  <!-- Set controller type and basic parameters -->
+  <rosparam param="$(arg arm_id)_controller/type" subst_value="true">position_controllers/JointTrajectoryController</rosparam>
+  <rosparam param="$(arg arm_id)_controller/joints" subst_value="true">
+    - $(arg arm_id)_j1
+    - $(arg arm_id)_j2
+    - $(arg arm_id)_j3
+    - $(arg arm_id)_j4
+    - $(arg arm_id)_j5
+    - $(arg arm_id)_j6
+  </rosparam>
+  <rosparam param="$(arg arm_id)_controller/constraints/goal_time" subst_value="true">3.0</rosparam>
+  <rosparam param="$(arg arm_id)_controller/constraints/stopped_velocity_tolerance" subst_value="true">0.0</rosparam>
+  
+  <!-- Set joint-specific constraints -->
+  <rosparam param="$(arg arm_id)_controller/constraints/$(arg arm_id)_j1/trajectory" subst_value="true">0.60</rosparam>
+  <rosparam param="$(arg arm_id)_controller/constraints/$(arg arm_id)_j1/goal" subst_value="true">0.15</rosparam>
+  <rosparam param="$(arg arm_id)_controller/constraints/$(arg arm_id)_j2/trajectory" subst_value="true">0.60</rosparam>
+  <rosparam param="$(arg arm_id)_controller/constraints/$(arg arm_id)_j2/goal" subst_value="true">0.15</rosparam>
+  <rosparam param="$(arg arm_id)_controller/constraints/$(arg arm_id)_j3/trajectory" subst_value="true">0.60</rosparam>
+  <rosparam param="$(arg arm_id)_controller/constraints/$(arg arm_id)_j3/goal" subst_value="true">0.15</rosparam>
+  <rosparam param="$(arg arm_id)_controller/constraints/$(arg arm_id)_j4/trajectory" subst_value="true">0.60</rosparam>
+  <rosparam param="$(arg arm_id)_controller/constraints/$(arg arm_id)_j4/goal" subst_value="true">0.15</rosparam>
+  <rosparam param="$(arg arm_id)_controller/constraints/$(arg arm_id)_j5/trajectory" subst_value="true">0.60</rosparam>
+  <rosparam param="$(arg arm_id)_controller/constraints/$(arg arm_id)_j5/goal" subst_value="true">0.15</rosparam>
+  <rosparam param="$(arg arm_id)_controller/constraints/$(arg arm_id)_j6/trajectory" subst_value="true">0.60</rosparam>
+  <rosparam param="$(arg arm_id)_controller/constraints/$(arg arm_id)_j6/goal" subst_value="true">0.15</rosparam>
 
   <!-- Controller manager -->
   <node name="controller_spawner" pkg="controller_manager" type="spawner" respawn="false"
