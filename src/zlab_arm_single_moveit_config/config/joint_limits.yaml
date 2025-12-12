@@ -7,34 +7,36 @@ default_acceleration_scaling_factor: 0.1
 
 # Specific joint properties can be changed with the keys [max_position, min_position, max_velocity, max_acceleration]
 # Joint limits can be turned off with [has_velocity_limits, has_acceleration_limits]
+# Note: Joint names use $(arg arm_id) placeholder which will be replaced in launch files
 joint_limits:
-  arm1_j1:
+  $(arg arm_id)_j1:
     has_velocity_limits: true
     max_velocity: 3.15
     has_acceleration_limits: false
     max_acceleration: 0
-  arm1_j2:
+  $(arg arm_id)_j2:
     has_velocity_limits: true
     max_velocity: 3.15
     has_acceleration_limits: false
     max_acceleration: 0
-  arm1_j3:
+  $(arg arm_id)_j3:
     has_velocity_limits: true
     max_velocity: 3.15
     has_acceleration_limits: false
     max_acceleration: 0
-  arm1_j4:
+  $(arg arm_id)_j4:
     has_velocity_limits: true
     max_velocity: 3.2
     has_acceleration_limits: false
     max_acceleration: 0
-  arm1_j5:
+  $(arg arm_id)_j5:
     has_velocity_limits: true
     max_velocity: 3.2
     has_acceleration_limits: false
     max_acceleration: 0
-  arm1_j6:
+  $(arg arm_id)_j6:
     has_velocity_limits: true
     max_velocity: 3.2
     has_acceleration_limits: false
     max_acceleration: 0
+

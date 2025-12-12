@@ -7,6 +7,7 @@
   <param name="moveit_controller_manager" value="moveit_fake_controller_manager/MoveItFakeControllerManager"/>
 
   <!-- The rest of the params are specific to this plugin -->
-  <rosparam subst_value="true" file="$(find zlab_arm_dual_moveit_config)/config/fake_controllers.yaml"/>
+  <!-- Load fake controller configuration with parameter substitution for fake_execution_type -->
+  <rosparam command="load" file="$(find zlab_arm_dual_moveit_config)/config/fake_controllers.yaml" subst_value="true"/>
 
 </launch>

@@ -1,12 +1,13 @@
 controller_list:
-  - name: zlab_arm_controller
+  - name: $(arg arm_id)/$(arg arm_id)_controller
     action_ns: follow_joint_trajectory
     type: FollowJointTrajectory
     default: True
     joints:
-      - arm1_j1
-      - arm1_j2
-      - arm1_j3
-      - arm1_j4
-      - arm1_j5
-      - arm1_j6
+      - $(arg arm_id)_j1
+      - $(arg arm_id)_j2
+      - $(arg arm_id)_j3
+      - $(arg arm_id)_j4
+      - $(arg arm_id)_j5
+      - $(arg arm_id)_j6
+

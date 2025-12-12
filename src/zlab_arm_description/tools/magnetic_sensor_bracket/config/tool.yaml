@@ -51,3 +51,12 @@ moveit:
   end_effector_link: "bracket_tcp_link"  # 使用URDF中定义的bracket_tcp_link作为末端执行器
   planning_frame_offset: [0, 0, 0]
 
+# MoveIt碰撞禁用配置 - 定义工具内部链接之间需要禁用碰撞的链接对
+# 这些配置会被SRDF自动读取并应用
+collision_disable:
+  # 链接对列表，每个条目包含两个链接名称（相对于工具根链接，不需要arm_id前缀）
+  # SRDF会自动添加arm_id前缀
+  - link1: "bracket_base_link"
+    link2: "bracket_tcp_link"
+    reason: "Adjacent"
+

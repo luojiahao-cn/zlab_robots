@@ -40,12 +40,8 @@ bool ZLabArmHWInterface::init()
     return false;
   }
 
-  // Get motion parameters
-  private_nh_.param("acc", acc_, 0.0);
-  private_nh_.param("vel", vel_, 0.0);
-  private_nh_.param("cmd_t", cmd_t_, 0.002);
-  private_nh_.param("filter_t", filter_t_, 0.002);
-  private_nh_.param("gain", gain_, 0.0);
+  // Motion parameters are hardcoded (like frrobot implementation)
+  // acc_, vel_, cmd_t_, filter_t_, gain_ are initialized in constructor
 
   // Get joint names from parameter server
   if (!private_nh_.getParam("hardware_interface/joints", joint_names_))

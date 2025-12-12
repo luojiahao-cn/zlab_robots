@@ -12,7 +12,8 @@ tool_type: "urdf_package"
 # URDF包配置
 urdf_package:
   # URDF文件路径（相对于工具包目录）
-  urdf_file: "urdf/electronic_magnet.urdf"
+  # 优先使用.urdf.xacro文件（支持arm_id参数），如果不存在则使用.urdf文件
+  urdf_file: "urdf/electronic_magnet.urdf.xacro"
   # 工具根链接名称（在URDF中定义的链接名，连接到机械臂的ee_link）
   root_link_name: "em_base_link"
   # TCP链接名称（URDF中已定义TCP链接）
@@ -51,4 +52,19 @@ physical_properties:
 moveit:
   end_effector_link: "em_tcp_link"  # 使用URDF中定义的em_tcp_link作为末端执行器
   planning_frame_offset: [0, 0, 0]
+
+# MoveIt碰撞禁用配置 - 定义工具内部链接之间需要禁用碰撞的链接对
+# 这些配置会被SRDF自动读取并应用
+collision_disable:
+  # 链接对列表，每个条目包含两个链接名称（相对于工具根链接，不需要arm_id前缀）
+  # SRDF会自动添加arm_id前缀
+  - link1: "em_base_link"
+    link2: "em_tcp_link"
+    reason: "Adjacent"
+  - link1: "em_base_link"
+    link2: "em_ee_link"
+    reason: "Adjacent"
+  - link1: "em_tcp_link"
+    link2: "em_ee_link"
+    reason: "Adjacent"
 

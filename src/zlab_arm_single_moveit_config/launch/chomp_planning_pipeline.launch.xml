@@ -1,6 +1,8 @@
 <launch>
   <arg name="start_state_max_bounds_error" default="0.1" />
   <arg name="jiggle_fraction" default="0.05" />
+  <!-- Arm ID parameter -->
+  <arg name="arm_id" default="arm1" doc="Arm ID to use"/>
   <!-- The request adapters (plugins) used when planning. ORDER MATTERS! -->
   <arg name="planning_adapters"
        default="default_planner_request_adapters/LimitMaxCartesianLinkSpeed

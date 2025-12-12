@@ -1,40 +1,41 @@
-zlab_arm_controller:
+$(arg arm_id)_controller:
   type: position_controllers/JointTrajectoryController
   joints:
-    - arm1_j1
-    - arm1_j2
-    - arm1_j3
-    - arm1_j4
-    - arm1_j5
-    - arm1_j6
+    - $(arg arm_id)_j1
+    - $(arg arm_id)_j2
+    - $(arg arm_id)_j3
+    - $(arg arm_id)_j4
+    - $(arg arm_id)_j5
+    - $(arg arm_id)_j6
   gains:
-    arm1_j1:
+    $(arg arm_id)_j1:
       p: 100
       d: 1
       i: 1
       i_clamp: 1
-    arm1_j2:
+    $(arg arm_id)_j2:
       p: 100
       d: 1
       i: 1
       i_clamp: 1
-    arm1_j3:
+    $(arg arm_id)_j3:
       p: 100
       d: 1
       i: 1
       i_clamp: 1
-    arm1_j4:
+    $(arg arm_id)_j4:
       p: 100
       d: 1
       i: 1
       i_clamp: 1
-    arm1_j5:
+    $(arg arm_id)_j5:
       p: 100
       d: 1
       i: 1
       i_clamp: 1
-    arm1_j6:
+    $(arg arm_id)_j6:
       p: 100
       d: 1
       i: 1
       i_clamp: 1
+

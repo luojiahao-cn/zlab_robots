@@ -1,3 +1,0 @@
-[submodule "catkin_ws/src/magnet_pose_estimation"]
-	path = catkin_ws/src/magnet_pose_estimation
-	url = https://github.com/luojiahao-cn/magnet_pose_estimation.git

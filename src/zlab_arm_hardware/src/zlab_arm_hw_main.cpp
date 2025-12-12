@@ -20,6 +20,8 @@ int main(int argc, char** argv)
   }
 
   // Create controller manager
+  // Use nh (group namespace) so controller_spawner can find it
+  // In group ns="arm1", nh will be "/arm1", private_nh will be "/arm1/zlab_arm_hardware"
   controller_manager::ControllerManager cm(&hw, nh);
 
   // Get control loop parameters
@@ -55,7 +57,7 @@ int main(int argc, char** argv)
     const double cycle_time_error = (elapsed_time - desired_update_period).toSec();
     if (cycle_time_error > cycle_time_error_threshold)
     {
-      ROS_WARN("Control loop missed desired period by %.4fs", cycle_time_error);
+    //   ROS_WARN("Control loop missed desired period by %.4fs", cycle_time_error);
     }
 
     // Read from hardware

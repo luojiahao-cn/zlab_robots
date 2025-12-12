@@ -23,10 +23,14 @@
                  arm2_xyz:='$(arg arm2_xyz)' arm2_rpy:='$(arg arm2_rpy)'"/>
 
   <!-- The semantic description that corresponds to the URDF -->
-  <param name="$(arg robot_description)_semantic" textfile="$(find zlab_arm_dual_moveit_config)/config/zlab_dual_arms.srdf" />
+  <!-- Use xacro to process SRDF file with tool parameters for dynamic collision disable -->
+  <param name="$(arg robot_description)_semantic" 
+         command="$(find xacro)/xacro '$(find zlab_arm_dual_moveit_config)/config/zlab_dual_arms.srdf.xacro'
+                 arm1_tool:=$(arg arm1_tool) arm2_tool:=$(arg arm2_tool)" />
 
   <!-- Load updated joint limits (override information from URDF) -->
   <group ns="$(arg robot_description)_planning">
+    <!-- Load joint limits from YAML file (contains both arm1 and arm2) -->
     <rosparam command="load" file="$(find zlab_arm_dual_moveit_config)/config/joint_limits.yaml"/>
     <rosparam command="load" file="$(find zlab_arm_dual_moveit_config)/config/cartesian_limits.yaml"/>
   </group>

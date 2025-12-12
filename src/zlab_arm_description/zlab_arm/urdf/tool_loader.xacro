@@ -120,76 +120,33 @@
             <xacro:property name="urdf_file" value="${urdf_config['urdf_file']}"/>
             <xacro:property name="root_link_name" value="${urdf_config['root_link_name']}"/>
             <xacro:property name="tcp_link_name" value="${urdf_config['tcp_link_name']}"/>
-            <!-- 从配置中提取参数 -->
-            <xacro:property name="tool_origin_xyz" value="${tool_config['origin']['xyz']}"/>
-            <xacro:property name="tool_origin_rpy" value="${tool_config['origin']['rpy']}"/>
-            <xacro:property name="tool_tcp_xyz" value="${tool_config['tcp']['xyz']}"/>
-            <xacro:property name="tool_tcp_rpy" value="${tool_config['tcp']['rpy']}"/>
-            <xacro:property name="tool_mass" value="${tool_config['physical_properties']['mass']}"/>
-            <xacro:property name="tool_inertia" value="${tool_config['physical_properties']['inertia']}"/>
-            <xacro:property name="tool_inertia_ixx" value="${tool_inertia['ixx']}"/>
-            <xacro:property name="tool_inertia_ixy" value="${tool_inertia['ixy']}"/>
-            <xacro:property name="tool_inertia_ixz" value="${tool_inertia['ixz']}"/>
-            <xacro:property name="tool_inertia_iyy" value="${tool_inertia['iyy']}"/>
-            <xacro:property name="tool_inertia_iyz" value="${tool_inertia['iyz']}"/>
-            <xacro:property name="tool_inertia_izz" value="${tool_inertia['izz']}"/>
 
             <!-- 获取安装偏移配置 -->
             <xacro:property name="mount_offset" value="${urdf_config['mount_offset']}"/>
+            <xacro:property name="mount_xyz" value="${mount_offset['xyz']}"/>
+            <xacro:property name="mount_rpy" value="${mount_offset['rpy']}"/>
 
-            <!-- 直接从配置文件读取网格文件路径 -->
-            <xacro:property name="visual_path" value="${tool_config['visual_mesh']}"/>
-            <xacro:property name="collision_path" value="${tool_config['collision_mesh']}"/>
-
-            <!-- 完整网格文件路径 -->
-            <xacro:property name="visual_mesh_path" value="package://zlab_arm_description/tools/${tool_name}/${visual_path}"/>
-            <xacro:property name="collision_mesh_path" value="package://zlab_arm_description/tools/${tool_name}/${collision_path}"/>
-
-            <!-- 内联定义工具链接以避免命名冲突 -->
-            <link name="${arm_id}_${root_link_name}">
-                <inertial>
-                    <origin xyz="${tool_origin_xyz[0]} ${tool_origin_xyz[1]} ${tool_origin_xyz[2]}" rpy="${tool_origin_rpy[0]} ${tool_origin_rpy[1]} ${tool_origin_rpy[2]}" />
-                    <mass value="${tool_mass}" />
-                    <inertia ixx="${tool_inertia_ixx}" ixy="${tool_inertia_ixy}" ixz="${tool_inertia_ixz}" iyy="${tool_inertia_iyy}" iyz="${tool_inertia_iyz}" izz="${tool_inertia_izz}" />
-                </inertial>
-                <visual>
-                    <origin xyz="0 0 0" rpy="0 0 0" />
-                    <geometry>
-                        <mesh filename="${visual_mesh_path}" />
-                    </geometry>
-                    <material name="">
-                        <color rgba="1 1 1 1" />
-                    </material>
-                </visual>
-                <collision>
-                    <origin xyz="0 0 0" rpy="0 0 0" />
-                    <geometry>
-                        <mesh filename="${collision_mesh_path}" />
-                    </geometry>
-                </collision>
-            </link>
-
-            <link name="${arm_id}_${tcp_link_name}">
-                <inertial>
-                    <origin xyz="${tool_tcp_xyz[0]} ${tool_tcp_xyz[1]} ${tool_tcp_xyz[2]}" rpy="${tool_tcp_rpy[0]} ${tool_tcp_rpy[1]} ${tool_tcp_rpy[2]}" />
-                    <mass value="0.001" />
-                    <inertia ixx="1e-6" ixy="0.0" ixz="0.0" iyy="1e-6" iyz="0.0" izz="1e-6" />
-                </inertial>
-                <!-- TCP链接不显示任何可视化内容，只用于运动学计算 -->
-            </link>
-
-            <joint name="${arm_id}_${tcp_link_name}_joint" type="fixed">
-                <parent link="${arm_id}_${root_link_name}" />
-                <child link="${arm_id}_${tcp_link_name}" />
-                <origin xyz="${tool_tcp_xyz[0]} ${tool_tcp_xyz[1]} ${tool_tcp_xyz[2]}" rpy="${tool_tcp_rpy[0]} ${tool_tcp_rpy[1]} ${tool_tcp_rpy[2]}" />
-            </joint>
-
+            <!-- 构建工具文件路径 -->
+            <xacro:property name="tool_file_path" value="$(find zlab_arm_description)/tools/${tool_name}/${urdf_file}"/>
+            
+            <!-- 设置全局变量供工具xacro文件使用 -->
+            <xacro:property name="tool_arm_id" value="${arm_id}"/>
+            
+            <!-- 加载工具URDF/xacro文件 -->
+            <!-- 如果配置文件指定的是.urdf.xacro文件，直接include（它会使用tool_arm_id变量） -->
+            <xacro:if value="${urdf_file.endswith('.urdf.xacro')}">
+                <!-- 使用xacro include，工具xacro文件会从tool_arm_id变量获取arm_id -->
+                <xacro:include filename="${tool_file_path}"/>
+            </xacro:if>
+            <xacro:unless value="${urdf_file.endswith('.urdf.xacro')}">
+                <!-- 如果是.urdf文件，直接include（不支持arm_id前缀，会有命名冲突） -->
+                <xacro:include filename="${tool_file_path}"/>
+            </xacro:unless>
+            
             <!-- 创建从ee_link到工具根链接的关节 -->
             <joint name="${arm_id}_${tool_name}_joint" type="fixed">
                 <parent link="${arm_id}_ee_link" />
                 <child link="${arm_id}_${root_link_name}" />
-                <xacro:property name="mount_xyz" value="${mount_offset['xyz']}"/>
-                <xacro:property name="mount_rpy" value="${mount_offset['rpy']}"/>
                 <origin
                     xyz="${mount_xyz[0]} ${mount_xyz[1]} ${mount_xyz[2]}"
                     rpy="${mount_rpy[0]} ${mount_rpy[1]} ${mount_rpy[2]}" />

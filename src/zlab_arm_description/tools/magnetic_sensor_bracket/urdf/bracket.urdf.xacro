@@ -4,9 +4,10 @@
      For more information, please see http://wiki.ros.org/sw_urdf_exporter -->
 <robot xmlns:xacro="http://www.ros.org/wiki/xacro"
   name="bracket">
-  <!-- 参数定义：允许外部指定链接名前缀 -->
-  <xacro:arg name="link_prefix" default=""/>
-  <xacro:property name="prefix" value="$(arg link_prefix)"/>
+  <!-- Arm ID: 从父xacro文件传递的全局变量tool_arm_id -->
+  <!-- 直接使用tool_arm_id作为前缀，避免循环定义 -->
+  <!-- Prefix for link names to avoid conflicts in dual arm setup -->
+  <xacro:property name="prefix" value="${tool_arm_id}_"/>
 
   <link name="${prefix}bracket_base_link">
     <inertial>

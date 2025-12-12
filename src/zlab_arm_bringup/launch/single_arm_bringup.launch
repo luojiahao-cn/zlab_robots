@@ -1,0 +1,38 @@
+<?xml version="1.0"?>
+<launch>
+  <!-- Arm ID: arm1 or arm2 -->
+  <arg name="arm_id" default="arm1" doc="Arm ID (arm1 or arm2)"/>
+  
+  <!-- Robot IP address -->
+  <arg name="robot_ip" default="" doc="IP address of the robot (if empty, uses default based on arm_id)"/>
+  
+  <!-- Control loop frequency -->
+  <arg name="loop_hz" default="60.0" doc="Control loop frequency (Hz)"/>
+  
+  <!-- Tool parameter (optional) -->
+  <arg name="tool_name" default="none" doc="Tool name to use"/>
+  
+  <!-- MoveIt options -->
+  <arg name="pipeline" default="ompl" doc="Planning pipeline to use with MoveIt"/>
+  <arg name="use_rviz" default="true" doc="Start RViz"/>
+  
+  <!-- Launch hardware interface -->
+  <include file="$(find zlab_arm_hardware)/launch/arm_hardware.launch">
+    <arg name="arm_id" value="$(arg arm_id)"/>
+    <arg name="robot_ip" value="$(arg robot_ip)"/>
+    <arg name="loop_hz" value="$(arg loop_hz)"/>
+    <arg name="tool_name" value="$(arg tool_name)"/>
+  </include>
+  
+  <!-- Launch MoveIt -->
+  <include file="$(find zlab_arm_single_moveit_config)/launch/demo.launch">
+    <arg name="arm_id" value="$(arg arm_id)"/>
+    <arg name="tool_name" value="$(arg tool_name)"/>
+    <arg name="moveit_controller_manager" value="simple"/>
+    <arg name="load_robot_description" value="false"/>
+    <arg name="pipeline" value="$(arg pipeline)"/>
+    <arg name="use_rviz" value="$(arg use_rviz)"/>
+  </include>
+  
+</launch>
+

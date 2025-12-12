@@ -4,6 +4,8 @@
   <!-- Define moveit controller manager plugin: fake, simple, or ros_control -->
   <arg name="moveit_controller_manager" />
   <arg name="fake_execution_type" default="interpolate" />
+  <!-- Arm ID parameter -->
+  <arg name="arm_id" default="arm1" doc="Arm ID to use"/>
 
   <!-- Flag indicating whether MoveIt is allowed to load/unload  or switch controllers -->
   <arg name="moveit_manage_controllers" default="true"/>

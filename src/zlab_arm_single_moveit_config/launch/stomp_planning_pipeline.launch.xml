@@ -1,6 +1,8 @@
 <launch>
   <!-- Stomp Plugin for MoveIt -->
   <arg name="planning_plugin" value="stomp_moveit/StompPlannerManager" />
+  <!-- Arm ID parameter -->
+  <arg name="arm_id" default="arm1" doc="Arm ID to use"/>
 
   <arg name="start_state_max_bounds_error" value="0.1" />
   <arg name="jiggle_fraction" value="0.05" />

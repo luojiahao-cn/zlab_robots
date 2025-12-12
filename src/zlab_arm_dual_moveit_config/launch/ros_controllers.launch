@@ -2,10 +2,12 @@
 <launch>
 
   <!-- Load joint controller configurations from YAML file to parameter server -->
-  <rosparam file="$(find zlab_arm_single_moveit_config)/config/ros_controllers.yaml" command="load"/>
+  <!-- Dual arms configuration already contains both arm1_controller and arm2_controller -->
+  <rosparam command="load" file="$(find zlab_arm_dual_moveit_config)/config/ros_controllers.yaml"/>
 
   <!-- Load the controllers -->
+  <!-- Dual arms configuration contains both arm1_controller and arm2_controller -->
   <node name="controller_spawner" pkg="controller_manager" type="spawner" respawn="false"
-    output="screen" args="zlab_arm_controller "/>
+    output="screen" args="arm1_controller arm2_controller "/>
 
 </launch>

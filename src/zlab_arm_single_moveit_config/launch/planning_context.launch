@@ -17,11 +17,16 @@
                  arm_id:=$(arg arm_id) tool_name:=$(arg tool_name)"/>
 
   <!-- The semantic description that corresponds to the URDF -->
-  <param name="$(arg robot_description)_semantic" textfile="$(find zlab_arm_single_moveit_config)/config/zlab_arm.srdf" />
+  <!-- Use xacro to process SRDF file with arm_id and tool_name parameters for dynamic collision disable -->
+  <param name="$(arg robot_description)_semantic" 
+         command="$(find xacro)/xacro '$(find zlab_arm_single_moveit_config)/config/zlab_arm.srdf.xacro' 
+                 arm_id:=$(arg arm_id) tool_name:=$(arg tool_name)" />
 
   <!-- Load updated joint limits (override information from URDF) -->
   <group ns="$(arg robot_description)_planning">
-    <rosparam command="load" file="$(find zlab_arm_single_moveit_config)/config/joint_limits.yaml"/>
+    <!-- Load joint limits from YAML file with parameter substitution -->
+    <rosparam command="load" file="$(find zlab_arm_single_moveit_config)/config/joint_limits.yaml" subst_value="true"/>
+    
     <rosparam command="load" file="$(find zlab_arm_single_moveit_config)/config/cartesian_limits.yaml"/>
   </group>
 

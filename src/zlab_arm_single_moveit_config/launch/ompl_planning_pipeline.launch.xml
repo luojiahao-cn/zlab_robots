@@ -13,6 +13,8 @@
 
   <arg name="start_state_max_bounds_error" default="0.1" />
   <arg name="jiggle_fraction" default="0.05" />
+  <!-- Arm ID parameter -->
+  <arg name="arm_id" default="arm1" doc="Arm ID to use"/>
 
   <param name="planning_plugin" value="ompl_interface/OMPLPlanner" />
   <param name="request_adapters" value="$(arg planning_adapters)" />
@@ -20,5 +22,8 @@
   <param name="jiggle_fraction" value="$(arg jiggle_fraction)" />
 
   <rosparam command="load" file="$(find zlab_arm_single_moveit_config)/config/ompl_planning.yaml"/>
+  
+  <!-- Override projection_evaluator with arm_id -->
+  <rosparam param="zlab_arm/projection_evaluator" subst_value="true">joints($(arg arm_id)_j1,$(arg arm_id)_j2)</rosparam>
 
 </launch>

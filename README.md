@@ -1,162 +1,287 @@
-# Dual-robot arm controller
+# ZLab 机械臂控制系统
 
-## Description
+## 项目描述
 
-Robot arm type: FR5
+基于 ROS Noetic 的 ZLab 机械臂控制系统，支持单臂和双臂控制，集成了 MoveIt 运动规划功能。
 
-- Arm1: Ram&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ip:192.168.31.202
+### 机械臂信息
 
-- Arm2: Rem&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ip:192.168.31.203
+- **Arm1 (Ram)**: IP 地址 192.168.31.202
+- **Arm2 (Rem)**: IP 地址 192.168.31.203
+- **末端执行器最大负载**: 5kg
 
-- Maximum weight of end-effector: 5kg
+### 系统要求
 
-Operating System: Ubuntu 20.04 LTS
+- **操作系统**: Ubuntu 20.04 LTS
+- **ROS 版本**: ROS Noetic
+
+## 项目结构
+
+项目包含以下主要包：
+
+- **zlab_arm_bringup**: 启动文件包，提供便捷的启动脚本
+  - 单臂/双臂硬件启动
+  - Gazebo 仿真启动
   
-- ROS Version: ROS Noetic
+- **zlab_arm_hardware**: 硬件接口包
+  - 基于 `ros_control` 的硬件接口
+  - TCP 通信协议（端口 8080）
+  - 支持 ServoJ 关节空间控制指令
   
-## Structure
+- **zlab_arm_description**: 机器人描述文件
+  - URDF 模型
+  - 支持多种工具配置
+  
+- **zlab_arm_single_moveit_config**: 单臂 MoveIt 配置
+  - 运动规划配置
+  - 碰撞检测配置
+  
+- **zlab_arm_dual_moveit_config**: 双臂 MoveIt 配置
+  - 双臂协调运动规划
+  - 双臂碰撞检测
 
-The project is structured as follows:
-- **MoveIt!**: Used for motion planning and execution.
-  - **fr5v6_dual_moveit_config**: Used for motion planning and configuration of dual robot arms.
-  - **fr5v6_single_moveit_config**: Used for motion planning and configuration of a single robot arm.
-  - **frcobot_description**:Contains URDF and other description files for the FR5v6 robot arms.
-  - **moveit_servo**:Used for real-time servoing of the robot arms. *Note: This feature is not fully implemented.*
-- **ROS Controller**: Manages the control loops and interfaces with the hardware.
-  - **ros_control_boilerplate**：A ROS controller based on ServoJ commands.
+## 安装
 
-## Installation
+### 1. 克隆仓库
 
-To install and set up the project, follow these steps:
+```bash
+git clone https://github.com/luojiahao-cn/zlab_robots.git
+cd zlab_robots
+```
 
-1. Clone the repository:
-    ```bash
-    git clone https://github.com/luojiahao-cn/zlab_robots.git
-    cd zlab_robots
-    ```
+### 2. 安装依赖
 
-2. Install dependencies:
-    In the workspace's `src` directory, run the following command:
-    ```bash
-    cd catkin_ws/src
-    rosdep install --from-paths . --ignore-src -r -y
-    sudo apt-get install ros-noetic-moveit
-    sudo apt-get install ros-noetic-trac-ik
-    sudo apt-get install ros-noetic-ros-controllers
-    sudo apt-get install ros-noetic-realsense2-camera
-    sudo apt-get install ros-noetic-realsense2-description
-    sudo apt-get install libceres-dev
-    ```
+在 `src` 目录下运行：
 
-3. Build the workspace:
-    In the workspace's `catkin_ws` directory, run the following command:
-    ```bash
-    cd ..
-    catkin_make
-    ```
+```bash
+cd src
+rosdep install --from-paths . --ignore-src -r -y
+```
 
-4. Source the workspace:
-    ```bash
-    source devel/setup.bash
-    ```
+安装额外的 ROS 包：
 
-## Usage
+```bash
+sudo apt-get install ros-noetic-moveit
+sudo apt-get install ros-noetic-trac-ik
+sudo apt-get install ros-noetic-ros-controllers
+sudo apt-get install ros-noetic-gazebo-ros-control
+sudo apt-get install ros-noetic-joint-trajectory-controller
+```
 
-- To start the single arm controller, use the following command:
+### 3. 编译工作空间
 
-    - Default arm1 (IP: 192.168.31.202):
-        ```bash
-        roslaunch frcobot_examples connect_single_arm.launch
-        ```
-    - Select arm2 (IP: 192.168.31.203):
-        ```bash
-        roslaunch frcobot_examples connect_single_arm.launch arm_selection:=arm2
-        ```
-    ![connect_single_arm Image](images/connect_single_arm.png)
+```bash
+cd ..
+catkin_make
+```
 
-- To start the dual-robot arm controller, use the following command:
+### 4. 配置环境
 
-    ```bash
-    roslaunch frcobot_examples connect_dual_arms.launch
-    ```
-    ![connect_dual_arms Image](images/connect_dual_arms.png)
+```bash
+source devel/setup.bash
+```
 
-- To start the gazebo simulation for a single arm, use the following command:
+建议将以下命令添加到 `~/.bashrc`：
 
-    ```bash
-    roslaunch fr5v6_single_moveit_config demo_gazebo.launch
-    ```
+```bash
+echo "source ~/workshop/zlab_robots/devel/setup.bash" >> ~/.bashrc
+```
 
-- To start the gazebo simulation for dual arms, use the following command:
+## 使用方法
 
-    ```bash
-    roslaunch fr5v6_dual_moveit_config demo_gazebo.launch
-    ```
+### 真实硬件启动
 
+#### 单臂启动
 
-- To add protective boundaries around the robot workspace, use:
+```bash
+# 启动 arm1（默认 IP: 192.168.31.202）
+roslaunch zlab_arm_bringup single_arm_bringup.launch arm_id:=arm1
 
-    ```bash
-    rosrun frcobot_examples environment
-    ```
-    This will create virtual walls and a table in the planning scene to prevent the robot arm from moving beyond safe boundaries. The environment includes:
-    - Three walls (back, left, and right sides)
-    - A virtual table in front of the robot
-    
-    Press Ctrl+C to remove the boundaries when no longer needed.
+# 启动 arm2（默认 IP: 192.168.31.203）
+roslaunch zlab_arm_bringup single_arm_bringup.launch arm_id:=arm2
 
-- To monitor the robot arm's status using the controller feedback protocol, use the following command:
+# 指定 IP 地址
+roslaunch zlab_arm_bringup single_arm_bringup.launch arm_id:=arm1 robot_ip:=192.168.31.202
 
-    ```bash
-    roslaunch frcobot_status frcobot_status.launch
-    ```
-    This will launch the status feedback interface, allowing you to view real-time information about the robot arm's state, including joint positions, tool positions, and error codes.
+# 指定工具
+roslaunch zlab_arm_bringup single_arm_bringup.launch arm_id:=arm1 tool_name:=permanent_magnet
 
+# 不启动 RViz
+roslaunch zlab_arm_bringup single_arm_bringup.launch arm_id:=arm1 use_rviz:=false
+```
 
-## Example
+#### 双臂启动
 
-## Common Issues
+```bash
+# 使用默认 IP 地址
+roslaunch zlab_arm_bringup dual_arms_bringup.launch
 
-### Robot Arm Motion Stuttering
+# 指定 IP 地址
+roslaunch zlab_arm_bringup dual_arms_bringup.launch \
+    arm1_ip:=192.168.31.202 \
+    arm2_ip:=192.168.31.203
 
-If you experience stuttering in the robot arm's motion, follow these steps to diagnose and resolve the issue:
+# 指定工具
+roslaunch zlab_arm_bringup dual_arms_bringup.launch \
+    arm1_tool:=permanent_magnet \
+    arm2_tool:=electronic_magnet
+```
 
-1. Enable Control Loop Monitoring:
-   Uncomment the following code in `catkin_ws/src/ros_control_boilerplate/src/generic_hw_control_loop.cpp`:
-   ```cpp
-   ROS_WARN_STREAM_NAMED(name_, "desired update period of " << desired_update_period_
-                               << ", cycle time: " << elapsed_time_
-                               << ", exceeded by: " << cycle_time_error
-                               << ",> threshold: " << cycle_time_error_threshold_);
-   ```
+### Gazebo 仿真启动
 
-2. Monitor Warning Messages:
-   - Watch for cycle time warnings indicating the control loop cannot maintain the desired frequency
-   - The warning will show the desired period, actual cycle time, and threshold exceedance
+#### 单臂仿真
 
-3. Solutions:
-   - Reduce the control frequency by modifying the `control_frequency` parameter
-   - Improve computer performance by checking CPU usage and closing unnecessary processes
-   - Optimize network connection between the robot and controller
+```bash
+# 启动单臂 Gazebo 仿真
+roslaunch zlab_arm_bringup single_arm_gazebo.launch arm_id:=arm1
 
-### Other Common Issues
+# 指定工具
+roslaunch zlab_arm_bringup single_arm_gazebo.launch arm_id:=arm1 tool_name:=permanent_magnet
 
-#### Connection Problems
-If you encounter connection errors, verify:
-- Robot IP address is correct
-- Network connection is stable
-- Firewall settings allow communication on required ports
+# 无 GUI 模式（用于无头服务器）
+roslaunch zlab_arm_bringup single_arm_gazebo.launch arm_id:=arm1 gazebo_gui:=false
+```
 
-#### Planning Failures
-If motion planning fails, check:
-- Target position is within workspace
-- No collision present
-- Planning parameters are appropriate
+#### 双臂仿真
 
-#### Error Messages
-Common error messages and solutions:
-- "Connection lost with robot": Check network connectivity
-- "Failed to receive joint states": Verify robot status and connection
-- "Control loop cycle time exceeded": Adjust control frequency or system resources
+```bash
+# 启动双臂 Gazebo 仿真
+roslaunch zlab_arm_bringup dual_arms_gazebo.launch
 
-For additional support or specific issues not covered here, please refer to the documentation or contact technical support.
+# 指定工具
+roslaunch zlab_arm_bringup dual_arms_gazebo.launch \
+    arm1_tool:=permanent_magnet \
+    arm2_tool:=electronic_magnet
+
+# 指定机械臂位置
+roslaunch zlab_arm_bringup dual_arms_gazebo.launch \
+    arm1_xyz:="0 0 0" \
+    arm1_rpy:="0 0 0" \
+    arm2_xyz:="0.5 0 0" \
+    arm2_rpy:="0 0 0"
+```
+
+### 仅启动硬件接口（不使用 MoveIt）
+
+如果需要单独启动硬件接口，可以使用：
+
+```bash
+# 单臂
+roslaunch zlab_arm_hardware arm_hardware.launch arm_id:=arm1
+
+# 双臂
+roslaunch zlab_arm_hardware dual_arms_hardware.launch
+```
+
+## 参数说明
+
+### 通用参数
+
+- `arm_id`: 机械臂 ID（arm1 或 arm2），默认 arm1
+- `tool_name`: 工具名称（如 permanent_magnet, electronic_magnet 等），默认 none
+- `pipeline`: MoveIt 规划管道，默认 ompl
+- `use_rviz`: 是否启动 RViz，默认 true
+
+### 硬件启动参数
+
+- `robot_ip`: 机械臂 IP 地址（单臂启动时使用）
+- `arm1_ip`: arm1 的 IP 地址，默认 192.168.31.202
+- `arm2_ip`: arm2 的 IP 地址，默认 192.168.31.203
+- `loop_hz`: 控制循环频率，默认 60.0 Hz
+
+### Gazebo 仿真参数
+
+- `gazebo_gui`: 是否启动 Gazebo GUI，默认 true
+- `paused`: 是否暂停启动，默认 false
+- `world_name`: Gazebo 世界文件，默认 worlds/empty.world
+- `world_pose`: 机器人初始位置，默认 "-x 0 -y 0 -z 0 -R 0 -P 0 -Y 0"
+- `arm1_xyz`: arm1 位置（x y z），默认 "0 0 0"
+- `arm1_rpy`: arm1 姿态（roll pitch yaw），默认 "0 0 0"
+- `arm2_xyz`: arm2 位置（x y z），默认空（使用默认值）
+- `arm2_rpy`: arm2 姿态（roll pitch yaw），默认空（使用默认值）
+
+## 常见问题
+
+### 机械臂运动卡顿
+
+如果遇到机械臂运动卡顿，可以尝试以下方法：
+
+1. **检查控制循环频率**：
+   - 降低 `loop_hz` 参数（例如从 60Hz 降到 50Hz）
+   - 检查系统 CPU 使用率，关闭不必要的进程
+
+2. **检查网络连接**：
+   - 确保机械臂 IP 地址正确
+   - 检查网络延迟和丢包率
+   - 确保防火墙允许端口 8080 通信
+
+3. **检查控制循环周期**：
+   - 查看日志中的 "Control loop missed desired period" 警告
+   - 如果频繁出现，考虑降低控制频率
+
+### 连接问题
+
+如果遇到连接错误：
+
+- **验证 IP 地址**：确保机械臂 IP 地址配置正确
+- **检查网络连接**：使用 `ping` 命令测试网络连通性
+- **检查端口**：确保端口 8080 未被占用
+- **防火墙设置**：确保防火墙允许 TCP 端口 8080 通信
+
+### 运动规划失败
+
+如果 MoveIt 运动规划失败：
+
+- **检查工作空间**：确保目标位置在机械臂工作空间内
+- **检查碰撞**：确保没有碰撞检测错误
+- **调整规划参数**：尝试不同的规划算法（ompl, chomp 等）
+- **检查关节限制**：确保目标位置在关节限制范围内
+
+### 错误消息
+
+常见错误消息及解决方案：
+
+- **"Connection lost with robot"**: 检查网络连接和 IP 地址配置
+- **"Failed to receive joint states"**: 验证机械臂状态和连接
+- **"Control loop cycle time exceeded"**: 降低控制频率或优化系统资源
+- **"Failed to get param 'robot_ip'"**: 检查 launch 文件参数配置
+
+## 开发说明
+
+### 包依赖关系
+
+```
+zlab_arm_bringup
+├── zlab_arm_hardware
+│   └── zlab_arm_description
+├── zlab_arm_single_moveit_config
+│   └── zlab_arm_description
+└── zlab_arm_dual_moveit_config
+    └── zlab_arm_description
+```
+
+### 协议格式
+
+硬件接口使用 TCP 协议通信（端口 8080）：
+
+**ServoJ 指令（376）**：
+```
+/f/bIII123III376III{length}III{ServoJ(j1,j2,j3,j4,j5,j6,acc,vel,cmdT,filterT,gain)}III/b/f
+```
+
+**GetActualJointPosRadian 指令（375）**：
+```
+/f/bIII123III375III25IIIGetActualJointPosRadian()III/b/f
+```
+
+## 许可证
+
+TODO
+
+## 贡献
+
+欢迎提交 Issue 和 Pull Request。
+
+## 联系方式
+
+如有问题或建议，请通过 GitHub Issues 联系。
