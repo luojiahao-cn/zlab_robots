@@ -1,0 +1,90 @@
+<?xml version="1.0"?>
+<launch>
+  <!-- Arm ID: arm1 or arm2 -->
+  <arg name="arm_id" default="arm1" doc="Arm ID (arm1 or arm2)"/>
+  
+  <!-- Robot IP address -->
+  <!-- Default IP: arm1 -> 192.168.31.202, arm2 -> 192.168.31.203 -->
+  <arg name="robot_ip" default="" doc="IP address of the robot (if empty, uses default based on arm_id)"/>
+  
+  <!-- Set default IP based on arm_id if robot_ip not provided -->
+  <arg if="$(eval arg('robot_ip') == '' and arg('arm_id') == 'arm1')" name="actual_robot_ip" value="192.168.31.202"/>
+  <arg if="$(eval arg('robot_ip') == '' and arg('arm_id') == 'arm2')" name="actual_robot_ip" value="192.168.31.203"/>
+  <arg unless="$(eval arg('robot_ip') == '')" name="actual_robot_ip" value="$(arg robot_ip)"/>
+  
+  <!-- Control loop frequency -->
+  <arg name="loop_hz" default="60.0" doc="Control loop frequency (Hz)"/>
+  
+  <!-- Tool parameter (optional) -->
+  <arg name="tool_name" default="none" doc="Tool name to use"/>
+  
+  <!-- Load URDF -->
+  <arg name="load_robot_description" default="true"/>
+  <param if="$(arg load_robot_description)" name="robot_description"
+         command="$(find xacro)/xacro '$(find zlab_arm_description)/zlab_arm/urdf/zlab_arm.xacro'
+                 arm_id:=$(arg arm_id) tool_name:=$(arg tool_name)"/>
+
+  <!-- Hardware interface node -->
+  <node name="zlab_arm_hardware" pkg="zlab_arm_hardware" type="zlab_arm_hw_main" output="screen">
+    <param name="robot_ip" value="$(arg actual_robot_ip)"/>
+    <param name="loop_hz" value="$(arg loop_hz)"/>
+    
+    <!-- Set joints based on arm_id -->
+    <rosparam param="hardware_interface/joints">
+      - $(arg arm_id)_j1
+      - $(arg arm_id)_j2
+      - $(arg arm_id)_j3
+      - $(arg arm_id)_j4
+      - $(arg arm_id)_j5
+      - $(arg arm_id)_j6
+    </rosparam>
+    
+    <!-- Load controller configuration -->
+    <rosparam file="$(find zlab_arm_hardware)/config/arm_controllers.yaml" command="load" ns="~"/>
+    
+    <!-- Override controller name and joints based on arm_id -->
+    <rosparam param="$(arg arm_id)_controller/joints">
+      - $(arg arm_id)_j1
+      - $(arg arm_id)_j2
+      - $(arg arm_id)_j3
+      - $(arg arm_id)_j4
+      - $(arg arm_id)_j5
+      - $(arg arm_id)_j6
+    </rosparam>
+    
+    <!-- Set joint constraints -->
+    <rosparam param="$(arg arm_id)_controller/constraints/$(arg arm_id)_j1">
+      trajectory: 0.60
+      goal: 0.15
+    </rosparam>
+    <rosparam param="$(arg arm_id)_controller/constraints/$(arg arm_id)_j2">
+      trajectory: 0.60
+      goal: 0.15
+    </rosparam>
+    <rosparam param="$(arg arm_id)_controller/constraints/$(arg arm_id)_j3">
+      trajectory: 0.60
+      goal: 0.15
+    </rosparam>
+    <rosparam param="$(arg arm_id)_controller/constraints/$(arg arm_id)_j4">
+      trajectory: 0.60
+      goal: 0.15
+    </rosparam>
+    <rosparam param="$(arg arm_id)_controller/constraints/$(arg arm_id)_j5">
+      trajectory: 0.60
+      goal: 0.15
+    </rosparam>
+    <rosparam param="$(arg arm_id)_controller/constraints/$(arg arm_id)_j6">
+      trajectory: 0.60
+      goal: 0.15
+    </rosparam>
+  </node>
+
+  <!-- Controller manager -->
+  <node name="controller_spawner" pkg="controller_manager" type="spawner" respawn="false"
+        output="screen" args="joint_state_controller $(arg arm_id)_controller"/>
+
+  <!-- Robot state publisher -->
+  <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher"/>
+
+</launch>
+
