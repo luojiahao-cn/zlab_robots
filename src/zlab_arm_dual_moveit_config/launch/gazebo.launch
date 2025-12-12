@@ -1,0 +1,49 @@
+<?xml version="1.0"?>
+<launch>
+  <!-- Tool parameters (optional, defaults to none) -->
+  <arg name="arm1_tool" default="none" doc="Tool name for arm1"/>
+  <arg name="arm2_tool" default="none" doc="Tool name for arm2"/>
+
+  <!-- Arm position parameters (optional) -->
+  <arg name="arm1_xyz" default="0 0 0" doc="Position of arm1 (x y z)"/>
+  <arg name="arm1_rpy" default="0 0 0" doc="Orientation of arm1 (roll pitch yaw)"/>
+  <arg name="arm2_xyz" default="" doc="Position of arm2 (x y z), empty for default"/>
+  <arg name="arm2_rpy" default="" doc="Orientation of arm2 (roll pitch yaw), empty for default"/>
+
+  <!-- Gazebo options -->
+  <arg name="gazebo_gui" default="true" doc="Start Gazebo GUI"/>
+  <arg name="paused" default="false" doc="Start Gazebo paused"/>
+  <arg name="world_name" default="worlds/empty.world" doc="Gazebo world file"/>
+  <arg name="world_pose" default="-x 0 -y 0 -z 0 -R 0 -P 0 -Y 0" doc="Pose to spawn the robot at"/>
+  <arg name="initial_joint_positions" default=" -J arm1_j1 0 -J arm1_j2 0 -J arm1_j3 0 -J arm1_j4 0 -J arm1_j5 0 -J arm1_j6 0 -J arm2_j1 0 -J arm2_j2 0 -J arm2_j3 0 -J arm2_j4 0 -J arm2_j5 0 -J arm2_j6 0" doc="Initial joint configuration of the robot"/>
+
+  <!-- Start Gazebo paused to allow the controllers to pickup the initial pose -->
+  <include file="$(find gazebo_ros)/launch/empty_world.launch" pass_all_args="true">
+    <arg name="paused" value="true"/>
+  </include>
+
+  <!-- Set the robot urdf on the parameter server -->
+  <param name="robot_description"
+         command="$(find xacro)/xacro '$(find zlab_arm_description)/zlab_arm/urdf/zlab_dual_arms.xacro'
+                 arm1_tool:=$(arg arm1_tool) arm2_tool:=$(arg arm2_tool)
+                 arm1_xyz:='$(arg arm1_xyz)' arm1_rpy:='$(arg arm1_rpy)'
+                 arm2_xyz:='$(arg arm2_xyz)' arm2_rpy:='$(arg arm2_rpy)'"/>
+
+  <!-- Unpause the simulation after loading the robot model -->
+  <arg name="unpause" value="$(eval '' if arg('paused') else '-unpause')" />
+
+  <!-- Spawn the robot in Gazebo -->
+  <node name="spawn_gazebo_model" pkg="gazebo_ros" type="spawn_model" args="-urdf -param robot_description -model robot $(arg unpause) $(arg world_pose) $(arg initial_joint_positions)"
+    respawn="false" output="screen" />
+
+  <!-- Load the controller parameters onto the parameter server -->
+  <rosparam file="$(find zlab_arm_dual_moveit_config)/config/gazebo_controllers.yaml" />
+  <include file="$(dirname)/ros_controllers.launch"/>
+
+  <!-- Spawn the Gazebo ROS controllers -->
+  <node name="gazebo_controller_spawner" pkg="controller_manager" type="spawner" respawn="false" output="screen" args="joint_state_controller" />
+
+  <!-- Given the published joint states, publish tf for the robot links -->
+  <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher" respawn="true" output="screen" />
+</launch>
+

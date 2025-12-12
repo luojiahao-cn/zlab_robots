@@ -1,0 +1,81 @@
+arm1_controller:
+  type: position_controllers/JointTrajectoryController
+  joints:
+    - arm1_j1
+    - arm1_j2
+    - arm1_j3
+    - arm1_j4
+    - arm1_j5
+    - arm1_j6
+  gains:
+    arm1_j1:
+      p: 100
+      d: 1
+      i: 1
+      i_clamp: 1
+    arm1_j2:
+      p: 100
+      d: 1
+      i: 1
+      i_clamp: 1
+    arm1_j3:
+      p: 100
+      d: 1
+      i: 1
+      i_clamp: 1
+    arm1_j4:
+      p: 100
+      d: 1
+      i: 1
+      i_clamp: 1
+    arm1_j5:
+      p: 100
+      d: 1
+      i: 1
+      i_clamp: 1
+    arm1_j6:
+      p: 100
+      d: 1
+      i: 1
+      i_clamp: 1
+arm2_controller:
+  type: position_controllers/JointTrajectoryController
+  joints:
+    - arm2_j1
+    - arm2_j2
+    - arm2_j3
+    - arm2_j4
+    - arm2_j5
+    - arm2_j6
+  gains:
+    arm2_j1:
+      p: 100
+      d: 1
+      i: 1
+      i_clamp: 1
+    arm2_j2:
+      p: 100
+      d: 1
+      i: 1
+      i_clamp: 1
+    arm2_j3:
+      p: 100
+      d: 1
+      i: 1
+      i_clamp: 1
+    arm2_j4:
+      p: 100
+      d: 1
+      i: 1
+      i_clamp: 1
+    arm2_j5:
+      p: 100
+      d: 1
+      i: 1
+      i_clamp: 1
+    arm2_j6:
+      p: 100
+      d: 1
+      i: 1
+      i_clamp: 1
+
