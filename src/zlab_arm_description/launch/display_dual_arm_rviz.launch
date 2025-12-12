@@ -1,7 +1,7 @@
 <launch>
     <!-- 定义工具参数 -->
-    <arg name="arm1_tool" default="none" doc="Tool name for arm1 (e.g., permanent_magnet, electronic_magnet, tool_250mm)"/>
-    <arg name="arm2_tool" default="none" doc="Tool name for arm2 (e.g., permanent_magnet, electronic_magnet, tool_250mm)"/>
+    <arg name="arm1_tool" default="none" doc="Tool name for arm1 (e.g., permanent_magnet, electronic_magnet, "/>
+    <arg name="arm2_tool" default="none" doc="Tool name for arm2 (e.g., permanent_magnet, electronic_magnet, "/>
     
     <!-- 定义机械臂位置参数 -->
     <!-- arm1 位置 (x y z)，默认在原点 -->

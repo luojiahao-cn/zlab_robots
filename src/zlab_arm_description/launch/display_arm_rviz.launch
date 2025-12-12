@@ -1,6 +1,6 @@
 <launch>
     <!-- 定义工具参数 -->
-    <arg name="tool_name" default="none" doc="Tool name to use (e.g., permanent_magnet, electronic_magnet, tool_250mm)"/>
+    <arg name="tool_name" default="none" doc="Tool name to use (e.g., permanent_magnet, electronic_magnet, "/>
     
     <!-- 加载机器人描述 -->
     <param name="robot_description"

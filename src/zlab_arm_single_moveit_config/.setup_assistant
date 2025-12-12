@@ -1,0 +1,11 @@
+moveit_setup_assistant_config:
+  URDF:
+    package: zlab_arm_description
+    relative_path: zlab_arm/urdf/zlab_arm.xacro
+    xacro_args: ""
+  SRDF:
+    relative_path: config/zlab_arm.srdf
+  CONFIG:
+    author_name: lawkaho
+    author_email: luojiahao.cn@outlook.com
+    generated_timestamp: 1765506783

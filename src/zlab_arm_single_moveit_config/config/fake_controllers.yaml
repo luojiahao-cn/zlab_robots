@@ -1,0 +1,13 @@
+controller_list:
+  - name: fake_zlab_arm_controller
+    type: $(arg fake_execution_type)
+    joints:
+      - arm1_j1
+      - arm1_j2
+      - arm1_j3
+      - arm1_j4
+      - arm1_j5
+      - arm1_j6
+initial:  # Define initial robot poses per group
+  - group: zlab_arm
+    pose: zero
