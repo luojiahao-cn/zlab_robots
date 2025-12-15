@@ -8,6 +8,7 @@
   
   <!-- MoveIt options -->
   <arg name="pipeline" default="ompl" doc="Planning pipeline to use with MoveIt"/>
+  <arg name="use_rviz" default="true" doc="Use Rviz to visualize the robot"/>
   
   <!-- Gazebo options -->
   <arg name="gazebo_gui" default="true" doc="Start Gazebo GUI"/>
@@ -26,6 +27,7 @@
     <arg name="arm_id" value="$(arg arm_id)"/>
     <arg name="tool_name" value="$(arg tool_name)"/>
     <arg name="pipeline" value="$(arg pipeline)"/>
+    <arg name="use_rviz" value="$(arg use_rviz)"/>
   </include>
 </launch>
 
