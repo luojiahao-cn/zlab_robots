@@ -16,6 +16,12 @@
   <arg name="pipeline" default="ompl" doc="Planning pipeline to use with MoveIt"/>
   <arg name="use_rviz" default="true" doc="Start RViz"/>
   
+  <!-- Environment loading options -->
+  <arg name="load_environment" default="false" doc="Whether to load environment obstacles (walls, etc.)"/>
+  <arg name="environment_config" 
+       default="$(find zlab_arm_bringup)/config/default_environment.yaml"
+       doc="Path to environment configuration YAML file"/>
+  
   <!-- Launch hardware interface -->
   <include file="$(find zlab_arm_hardware)/launch/arm_hardware.launch">
     <arg name="arm_id" value="$(arg arm_id)"/>
@@ -32,6 +38,13 @@
     <arg name="load_robot_description" value="false"/>
     <arg name="pipeline" value="$(arg pipeline)"/>
     <arg name="use_rviz" value="$(arg use_rviz)"/>
+  </include>
+  
+  <!-- Load environment (walls, obstacles) - must be after MoveIt -->
+  <include file="$(find zlab_arm_bringup)/launch/load_environment.launch">
+    <arg name="environment_config" value="$(arg environment_config)"/>
+    <arg name="load_environment" value="$(arg load_environment)"/>
+    <arg name="arm_id" value="$(arg arm_id)"/>
   </include>
   
 </launch>

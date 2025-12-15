@@ -19,6 +19,13 @@ roslaunch zlab_arm_bringup single_arm_bringup.launch arm_id:=arm1 tool_name:=per
 
 # 不启动 RViz
 roslaunch zlab_arm_bringup single_arm_bringup.launch arm_id:=arm1 use_rviz:=false
+
+# 不加载环境（用于测试）
+roslaunch zlab_arm_bringup single_arm_bringup.launch arm_id:=arm1 load_environment:=false
+
+# 使用自定义环境配置
+roslaunch zlab_arm_bringup single_arm_bringup.launch arm_id:=arm1 \
+    environment_config:=$(rospack find zlab_arm_bringup)/config/default_environment.yaml
 ```
 
 #### 双臂启动
@@ -78,6 +85,11 @@ roslaunch zlab_arm_bringup dual_arms_gazebo.launch \
 - `pipeline`: MoveIt 规划管道，默认 ompl
 - `use_rviz`: 是否启动 RViz，默认 true
 
+### 环境加载参数
+
+- `load_environment`: 是否加载环境障碍物（墙壁等），默认 true
+- `environment_config`: 环境配置文件路径，默认 `$(find zlab_arm_bringup)/config/default_environment.yaml`
+
 ### 硬件启动参数
 
 - `robot_ip`: 机械臂 IP 地址（单臂）
@@ -96,10 +108,47 @@ roslaunch zlab_arm_bringup dual_arms_gazebo.launch \
 - `arm2_xyz`: arm2 位置（x y z），默认空（使用默认值）
 - `arm2_rpy`: arm2 姿态（roll pitch yaw），默认空（使用默认值）
 
+## 环境加载功能
+
+环境加载功能用于防止机械臂碰撞周边的墙壁和障碍物。环境障碍物会被添加到 MoveIt 的 planning scene 中，规划器会自动避开这些区域。
+
+### 环境配置文件
+
+环境配置文件位于 `config/default_environment.yaml`，支持以下类型的障碍物：
+
+- **box**: 长方体（需要 3 个维度：长、宽、高）
+- **cylinder**: 圆柱体（需要 2 个维度：高度、半径）
+- **sphere**: 球体（需要 1 个维度：半径）
+
+### 配置示例
+
+```yaml
+collision_objects:
+  # 后墙
+  - id: back_wall
+    type: box
+    frame_id: "{arm_id}_base_link"  # 会自动替换为 arm1_base_link 或 arm2_base_link
+    position: [0.0, -0.5, 0.5]     # x, y, z (米)
+    orientation: [0, 0, 0, 1]      # quaternion (x, y, z, w)
+    dimensions: [2.0, 0.1, 2.0]     # 长、宽、高 (米)
+```
+
+### 使用说明
+
+1. **默认环境**：启动时会自动加载默认环境配置
+2. **自定义环境**：可以通过 `environment_config` 参数指定自定义配置文件
+3. **禁用环境**：设置 `load_environment:=false` 可以禁用环境加载（用于测试）
+
+### 在 RViz 中查看
+
+环境障碍物会在 RViz 的 Planning Scene 中显示为半透明的几何体，可以通过 MoveIt Motion Planning 插件查看。
+
 ## 依赖
 
 - `zlab_arm_hardware`: 硬件接口包
 - `zlab_arm_single_moveit_config`: 单臂 MoveIt 配置
 - `zlab_arm_dual_moveit_config`: 双臂 MoveIt 配置
 - `gazebo_ros`: Gazebo ROS 接口
+- `moveit_ros_planning_interface`: MoveIt 规划接口
+- `yaml-cpp`: YAML 配置文件解析库
 

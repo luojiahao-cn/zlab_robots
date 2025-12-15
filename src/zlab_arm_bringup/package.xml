@@ -8,6 +8,16 @@
 
   <buildtool_depend>catkin</buildtool_depend>
 
+  <build_depend>moveit_core</build_depend>
+  <build_depend>moveit_ros_planning_interface</build_depend>
+  <build_depend>yaml-cpp</build_depend>
+  <build_depend>roscpp</build_depend>
+  <build_depend>roslib</build_depend>
+
+  <exec_depend>roscpp</exec_depend>
+  <exec_depend>roslib</exec_depend>
+  <exec_depend>moveit_core</exec_depend>
+  <exec_depend>moveit_ros_planning_interface</exec_depend>
   <exec_depend>zlab_arm_hardware</exec_depend>
   <exec_depend>zlab_arm_single_moveit_config</exec_depend>
   <exec_depend>zlab_arm_dual_moveit_config</exec_depend>

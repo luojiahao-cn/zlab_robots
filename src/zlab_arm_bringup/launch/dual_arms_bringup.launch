@@ -15,6 +15,12 @@
   <arg name="pipeline" default="ompl" doc="Planning pipeline to use with MoveIt"/>
   <arg name="use_rviz" default="true" doc="Start RViz"/>
   
+  <!-- Environment loading options -->
+  <arg name="load_environment" default="false" doc="Whether to load environment obstacles (walls, etc.)"/>
+  <arg name="environment_config" 
+       default="$(find zlab_arm_bringup)/config/default_environment.yaml"
+       doc="Path to environment configuration YAML file"/>
+  
   <!-- Arm position parameters (optional) -->
   <arg name="arm1_xyz" default="0 0 0" doc="Position of arm1 (x y z)"/>
   <arg name="arm1_rpy" default="0 0 0" doc="Orientation of arm1 (roll pitch yaw)"/>
@@ -42,6 +48,12 @@
     <arg name="load_robot_description" value="false"/>
     <arg name="pipeline" value="$(arg pipeline)"/>
     <arg name="use_rviz" value="$(arg use_rviz)"/>
+  </include>
+  
+  <!-- Load environment (walls, obstacles) - must be after MoveIt -->
+  <include file="$(find zlab_arm_bringup)/launch/load_environment.launch">
+    <arg name="environment_config" value="$(arg environment_config)"/>
+    <arg name="load_environment" value="$(arg load_environment)"/>
   </include>
   
 </launch>
