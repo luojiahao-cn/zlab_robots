@@ -7,6 +7,27 @@ $(arg arm_id)_controller:
     - $(arg arm_id)_j4
     - $(arg arm_id)_j5
     - $(arg arm_id)_j6
+  constraints:
+    goal_time: 3.0
+    stopped_velocity_tolerance: 0.0
+    $(arg arm_id)_j1:
+      trajectory: 0.05
+      goal: 0.01
+    $(arg arm_id)_j2:
+      trajectory: 0.05
+      goal: 0.01
+    $(arg arm_id)_j3:
+      trajectory: 0.05
+      goal: 0.01
+    $(arg arm_id)_j4:
+      trajectory: 0.05
+      goal: 0.01
+    $(arg arm_id)_j5:
+      trajectory: 0.05
+      goal: 0.01
+    $(arg arm_id)_j6:
+      trajectory: 0.05
+      goal: 0.01
   gains:
     $(arg arm_id)_j1:
       p: 100

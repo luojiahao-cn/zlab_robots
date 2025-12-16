@@ -7,6 +7,27 @@ arm1_controller:
     - arm1_j4
     - arm1_j5
     - arm1_j6
+  constraints:
+    goal_time: 3.0
+    stopped_velocity_tolerance: 0.0
+    arm1_j1:
+      trajectory: 0.05
+      goal: 0.01
+    arm1_j2:
+      trajectory: 0.05
+      goal: 0.01
+    arm1_j3:
+      trajectory: 0.05
+      goal: 0.01
+    arm1_j4:
+      trajectory: 0.05
+      goal: 0.01
+    arm1_j5:
+      trajectory: 0.05
+      goal: 0.01
+    arm1_j6:
+      trajectory: 0.05
+      goal: 0.01
   gains:
     arm1_j1:
       p: 100
@@ -47,6 +68,27 @@ arm2_controller:
     - arm2_j4
     - arm2_j5
     - arm2_j6
+  constraints:
+    goal_time: 3.0
+    stopped_velocity_tolerance: 0.0
+    arm2_j1:
+      trajectory: 0.05
+      goal: 0.01
+    arm2_j2:
+      trajectory: 0.05
+      goal: 0.01
+    arm2_j3:
+      trajectory: 0.05
+      goal: 0.01
+    arm2_j4:
+      trajectory: 0.05
+      goal: 0.01
+    arm2_j5:
+      trajectory: 0.05
+      goal: 0.01
+    arm2_j6:
+      trajectory: 0.05
+      goal: 0.01
   gains:
     arm2_j1:
       p: 100
