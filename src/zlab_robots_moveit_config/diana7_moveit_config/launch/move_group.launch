@@ -2,9 +2,11 @@
 
   <arg name="load_robot_description" default="true" />
   <arg name="pipeline" default="ompl" />
+  <arg name="tool_name" default="none" />
 
   <include file="$(find diana7_moveit_config)/launch/planning_context.launch">
     <arg name="load_robot_description" value="$(arg load_robot_description)" />
+    <arg name="tool_name" value="$(arg tool_name)" />
   </include>
 
   <!-- GDB Debug Option -->

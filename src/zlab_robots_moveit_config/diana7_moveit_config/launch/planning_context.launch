@@ -5,8 +5,12 @@
   <!-- The name of the parameter under which the URDF is loaded -->
   <arg name="robot_description" default="robot_description"/>
 
+  <!-- Tool parameter (optional, defaults to none) -->
+  <arg name="tool_name" default="none" doc="Tool name to use"/>
+
   <!-- Load universal robot description format (URDF) -->
-  <param if="$(arg load_robot_description)" name="$(arg robot_description)" command="xacro  '$(find diana7_description)/urdf/diana7.urdf.xacro'"/>
+  <param if="$(arg load_robot_description)" name="$(arg robot_description)" 
+         command="xacro '$(find diana7_description)/urdf/diana7.urdf.xacro' tool_name:=$(arg tool_name)"/>
 
   <!-- The semantic description that corresponds to the URDF -->
   <param name="$(arg robot_description)_semantic" textfile="$(find diana7_moveit_config)/config/diana7.srdf" />

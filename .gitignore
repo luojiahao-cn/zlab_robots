@@ -4,3 +4,5 @@ doc/.~*
 build/
 devel/
 .log
+/.catkin_tools
+/.vscode

@@ -127,7 +127,7 @@
             <xacro:property name="mount_rpy" value="${mount_offset['rpy']}"/>
 
             <!-- 构建工具文件路径 -->
-            <xacro:property name="tool_file_path" value="$(find fr5_description)/tools/${tool_name}/${urdf_file}"/>
+            <xacro:property name="tool_file_path" value="$(find zlab_tools_description)/${tool_name}/${urdf_file}"/>
             
             <!-- 设置全局变量供工具xacro文件使用 -->
             <xacro:property name="tool_arm_id" value="${arm_id}"/>

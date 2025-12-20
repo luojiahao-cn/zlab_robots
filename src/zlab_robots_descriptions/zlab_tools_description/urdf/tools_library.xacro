@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro">
+  <!-- Include all tool macros -->
+  <xacro:include filename="$(find zlab_tools_description)/electronic_magnet/urdf/electronic_magnet_macro.xacro"/>
+  <xacro:include filename="$(find zlab_tools_description)/permanent_magnet/urdf/permanent_magnet_macro.xacro"/>
+  <xacro:include filename="$(find zlab_tools_description)/magnetic_sensor_bracket/urdf/bracket_macro.xacro"/>
+  <xacro:include filename="$(find zlab_tools_description)/magnetometer_array/urdf/magnetometer_array_macro.xacro"/>
+
+  <!-- Main macro to load a tool based on name -->
+  <xacro:macro name="load_tool" params="tool_name prefix parent">
+    
+    <xacro:if value="${tool_name == 'electronic_magnet'}">
+       <xacro:electronic_magnet prefix="${prefix}" parent="${parent}"/>
+    </xacro:if>
+    
+    <xacro:if value="${tool_name == 'permanent_magnet'}">
+       <xacro:permanent_magnet prefix="${prefix}" parent="${parent}"/>
+    </xacro:if>
+
+    <xacro:if value="${tool_name == 'magnetic_sensor_bracket'}">
+       <xacro:magnetic_sensor_bracket prefix="${prefix}" parent="${parent}"/>
+    </xacro:if>
+
+    <xacro:if value="${tool_name == 'magnetometer_array'}">
+       <xacro:magnetometer_array prefix="${prefix}" parent="${parent}"/>
+    </xacro:if>
+    
+    <!-- Add more tools here as needed -->
+    
+  </xacro:macro>
+</robot>

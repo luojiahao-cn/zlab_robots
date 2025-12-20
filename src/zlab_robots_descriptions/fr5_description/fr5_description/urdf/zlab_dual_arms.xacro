@@ -14,32 +14,12 @@
     <xacro:arg name="arm2_rpy" default=""/>
 
     <!-- 加载机械臂库 -->
-    <xacro:include filename="$(find fr5_description)/fr/urdf/fr5_library.xacro" />
+    <xacro:include filename="$(find fr5_description)/fr5_description/urdf/fr5_library.xacro" />
+    <!-- 加载工具库 -->
+    <xacro:include filename="$(find zlab_tools_description)/urdf/tools_library.xacro" />
 
     <!-- 创建世界坐标系 -->
     <link name="world" />
-
-    <!-- ========== 加载 arm1 工具配置 ========== -->
-    <xacro:property name="arm1_tool_name_arg" value="$(arg arm1_tool)"/>
-    <xacro:property name="arm1_tool_config" value="{}"/>
-    
-    <xacro:unless value="${arm1_tool_name_arg == 'none'}">
-        <xacro:property name="arm1_tool_package_path" 
-                        value="$(find fr5_description)/tools/${arm1_tool_name_arg}/config/tool.yaml"/>
-        <xacro:property name="arm1_tool_config" 
-                        value="${xacro.load_yaml(arm1_tool_package_path)}"/>
-    </xacro:unless>
-
-    <!-- ========== 加载 arm2 工具配置 ========== -->
-    <xacro:property name="arm2_tool_name_arg" value="$(arg arm2_tool)"/>
-    <xacro:property name="arm2_tool_config" value="{}"/>
-    
-    <xacro:unless value="${arm2_tool_name_arg == 'none'}">
-        <xacro:property name="arm2_tool_package_path" 
-                        value="$(find fr5_description)/tools/${arm2_tool_name_arg}/config/tool.yaml"/>
-        <xacro:property name="arm2_tool_config" 
-                        value="${xacro.load_yaml(arm2_tool_package_path)}"/>
-    </xacro:unless>
 
     <!-- ========== 设置arm2位置 ========== -->
     <!-- 默认值：arm1在原点，arm2在右边1米处 -->
@@ -84,8 +64,11 @@
         connected_to="world" 
         xyz="$(arg arm1_xyz)"
         rpy="$(arg arm1_rpy)"
-        tool_name="$(arg arm1_tool)"
-        tool_config="${arm1_tool_config}" />
+        tool_name="none"
+        tool_config="{}" />
+    
+    <!-- 加载 arm1 工具 -->
+    <xacro:load_tool tool_name="$(arg arm1_tool)" prefix="arm1_" parent="arm1_ee_link"/>
 
     <xacro:gazebo-joint joint="arm1_j1" />
     <xacro:gazebo-joint joint="arm1_j2" />
@@ -100,8 +83,11 @@
         connected_to="world" 
         xyz="${arm2_xyz_final}"
         rpy="${arm2_rpy_final}"
-        tool_name="$(arg arm2_tool)"
-        tool_config="${arm2_tool_config}" />
+        tool_name="none"
+        tool_config="{}" />
+
+    <!-- 加载 arm2 工具 -->
+    <xacro:load_tool tool_name="$(arg arm2_tool)" prefix="arm2_" parent="arm2_ee_link"/>
 
     <xacro:gazebo-joint joint="arm2_j1" />
     <xacro:gazebo-joint joint="arm2_j2" />

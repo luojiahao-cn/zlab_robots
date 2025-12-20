@@ -14,9 +14,15 @@
     <xacro:arg name="arm2_xyz" default="1.5 0.4 0"/>
     <xacro:arg name="arm2_rpy" default="0 0 0"/>
 
+    <!-- Arguments for tools -->
+    <xacro:arg name="arm1_tool" default="none"/>
+    <xacro:arg name="arm2_tool" default="none"/>
+    <xacro:arg name="diana7_tool" default="none"/>
+
     <!-- Include Macros -->
     <xacro:include filename="$(find fr5_description)/fr5_description/urdf/fr5_library.xacro" />
     <xacro:include filename="$(find diana7_description)/urdf/diana7_macro.xacro" />
+    <xacro:include filename="$(find zlab_tools_description)/urdf/tools_library.xacro" />
 
     <!-- World Link -->
     <link name="world" />
@@ -26,10 +32,19 @@
         <origin xyz="$(arg diana7_xyz)" rpy="$(arg diana7_rpy)"/>
     </xacro:diana7_robot>
 
+    <!-- Load Tool for Diana7 -->
+    <xacro:load_tool tool_name="$(arg diana7_tool)" prefix="diana7_" parent="diana7_link_7"/>
+
     <!-- Instantiate FR5 Arm 1 -->
-    <xacro:fr arm_id="arm1" connected_to="world" xyz="$(arg arm1_xyz)" rpy="$(arg arm1_rpy)"/>
+    <xacro:fr arm_id="arm1" connected_to="world" xyz="$(arg arm1_xyz)" rpy="$(arg arm1_rpy)" tool_name="none"/>
+    
+    <!-- Load Tool for Arm 1 -->
+    <xacro:load_tool tool_name="$(arg arm1_tool)" prefix="arm1_" parent="arm1_ee_link"/>
 
     <!-- Instantiate FR5 Arm 2 -->
-    <xacro:fr arm_id="arm2" connected_to="world" xyz="$(arg arm2_xyz)" rpy="$(arg arm2_rpy)"/>
+    <xacro:fr arm_id="arm2" connected_to="world" xyz="$(arg arm2_xyz)" rpy="$(arg arm2_rpy)" tool_name="none"/>
+    
+    <!-- Load Tool for Arm 2 -->
+    <xacro:load_tool tool_name="$(arg arm2_tool)" prefix="arm2_" parent="arm2_ee_link"/>
 
 </robot>

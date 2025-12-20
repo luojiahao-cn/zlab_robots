@@ -1,6 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <robot xmlns:xacro="http://wiki.ros.org/xacro" name="diana7">
+  
+  <!-- Tool Argument -->
+  <xacro:arg name="tool_name" default="none"/>
+
+  <!-- Include Tool Library -->
+  <xacro:include filename="$(find zlab_tools_description)/urdf/tools_library.xacro" />
+
   <link name="world">
       <origin
         xyz="0 0 0"
@@ -390,5 +397,8 @@
       effort="54"
       velocity="3.14" />
   </joint>
+
+  <!-- Load Tool -->
+  <xacro:load_tool tool_name="$(arg tool_name)" prefix="" parent="link_7"/>
 
 </robot>

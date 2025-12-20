@@ -167,6 +167,35 @@ roslaunch diana7_hardware diana7_hardware.launch
 - `arm2_ip`: arm2 的 IP 地址，默认 192.168.31.203
 - `loop_hz`: 控制循环频率，默认 60.0 Hz
 
+## 标定后位姿修改
+
+在完成多臂系统的标定后，可以通过修改启动参数来调整各机械臂在世界坐标系下的相对位姿，无需修改 URDF 文件。
+
+### 方法一：命令行参数（临时调试）
+
+在启动 `demo.launch` 时，直接通过命令行参数覆盖默认位姿：
+
+```bash
+roslaunch triple_arm_moveit_config demo.launch \
+    diana7_xyz:="0 0 0" diana7_rpy:="0 0 0" \
+    arm1_xyz:="1.5 -0.2 0" arm1_rpy:="0 0 0" \
+    arm2_xyz:="1.5 0.4 0" arm2_rpy:="0 0 0"
+```
+
+### 方法二：修改 Launch 文件（永久生效）
+
+若需永久保存标定结果，请编辑 `src/zlab_robots_moveit_config/triple_arm_moveit_config/launch/demo.launch` 文件，修改对应的 `<arg>` 默认值：
+
+```xml
+<!-- Arm position parameters (optional) -->
+<arg name="diana7_xyz" default="0 0 0" doc="Position of diana7 (x y z)"/>
+<arg name="diana7_rpy" default="0 0 0" doc="Orientation of diana7 (roll pitch yaw)"/>
+<arg name="arm1_xyz" default="1.5 -0.2 0" doc="Position of arm1 (x y z)"/>
+<arg name="arm1_rpy" default="0 0 0" doc="Orientation of arm1 (roll pitch yaw)"/>
+<arg name="arm2_xyz" default="1.5 0.4 0" doc="Position of arm2 (x y z)"/>
+<arg name="arm2_rpy" default="0 0 0" doc="Orientation of arm2 (roll pitch yaw)"/>
+```
+
 ## 常见问题
 
 ### 1. 缺少 DianaApi

@@ -8,6 +8,7 @@
   <!-- Tool parameters (optional, defaults to none) -->
   <arg name="arm1_tool" default="none" doc="Tool name for arm1"/>
   <arg name="arm2_tool" default="none" doc="Tool name for arm2"/>
+  <arg name="diana7_tool" default="none" doc="Tool name for diana7"/>
 
   <!-- Arm position parameters (optional) -->
   <arg name="diana7_xyz" default="0 0 0" doc="Position of diana7 (x y z)"/>
@@ -22,7 +23,10 @@
          command="$(find xacro)/xacro '$(find fr5_description)/fr5_description/urdf/zlab_triple_arms.xacro'
                  diana7_xyz:='$(arg diana7_xyz)' diana7_rpy:='$(arg diana7_rpy)'
                  arm1_xyz:='$(arg arm1_xyz)' arm1_rpy:='$(arg arm1_rpy)'
-                 arm2_xyz:='$(arg arm2_xyz)' arm2_rpy:='$(arg arm2_rpy)'"/>
+                 arm2_xyz:='$(arg arm2_xyz)' arm2_rpy:='$(arg arm2_rpy)'
+                 arm1_tool:='$(arg arm1_tool)'
+                 arm2_tool:='$(arg arm2_tool)'
+                 diana7_tool:='$(arg diana7_tool)'"/>
 
   <!-- The semantic description that corresponds to the URDF -->
   <!-- Use xacro to process SRDF file with tool parameters for dynamic collision disable -->

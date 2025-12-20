@@ -1,0 +1,43 @@
+tool_info:
+  name: "magnetometer_array"
+  display_name: "磁力计阵列"
+  description: "多磁传感器阵列末端工具"
+  version: "1.0.0"
+
+# 使用URDF包（SolidWorks导出）
+tool_type: "urdf_package"
+
+urdf_package:
+  urdf_file: "urdf/magnetometer_array.urdf"
+  root_link_name: "magnetometer_base_link"
+  tcp_link_name: "magnetometer_tcp_link"
+  mount_offset:
+    xyz: [0.0, 0.0, 0.0]
+    rpy: [0.0, 0.0, 0.0]
+
+origin:
+  xyz: [0.0, 0.0, 0.0]
+  rpy: [0.0, 0.0, 0.0]
+
+tcp:
+  xyz: [0.0, 0.0, 0.19309]
+  rpy: [0.0, 0.0, 0.0]
+
+physical_properties:
+  mass: 0.0686734242847689
+  inertia:
+    ixx: 0.0001339585
+    ixy: 0.0
+    ixz: 0.0
+    iyy: 0.0001407879191935191
+    iyz: 0.0
+    izz: 0.0000229040668478137
+
+moveit:
+  end_effector_link: "magnetometer_tcp_link"
+  planning_frame_offset: [0.0, 0.0, 0.0]
+
+collision_disable:
+  - link1: "magnetometer_base_link"
+    link2: "magnetometer_tcp_link"
+    reason: "Adjacent"

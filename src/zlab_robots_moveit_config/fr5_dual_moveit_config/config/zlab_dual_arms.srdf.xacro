@@ -203,7 +203,7 @@
     <xacro:macro name="generate_tool_collision_disable" params="arm_id tool_name">
         <xacro:unless value="${tool_name == 'none'}">
             <xacro:property name="tool_config_path" 
-                            value="$(find fr5_description)/tools/${tool_name}/config/tool.yaml"/>
+                            value="$(find zlab_tools_description)/${tool_name}/config/tool.yaml"/>
             <xacro:property name="tool_config" 
                             value="${xacro.load_yaml(tool_config_path)}"/>
             <!-- Check if collision_disable configuration exists -->

@@ -13,7 +13,7 @@
 
   <!-- Load universal robot description format (URDF) -->
   <param if="$(arg load_robot_description)" name="$(arg robot_description)"
-         command="$(find xacro)/xacro '$(find fr5_description)/fr/urdf/fr.xacro'
+         command="$(find xacro)/xacro '$(find fr5_description)/fr5_description/urdf/fr.xacro'
                  arm_id:=$(arg arm_id) tool_name:=$(arg tool_name)"/>
 
   <!-- The semantic description that corresponds to the URDF -->

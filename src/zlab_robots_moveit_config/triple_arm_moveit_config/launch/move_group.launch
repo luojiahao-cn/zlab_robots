@@ -27,6 +27,7 @@
   <!-- Tool parameters -->
   <arg name="arm1_tool" default="none" doc="Tool name for arm1"/>
   <arg name="arm2_tool" default="none" doc="Tool name for arm2"/>
+  <arg name="diana7_tool" default="none" doc="Tool name for diana7"/>
 
   <!-- Arm position parameters -->
   <arg name="diana7_xyz" default="0 0 0" doc="Position of diana7 (x y z)"/>
@@ -43,6 +44,7 @@
     <arg name="load_robot_description" value="$(arg load_robot_description)" />
     <arg name="arm1_tool" value="$(arg arm1_tool)" />
     <arg name="arm2_tool" value="$(arg arm2_tool)" />
+    <arg name="diana7_tool" value="$(arg diana7_tool)" />
     <arg name="diana7_xyz" value="$(arg diana7_xyz)" />
     <arg name="diana7_rpy" value="$(arg diana7_rpy)" />
     <arg name="arm1_xyz" value="$(arg arm1_xyz)" />
