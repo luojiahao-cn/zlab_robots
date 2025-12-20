@@ -1,0 +1,25 @@
+<launch>
+  <arg name="robot_ip" default="192.168.31.200"/>
+  <arg name="debug" default="false" />
+  <arg name="use_rviz" default="true" />
+
+  <!-- 1. Bringup Real Robot (Driver + Controllers + TF) -->
+  <include file="$(find diana7_bringup)/launch/diana7_robot.launch">
+    <arg name="robot_ip" value="$(arg robot_ip)"/>
+    <arg name="load_robot_description" value="true"/>
+  </include>
+
+  <!-- 2. Launch MoveIt -->
+  <include file="$(find diana7_moveit_config)/launch/move_group.launch">
+    <arg name="debug" default="$(arg debug)" />
+    <arg name="publish_monitored_planning_scene" value="true" />
+    <arg name="load_robot_description" value="false"/> <!-- Already loaded by bringup -->
+  </include>
+
+  <!-- 3. Launch Rviz -->
+  <include if="$(arg use_rviz)" file="$(find diana7_moveit_config)/launch/moveit_rviz.launch">
+    <arg name="rviz_config" value="$(find diana7_moveit_config)/launch/moveit.rviz"/>
+    <arg name="debug" value="$(arg debug)"/>
+  </include>
+
+</launch>

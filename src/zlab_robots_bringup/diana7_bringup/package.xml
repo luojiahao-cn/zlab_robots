@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<package format="2">
+  <name>diana7_bringup</name>
+  <version>0.0.0</version>
+  <description>The diana7_bringup package</description>
+  <maintainer email="user@todo.todo">user</maintainer>
+  <license>TODO</license>
+
+  <buildtool_depend>catkin</buildtool_depend>
+  <exec_depend>diana7_description</exec_depend>
+  <exec_depend>diana7_hardware</exec_depend>
+  <exec_depend>diana7_moveit_config</exec_depend>
+  <exec_depend>robot_state_publisher</exec_depend>
+  <exec_depend>controller_manager</exec_depend>
+  <exec_depend>joint_state_controller</exec_depend>
+  <exec_depend>position_controllers</exec_depend>
+</package>
