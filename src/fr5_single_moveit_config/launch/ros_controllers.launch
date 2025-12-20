@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+<launch>
+  <!-- Arm ID parameter -->
+  <arg name="arm_id" default="arm1" doc="Arm ID to use"/>
+
+  <!-- Load ROS controller configuration from YAML with parameter substitution -->
+  <rosparam command="load" file="$(find fr5_single_moveit_config)/config/ros_controllers.yaml" subst_value="true"/>
+
+  <!-- Load the controllers -->
+  <!-- Controller name is dynamically set based on arm_id in YAML file -->
+  <node name="controller_spawner" pkg="controller_manager" type="spawner" respawn="false"
+    output="screen" args="$(arg arm_id)_controller "/>
+
+</launch>

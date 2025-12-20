@@ -1,0 +1,265 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--This does not replace URDF, and is not an extension of URDF.
+    This is a format for representing semantic information about the robot structure.
+    A URDF file must exist for this robot as well, where the joints and the links that are referenced are defined
+-->
+<robot name="zlab_dual_arms" xmlns:xacro="http://www.ros.org/wiki/xacro">
+    <!-- Tool parameters for dynamic collision disable configuration -->
+    <xacro:arg name="arm1_tool" default="none"/>
+    <xacro:arg name="arm2_tool" default="none"/>
+    <!--GROUPS: Representation of a set of joints and links. This can be useful for specifying DOF to plan for, defining arms, end effectors, etc-->
+    <!--LINKS: When a link is specified, the parent joint of that link (if it exists) is automatically included-->
+    <!--JOINTS: When a joint is specified, the child link of that joint (which will always exist) is automatically included-->
+    <!--CHAINS: When a chain is specified, all the links along the chain (including endpoints) are included in the group. Additionally, all the joints that are parents to included links are also included. This means that joints along the chain and the parent joint of the base link are included in the group-->
+    <!--SUBGROUPS: Groups can also be formed by referencing to already defined group names-->
+    <group name="arm1">
+        <link name="arm1_ee_link"/>
+        <link name="arm1_j1_link"/>
+        <link name="arm1_j2_link"/>
+        <link name="arm1_j3_link"/>
+        <link name="arm1_j4_link"/>
+        <link name="arm1_j5_link"/>
+        <link name="arm1_j6_link"/>
+        <joint name="arm1_j1"/>
+        <joint name="arm1_j2"/>
+        <joint name="arm1_j3"/>
+        <joint name="arm1_j4"/>
+        <joint name="arm1_j5"/>
+        <joint name="arm1_j6"/>
+    </group>
+    <group name="arm2">
+        <link name="arm2_ee_link"/>
+        <link name="arm2_j1_link"/>
+        <link name="arm2_j2_link"/>
+        <link name="arm2_j3_link"/>
+        <link name="arm2_j4_link"/>
+        <link name="arm2_j5_link"/>
+        <link name="arm2_j6_link"/>
+        <joint name="arm2_j1"/>
+        <joint name="arm2_j2"/>
+        <joint name="arm2_j3"/>
+        <joint name="arm2_j4"/>
+        <joint name="arm2_j5"/>
+        <joint name="arm2_j6"/>
+    </group>
+    <group name="dual_arms">
+        <group name="arm1"/>
+        <group name="arm2"/>
+    </group>
+    <!--GROUP STATES: Purpose: Define a named state for a particular group, in terms of joint values. This is useful to define states like 'folded arms'-->
+    <group_state name="zero" group="arm1">
+        <joint name="arm1_j1" value="0"/>
+        <joint name="arm1_j2" value="0"/>
+        <joint name="arm1_j3" value="0"/>
+        <joint name="arm1_j4" value="0"/>
+        <joint name="arm1_j5" value="0"/>
+        <joint name="arm1_j6" value="0"/>
+    </group_state>
+    <group_state name="zero" group="arm2">
+        <joint name="arm2_j1" value="0"/>
+        <joint name="arm2_j2" value="0"/>
+        <joint name="arm2_j3" value="0"/>
+        <joint name="arm2_j4" value="0"/>
+        <joint name="arm2_j5" value="0"/>
+        <joint name="arm2_j6" value="0"/>
+    </group_state>
+    <group_state name="up" group="arm1">
+        <joint name="arm1_j1" value="0"/>
+        <joint name="arm1_j2" value="-1.570796"/>
+        <joint name="arm1_j3" value="0"/>
+        <joint name="arm1_j4" value="-1.570796"/>
+        <joint name="arm1_j5" value="0"/>
+        <joint name="arm1_j6" value="0"/>
+    </group_state>
+    <group_state name="up" group="arm2">
+        <joint name="arm2_j1" value="0"/>
+        <joint name="arm2_j2" value="-1.570796"/>
+        <joint name="arm2_j3" value="0"/>
+        <joint name="arm2_j4" value="-1.570796"/>
+        <joint name="arm2_j5" value="0"/>
+        <joint name="arm2_j6" value="0"/>
+    </group_state>
+    <group_state name="ready" group="arm1">
+        <joint name="arm1_j1" value="0"/>
+        <joint name="arm1_j2" value="-1.4189"/>
+        <joint name="arm1_j3" value="-1.5152"/>
+        <joint name="arm1_j4" value="-0.0015"/>
+        <joint name="arm1_j5" value="1.6031"/>
+        <joint name="arm1_j6" value="0"/>
+    </group_state>
+    <group_state name="ready" group="arm2">
+        <joint name="arm2_j1" value="0"/>
+        <joint name="arm2_j2" value="-1.4189"/>
+        <joint name="arm2_j3" value="-1.5152"/>
+        <joint name="arm2_j4" value="-0.0015"/>
+        <joint name="arm2_j5" value="1.6031"/>
+        <joint name="arm2_j6" value="0"/>
+    </group_state>
+    <group_state name="ready" group="dual_arms">
+        <joint name="arm1_j1" value="0"/>
+        <joint name="arm1_j2" value="-1.4189"/>
+        <joint name="arm1_j3" value="-1.5152"/>
+        <joint name="arm1_j4" value="-0.0015"/>
+        <joint name="arm1_j5" value="1.6031"/>
+        <joint name="arm1_j6" value="0"/>
+        <joint name="arm2_j1" value="0"/>
+        <joint name="arm2_j2" value="-1.4189"/>
+        <joint name="arm2_j3" value="-1.5152"/>
+        <joint name="arm2_j4" value="-0.0015"/>
+        <joint name="arm2_j5" value="1.6031"/>
+        <joint name="arm2_j6" value="0"/>
+    </group_state>
+    <group_state name="up" group="dual_arms">
+        <joint name="arm1_j1" value="0"/>
+        <joint name="arm1_j2" value="-1.570796"/>
+        <joint name="arm1_j3" value="0"/>
+        <joint name="arm1_j4" value="-1.570796"/>
+        <joint name="arm1_j5" value="0"/>
+        <joint name="arm1_j6" value="0"/>
+        <joint name="arm2_j1" value="0"/>
+        <joint name="arm2_j2" value="-1.570796"/>
+        <joint name="arm2_j3" value="0"/>
+        <joint name="arm2_j4" value="-1.570796"/>
+        <joint name="arm2_j5" value="0"/>
+        <joint name="arm2_j6" value="0"/>
+    </group_state>
+    <group_state name="zero" group="dual_arms">
+        <joint name="arm1_j1" value="0"/>
+        <joint name="arm1_j2" value="0"/>
+        <joint name="arm1_j3" value="0"/>
+        <joint name="arm1_j4" value="0"/>
+        <joint name="arm1_j5" value="0"/>
+        <joint name="arm1_j6" value="0"/>
+        <joint name="arm2_j1" value="0"/>
+        <joint name="arm2_j2" value="0"/>
+        <joint name="arm2_j3" value="0"/>
+        <joint name="arm2_j4" value="0"/>
+        <joint name="arm2_j5" value="0"/>
+        <joint name="arm2_j6" value="0"/>
+    </group_state>
+    <!--VIRTUAL JOINT: Purpose: this element defines a virtual joint between a robot link and an external frame of reference (considered fixed with respect to the robot)-->
+    <virtual_joint name="virtual_joint" type="fixed" parent_frame="virtual_world" child_link="world"/>
+    <!--DISABLE COLLISIONS: By default it is assumed that any link of the robot could potentially come into collision with any other link in the robot. This tag disables collision checking between a specified pair of links. -->
+    <disable_collisions link1="arm1_base0_link" link2="arm1_base1_link" reason="Adjacent"/>
+    <disable_collisions link1="arm1_base0_link" link2="arm1_base2_link" reason="Never"/>
+    <disable_collisions link1="arm1_base0_link" link2="arm1_j1_link" reason="Never"/>
+    <disable_collisions link1="arm1_base0_link" link2="arm2_base0_link" reason="Adjacent"/>
+    <disable_collisions link1="arm1_base0_link" link2="arm2_base1_link" reason="Never"/>
+    <disable_collisions link1="arm1_base0_link" link2="arm2_base2_link" reason="Never"/>
+    <disable_collisions link1="arm1_base0_link" link2="arm2_j1_link" reason="Never"/>
+    <disable_collisions link1="arm1_base0_link" link2="arm2_j2_link" reason="Never"/>
+    <disable_collisions link1="arm1_base1_link" link2="arm1_base2_link" reason="Adjacent"/>
+    <disable_collisions link1="arm1_base1_link" link2="arm1_j1_link" reason="Never"/>
+    <disable_collisions link1="arm1_base1_link" link2="arm1_j2_link" reason="Never"/>
+    <disable_collisions link1="arm1_base1_link" link2="arm2_base0_link" reason="Never"/>
+    <disable_collisions link1="arm1_base1_link" link2="arm2_base1_link" reason="Never"/>
+    <disable_collisions link1="arm1_base1_link" link2="arm2_base2_link" reason="Never"/>
+    <disable_collisions link1="arm1_base1_link" link2="arm2_j1_link" reason="Never"/>
+    <disable_collisions link1="arm1_base1_link" link2="arm2_j2_link" reason="Never"/>
+    <disable_collisions link1="arm1_base2_link" link2="arm1_j1_link" reason="Adjacent"/>
+    <disable_collisions link1="arm1_base2_link" link2="arm1_j2_link" reason="Never"/>
+    <disable_collisions link1="arm1_base2_link" link2="arm2_base0_link" reason="Never"/>
+    <disable_collisions link1="arm1_base2_link" link2="arm2_base1_link" reason="Never"/>
+    <disable_collisions link1="arm1_base2_link" link2="arm2_base2_link" reason="Never"/>
+    <disable_collisions link1="arm1_base2_link" link2="arm2_j1_link" reason="Never"/>
+    <disable_collisions link1="arm1_base2_link" link2="arm2_j2_link" reason="Never"/>
+    <disable_collisions link1="arm1_j1_link" link2="arm1_j2_link" reason="Adjacent"/>
+    <disable_collisions link1="arm1_j1_link" link2="arm1_j3_link" reason="Never"/>
+    <disable_collisions link1="arm1_j1_link" link2="arm1_j4_link" reason="Never"/>
+    <disable_collisions link1="arm1_j1_link" link2="arm2_base0_link" reason="Never"/>
+    <disable_collisions link1="arm1_j1_link" link2="arm2_base1_link" reason="Never"/>
+    <disable_collisions link1="arm1_j1_link" link2="arm2_base2_link" reason="Never"/>
+    <disable_collisions link1="arm1_j1_link" link2="arm2_j1_link" reason="Never"/>
+    <disable_collisions link1="arm1_j1_link" link2="arm2_j2_link" reason="Never"/>
+    <disable_collisions link1="arm1_j2_link" link2="arm1_j3_link" reason="Adjacent"/>
+    <disable_collisions link1="arm1_j2_link" link2="arm1_j4_link" reason="Never"/>
+    <disable_collisions link1="arm1_j2_link" link2="arm2_base0_link" reason="Never"/>
+    <disable_collisions link1="arm1_j2_link" link2="arm2_base1_link" reason="Never"/>
+    <disable_collisions link1="arm1_j2_link" link2="arm2_base2_link" reason="Never"/>
+    <disable_collisions link1="arm1_j2_link" link2="arm2_j1_link" reason="Never"/>
+    <disable_collisions link1="arm1_j3_link" link2="arm1_j4_link" reason="Adjacent"/>
+    <disable_collisions link1="arm1_j4_link" link2="arm1_j5_link" reason="Adjacent"/>
+    <disable_collisions link1="arm1_j4_link" link2="arm1_j6_link" reason="Never"/>
+    <disable_collisions link1="arm1_j5_link" link2="arm1_j6_link" reason="Adjacent"/>
+    <disable_collisions link1="arm2_base0_link" link2="arm2_base1_link" reason="Adjacent"/>
+    <disable_collisions link1="arm2_base0_link" link2="arm2_base2_link" reason="Never"/>
+    <disable_collisions link1="arm2_base0_link" link2="arm2_j1_link" reason="Never"/>
+    <disable_collisions link1="arm2_base1_link" link2="arm2_base2_link" reason="Adjacent"/>
+    <disable_collisions link1="arm2_base1_link" link2="arm2_j1_link" reason="Never"/>
+    <disable_collisions link1="arm2_base1_link" link2="arm2_j2_link" reason="Never"/>
+    <disable_collisions link1="arm2_base2_link" link2="arm2_j1_link" reason="Adjacent"/>
+    <disable_collisions link1="arm2_base2_link" link2="arm2_j2_link" reason="Never"/>
+    <disable_collisions link1="arm2_j1_link" link2="arm2_j2_link" reason="Adjacent"/>
+    <disable_collisions link1="arm2_j1_link" link2="arm2_j3_link" reason="Never"/>
+    <disable_collisions link1="arm2_j1_link" link2="arm2_j4_link" reason="Never"/>
+    <disable_collisions link1="arm2_j2_link" link2="arm2_j3_link" reason="Adjacent"/>
+    <disable_collisions link1="arm2_j2_link" link2="arm2_j4_link" reason="Never"/>
+    <disable_collisions link1="arm2_j3_link" link2="arm2_j4_link" reason="Adjacent"/>
+    <disable_collisions link1="arm2_j4_link" link2="arm2_j5_link" reason="Adjacent"/>
+    <disable_collisions link1="arm2_j4_link" link2="arm2_j6_link" reason="Never"/>
+    <disable_collisions link1="arm2_j5_link" link2="arm2_j6_link" reason="Adjacent"/>
+    <!-- Tool collision disable - dynamically loaded from tool configuration files -->
+    <!-- Macro to generate disable_collisions from tool config -->
+    <xacro:macro name="generate_tool_collision_disable" params="arm_id tool_name">
+        <xacro:unless value="${tool_name == 'none'}">
+            <xacro:property name="tool_config_path" 
+                            value="$(find fr5_description)/tools/${tool_name}/config/tool.yaml"/>
+            <xacro:property name="tool_config" 
+                            value="${xacro.load_yaml(tool_config_path)}"/>
+            <!-- Check if collision_disable configuration exists -->
+            <xacro:if value="${'collision_disable' in tool_config}">
+                <xacro:property name="collision_disable_list" value="${tool_config['collision_disable']}"/>
+                <!-- Generate disable_collisions for each link pair -->
+                <!-- Note: xacro doesn't support while loops, so we need to handle each item individually -->
+                <!-- For tools with multiple link pairs, we'll handle up to 10 pairs (should be enough) -->
+                <xacro:property name="collision_count" value="${len(collision_disable_list)}"/>
+                <!-- Handle up to 10 collision pairs -->
+                <xacro:if value="${collision_count > 0}">
+                    <xacro:property name="pair0" value="${collision_disable_list[0]}"/>
+                    <disable_collisions link1="${arm_id}_${pair0['link1']}" link2="${arm_id}_${pair0['link2']}" reason="${pair0.get('reason', 'Adjacent')}"/>
+                </xacro:if>
+                <xacro:if value="${collision_count > 1}">
+                    <xacro:property name="pair1" value="${collision_disable_list[1]}"/>
+                    <disable_collisions link1="${arm_id}_${pair1['link1']}" link2="${arm_id}_${pair1['link2']}" reason="${pair1.get('reason', 'Adjacent')}"/>
+                </xacro:if>
+                <xacro:if value="${collision_count > 2}">
+                    <xacro:property name="pair2" value="${collision_disable_list[2]}"/>
+                    <disable_collisions link1="${arm_id}_${pair2['link1']}" link2="${arm_id}_${pair2['link2']}" reason="${pair2.get('reason', 'Adjacent')}"/>
+                </xacro:if>
+                <xacro:if value="${collision_count > 3}">
+                    <xacro:property name="pair3" value="${collision_disable_list[3]}"/>
+                    <disable_collisions link1="${arm_id}_${pair3['link1']}" link2="${arm_id}_${pair3['link2']}" reason="${pair3.get('reason', 'Adjacent')}"/>
+                </xacro:if>
+                <xacro:if value="${collision_count > 4}">
+                    <xacro:property name="pair4" value="${collision_disable_list[4]}"/>
+                    <disable_collisions link1="${arm_id}_${pair4['link1']}" link2="${arm_id}_${pair4['link2']}" reason="${pair4.get('reason', 'Adjacent')}"/>
+                </xacro:if>
+                <xacro:if value="${collision_count > 5}">
+                    <xacro:property name="pair5" value="${collision_disable_list[5]}"/>
+                    <disable_collisions link1="${arm_id}_${pair5['link1']}" link2="${arm_id}_${pair5['link2']}" reason="${pair5.get('reason', 'Adjacent')}"/>
+                </xacro:if>
+                <xacro:if value="${collision_count > 6}">
+                    <xacro:property name="pair6" value="${collision_disable_list[6]}"/>
+                    <disable_collisions link1="${arm_id}_${pair6['link1']}" link2="${arm_id}_${pair6['link2']}" reason="${pair6.get('reason', 'Adjacent')}"/>
+                </xacro:if>
+                <xacro:if value="${collision_count > 7}">
+                    <xacro:property name="pair7" value="${collision_disable_list[7]}"/>
+                    <disable_collisions link1="${arm_id}_${pair7['link1']}" link2="${arm_id}_${pair7['link2']}" reason="${pair7.get('reason', 'Adjacent')}"/>
+                </xacro:if>
+                <xacro:if value="${collision_count > 8}">
+                    <xacro:property name="pair8" value="${collision_disable_list[8]}"/>
+                    <disable_collisions link1="${arm_id}_${pair8['link1']}" link2="${arm_id}_${pair8['link2']}" reason="${pair8.get('reason', 'Adjacent')}"/>
+                </xacro:if>
+                <xacro:if value="${collision_count > 9}">
+                    <xacro:property name="pair9" value="${collision_disable_list[9]}"/>
+                    <disable_collisions link1="${arm_id}_${pair9['link1']}" link2="${arm_id}_${pair9['link2']}" reason="${pair9.get('reason', 'Adjacent')}"/>
+                </xacro:if>
+            </xacro:if>
+        </xacro:unless>
+    </xacro:macro>
+    
+    <!-- Generate collision disables for arm1 and arm2 tools -->
+    <xacro:generate_tool_collision_disable arm_id="arm1" tool_name="$(arg arm1_tool)"/>
+    <xacro:generate_tool_collision_disable arm_id="arm2" tool_name="$(arg arm2_tool)"/>
+</robot>
+

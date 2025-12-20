@@ -1,0 +1,42 @@
+<?xml version="1.0"?>
+<package format="2">
+    <name>fr5_description</name>
+    <version>0.0.1</version>
+    <description>The fr5_description package - Robot description files for ZLab robot arms</description>
+    <maintainer email="lawkaho@todo.todo">ZLab</maintainer>
+    <license>Apache 2.0</license>
+    <author email="lawkaho@example.com">ZLab</author>
+
+    <buildtool_depend>catkin</buildtool_depend>
+
+    <!-- 原有依赖 -->
+    <build_depend>urdf</build_depend>
+    <build_depend>xacro</build_depend>
+    <build_export_depend>urdf</build_export_depend>
+    <build_export_depend>xacro</build_export_depend>
+    <exec_depend>urdf</exec_depend>
+    <exec_depend>xacro</exec_depend>
+
+    <!-- 添加新的依赖 -->
+    <build_depend>roscpp</build_depend>
+    <build_depend>tf2</build_depend>
+    <build_depend>tf2_ros</build_depend>
+    <build_depend>tf2_geometry_msgs</build_depend>
+    <build_depend>moveit_ros_planning_interface</build_depend>
+    <build_depend>apriltag_ros</build_depend>
+    <build_depend>cv_bridge</build_depend>
+    <build_depend>image_transport</build_depend>
+
+    <exec_depend>roscpp</exec_depend>
+    <exec_depend>tf2</exec_depend>
+    <exec_depend>tf2_ros</exec_depend>
+    <exec_depend>tf2_geometry_msgs</exec_depend>
+    <exec_depend>moveit_ros_planning_interface</exec_depend>
+    <exec_depend>apriltag_ros</exec_depend>
+    <exec_depend>cv_bridge</exec_depend>
+    <exec_depend>image_transport</exec_depend>
+
+    <test_depend>rosunit</test_depend>
+
+</package>
+
