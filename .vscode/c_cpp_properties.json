@@ -6,12 +6,14 @@
                 "limitSymbolsToIncludedHeaders": false
             },
             "includePath": [
-              "/usr/include/**",
-              "/opt/ros/noetic/include/**",
-              "/opt/ros/noetic/share/**",
-              "/opt/ros/noetic/lib/**",
-              "${workspaceFolder}/catkin_ws/devel/include/**",
-              "${workspaceFolder}/catkin_ws/src/**/include/**"
+                "/usr/include/**",
+                "/opt/ros/noetic/include/**",
+                "/opt/ros/noetic/share/**",
+                "/opt/ros/noetic/lib/**",
+                "/opt/DianaApi/include/**",
+                "${workspaceFolder}/catkin_ws/devel/include/**",
+                "${workspaceFolder}/catkin_ws/src/**/include/**",
+                "${workspaceFolder}/src/diana7_hardware/include"
             ],
             "name": "ROS",
             "intelliSenseMode": "gcc-x64",
