@@ -1,0 +1,44 @@
+<launch>
+  <!-- By default we do not overwrite the URDF. Change the following to true to change the default behavior -->
+  <arg name="load_robot_description" default="false"/>
+
+  <!-- The name of the parameter under which the URDF is loaded -->
+  <arg name="robot_description" default="robot_description"/>
+
+  <!-- Tool parameters (optional, defaults to none) -->
+  <arg name="arm1_tool" default="none" doc="Tool name for arm1"/>
+  <arg name="arm2_tool" default="none" doc="Tool name for arm2"/>
+
+  <!-- Arm position parameters (optional) -->
+  <arg name="diana7_xyz" default="0 0 0" doc="Position of diana7 (x y z)"/>
+  <arg name="diana7_rpy" default="0 0 0" doc="Orientation of diana7 (roll pitch yaw)"/>
+  <arg name="arm1_xyz" default="1.5 -0.2 0" doc="Position of arm1 (x y z)"/>
+  <arg name="arm1_rpy" default="0 0 0" doc="Orientation of arm1 (roll pitch yaw)"/>
+  <arg name="arm2_xyz" default="1.5 0.4 0" doc="Position of arm2 (x y z)"/>
+  <arg name="arm2_rpy" default="0 0 0" doc="Orientation of arm2 (roll pitch yaw)"/>
+
+  <!-- Load universal robot description format (URDF) -->
+  <param if="$(arg load_robot_description)" name="$(arg robot_description)"
+         command="$(find xacro)/xacro '$(find fr5_description)/fr5_description/urdf/zlab_triple_arms.xacro'
+                 diana7_xyz:='$(arg diana7_xyz)' diana7_rpy:='$(arg diana7_rpy)'
+                 arm1_xyz:='$(arg arm1_xyz)' arm1_rpy:='$(arg arm1_rpy)'
+                 arm2_xyz:='$(arg arm2_xyz)' arm2_rpy:='$(arg arm2_rpy)'"/>
+
+  <!-- The semantic description that corresponds to the URDF -->
+  <!-- Use xacro to process SRDF file with tool parameters for dynamic collision disable -->
+  <param name="$(arg robot_description)_semantic" 
+         command="$(find xacro)/xacro '$(find triple_arm_moveit_config)/config/zlab_triple_arms.srdf.xacro'
+                 arm1_tool:=$(arg arm1_tool) arm2_tool:=$(arg arm2_tool)" />
+
+  <!-- Load updated joint limits (override information from URDF) -->
+  <group ns="$(arg robot_description)_planning">
+    <rosparam command="load" file="$(find triple_arm_moveit_config)/config/joint_limits.yaml"/>
+    <rosparam command="load" file="$(find triple_arm_moveit_config)/config/cartesian_limits.yaml"/>
+  </group>
+
+  <!-- Load default settings for kinematics; these settings are overridden by settings in a node's namespace -->
+  <group ns="$(arg robot_description)_kinematics">
+    <rosparam command="load" file="$(find triple_arm_moveit_config)/config/kinematics.yaml"/>
+  </group>
+
+</launch>

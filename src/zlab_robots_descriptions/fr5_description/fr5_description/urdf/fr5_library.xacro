@@ -59,8 +59,8 @@
             iyy="0.87602"
             iyz="-1.6883E-06"
             izz="1.5353"
-            visual_mesh="package://fr5_description/fr/meshes/visual/extra_base_link.DAE"
-            collision_mesh="package://fr5_description/fr/meshes/collision/extra_base_link.STL" />
+            visual_mesh="package://fr5_description/fr5_description/meshes/visual/extra_base_link.DAE"
+            collision_mesh="package://fr5_description/fr5_description/meshes/collision/extra_base_link.STL" />
 
         <xacro:link_with_inertial name="${arm_id}_base1_link"
             xyz="2.7756E-16 2.2204E-16 -0.008"
@@ -72,8 +72,8 @@
             iyy="0.0064529"
             iyz="-1.7017E-21"
             izz="0.012771"
-            visual_mesh="package://fr5_description/fr/meshes/visual/plant_link.DAE"
-            collision_mesh="package://fr5_description/fr/meshes/collision/plant_link.STL" />
+            visual_mesh="package://fr5_description/fr5_description/meshes/visual/plant_link.DAE"
+            collision_mesh="package://fr5_description/fr5_description/meshes/collision/plant_link.STL" />
 
         <joint name="${arm_id}_base0_to_base1" type="fixed">
             <parent link="${arm_id}_base0_link" />
@@ -86,8 +86,8 @@
             mass="1.6185"
             ixx="0.0030836" ixy="1.5354E-05" ixz="-1.9315E-05" iyy="0.0030825" iyz="-1.7918E-05"
             izz="0.0045209"
-            visual_mesh="package://fr5_description/fr/meshes/visual/base_link.DAE"
-            collision_mesh="package://fr5_description/fr/meshes/collision/base_link.STL" />
+            visual_mesh="package://fr5_description/fr5_description/meshes/visual/base_link.DAE"
+            collision_mesh="package://fr5_description/fr5_description/meshes/collision/base_link.STL" />
 
         <joint name="${arm_id}_base1_to_base2" type="fixed">
             <parent link="${arm_id}_base1_link" />
@@ -100,8 +100,8 @@
             mass="4.3771"
             ixx="0.010731" ixy="-8.0587E-09" ixz="-3.6773E-08" iyy="0.010408" iyz="0.00012853"
             izz="0.0081793"
-            visual_mesh="package://fr5_description/fr/meshes/visual/j1_link.DAE"
-            collision_mesh="package://fr5_description/fr/meshes/collision/j1_link.STL" />
+            visual_mesh="package://fr5_description/fr5_description/meshes/visual/j1_link.DAE"
+            collision_mesh="package://fr5_description/fr5_description/meshes/collision/j1_link.STL" />
 
         <joint name="${arm_id}_j1" type="revolute">
             <origin xyz="0 0 0" rpy="0 0 0" />
@@ -120,8 +120,8 @@
             mass="14.458"
             ixx="0.028392" ixy="-1.337E-07" ixz="-3.9895E-09" iyy="0.4559" iyz="4.214E-08"
             izz="0.44974"
-            visual_mesh="package://fr5_description/fr/meshes/visual/j2_link.DAE"
-            collision_mesh="package://fr5_description/fr/meshes/collision/j2_link.STL" />
+            visual_mesh="package://fr5_description/fr5_description/meshes/visual/j2_link.DAE"
+            collision_mesh="package://fr5_description/fr5_description/meshes/collision/j2_link.STL" />
 
         <joint name="${arm_id}_j2" type="revolute">
             <origin xyz="0 0 0.152" rpy="1.5708 0 0" />
@@ -140,8 +140,8 @@
             mass="7.6737"
             ixx="0.0085096" ixy="2.1613E-06" ixz="-0.0068678" iyy="0.16971" iyz="3.7086E-08"
             izz="0.16854"
-            visual_mesh="package://fr5_description/fr/meshes/visual/j3_link.DAE"
-            collision_mesh="package://fr5_description/fr/meshes/collision/j3_link.STL" />
+            visual_mesh="package://fr5_description/fr5_description/meshes/visual/j3_link.DAE"
+            collision_mesh="package://fr5_description/fr5_description/meshes/collision/j3_link.STL" />
 
         <joint name="${arm_id}_j3" type="revolute">
             <origin xyz="-0.425 0 0" rpy="0 0 0" />
@@ -160,8 +160,8 @@
             mass="1.6266"
             ixx="0.00216" ixy="4.888E-09" ixz="3.1528E-08" iyy="0.0015455" iyz="3.7678E-05"
             izz="0.0019902"
-            visual_mesh="package://fr5_description/fr/meshes/visual/j4_link.DAE"
-            collision_mesh="package://fr5_description/fr/meshes/collision/j4_link.STL" />
+            visual_mesh="package://fr5_description/fr5_description/meshes/visual/j4_link.DAE"
+            collision_mesh="package://fr5_description/fr5_description/meshes/collision/j4_link.STL" />
 
         <joint name="${arm_id}_j4" type="revolute">
             <origin xyz="-0.39501 0 0" rpy="0 0 0" />
@@ -180,8 +180,8 @@
             mass="1.5812"
             ixx="0.0020612" ixy="8.7064E-09" ixz="-3.4742E-08" iyy="0.0014477" iyz="-2.8534E-05"
             izz="0.0019573"
-            visual_mesh="package://fr5_description/fr/meshes/visual/j5_link.DAE"
-            collision_mesh="package://fr5_description/fr/meshes/collision/j5_link.STL" />
+            visual_mesh="package://fr5_description/fr5_description/meshes/visual/j5_link.DAE"
+            collision_mesh="package://fr5_description/fr5_description/meshes/collision/j5_link.STL" />
 
         <joint name="${arm_id}_j5" type="revolute">
             <origin xyz="0 0 0.1021" rpy="1.5708 0 0" />
@@ -200,8 +200,8 @@
             mass="0.52542"
             ixx="0.00027721" ixy="-1.8677E-09" ixz="-1.188E-07" iyy="0.00027839" iyz="2.2607E-07"
             izz="0.00041605"
-            visual_mesh="package://fr5_description/fr/meshes/visual/j6_link.DAE"
-            collision_mesh="package://fr5_description/fr/meshes/collision/j6_link.STL" />
+            visual_mesh="package://fr5_description/fr5_description/meshes/visual/j6_link.DAE"
+            collision_mesh="package://fr5_description/fr5_description/meshes/collision/j6_link.STL" />
 
         <joint name="${arm_id}_j6" type="revolute">
             <origin xyz="0 0 0.102" rpy="-1.5708 0 0" />

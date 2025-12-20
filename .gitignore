@@ -3,4 +3,4 @@ doc/.~*
 *.bag
 build/
 devel/
-
+.log

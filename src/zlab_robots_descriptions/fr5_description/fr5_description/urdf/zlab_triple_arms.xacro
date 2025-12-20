@@ -1,0 +1,35 @@
+<?xml version="1.0"?>
+<robot name="zlab_triple_arms" xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+    <!-- Arguments for positions -->
+    <!-- Diana7 (Center) -->
+    <xacro:arg name="diana7_xyz" default="0 0 0"/>
+    <xacro:arg name="diana7_rpy" default="0 0 0"/>
+
+    <!-- FR5 Arm 1 (Left) -->
+    <xacro:arg name="arm1_xyz" default="1.5 -0.2 0"/>
+    <xacro:arg name="arm1_rpy" default="0 0 0"/>
+
+    <!-- FR5 Arm 2 (Right) -->
+    <xacro:arg name="arm2_xyz" default="1.5 0.4 0"/>
+    <xacro:arg name="arm2_rpy" default="0 0 0"/>
+
+    <!-- Include Macros -->
+    <xacro:include filename="$(find fr5_description)/fr5_description/urdf/fr5_library.xacro" />
+    <xacro:include filename="$(find diana7_description)/urdf/diana7_macro.xacro" />
+
+    <!-- World Link -->
+    <link name="world" />
+
+    <!-- Instantiate Diana7 -->
+    <xacro:diana7_robot prefix="diana7_" parent="world">
+        <origin xyz="$(arg diana7_xyz)" rpy="$(arg diana7_rpy)"/>
+    </xacro:diana7_robot>
+
+    <!-- Instantiate FR5 Arm 1 -->
+    <xacro:fr arm_id="arm1" connected_to="world" xyz="$(arg arm1_xyz)" rpy="$(arg arm1_rpy)"/>
+
+    <!-- Instantiate FR5 Arm 2 -->
+    <xacro:fr arm_id="arm2" connected_to="world" xyz="$(arg arm2_xyz)" rpy="$(arg arm2_rpy)"/>
+
+</robot>

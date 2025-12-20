@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<robot name="zlab_triple_arms" xmlns:xacro="http://www.ros.org/wiki/xacro">
+    <xacro:arg name="arm1_tool" default="none"/>
+    <xacro:arg name="arm2_tool" default="none"/>
+
+    <!-- GROUPS -->
+    <group name="arm1">
+        <chain base_link="arm1_base0_link" tip_link="arm1_ee_link"/>
+    </group>
+    <group name="arm2">
+        <chain base_link="arm2_base0_link" tip_link="arm2_ee_link"/>
+    </group>
+    <group name="diana7">
+        <chain base_link="diana7_base_link" tip_link="diana7_link_7"/>
+    </group>
+    <group name="triple_arms">
+        <group name="arm1"/>
+        <group name="arm2"/>
+        <group name="diana7"/>
+    </group>
+
+    <!-- GROUP STATES -->
+    <!-- Arm 1 & 2 States (Copied from dual) -->
+    <group_state name="home" group="arm1">
+        <joint name="arm1_j1" value="0"/>
+        <joint name="arm1_j2" value="0"/>
+        <joint name="arm1_j3" value="0"/>
+        <joint name="arm1_j4" value="0"/>
+        <joint name="arm1_j5" value="0"/>
+        <joint name="arm1_j6" value="0"/>
+    </group_state>
+    <group_state name="home" group="arm2">
+        <joint name="arm2_j1" value="0"/>
+        <joint name="arm2_j2" value="0"/>
+        <joint name="arm2_j3" value="0"/>
+        <joint name="arm2_j4" value="0"/>
+        <joint name="arm2_j5" value="0"/>
+        <joint name="arm2_j6" value="0"/>
+    </group_state>
+    <group_state name="up" group="arm1">
+        <joint name="arm1_j1" value="0"/>
+        <joint name="arm1_j2" value="-1.5708"/>
+        <joint name="arm1_j3" value="0"/>
+        <joint name="arm1_j4" value="-1.5708"/>
+        <joint name="arm1_j5" value="0"/>
+        <joint name="arm1_j6" value="0"/>
+    </group_state>
+    <group_state name="up" group="arm2">
+        <joint name="arm2_j1" value="0"/>
+        <joint name="arm2_j2" value="-1.5708"/>
+        <joint name="arm2_j3" value="0"/>
+        <joint name="arm2_j4" value="-1.5708"/>
+        <joint name="arm2_j5" value="0"/>
+        <joint name="arm2_j6" value="0"/>
+    </group_state>
+
+    <!-- Diana7 States -->
+    <group_state name="home" group="diana7">
+        <joint name="diana7_joint_1" value="0"/>
+        <joint name="diana7_joint_2" value="0"/>
+        <joint name="diana7_joint_3" value="0"/>
+        <joint name="diana7_joint_4" value="0"/>
+        <joint name="diana7_joint_5" value="0"/>
+        <joint name="diana7_joint_6" value="0"/>
+        <joint name="diana7_joint_7" value="0"/>
+    </group_state>
+
+    <!-- Triple Arms States -->
+    <group_state name="home" group="triple_arms">
+        <joint name="arm1_j1" value="0"/>
+        <joint name="arm1_j2" value="0"/>
+        <joint name="arm1_j3" value="0"/>
+        <joint name="arm1_j4" value="0"/>
+        <joint name="arm1_j5" value="0"/>
+        <joint name="arm1_j6" value="0"/>
+        <joint name="arm2_j1" value="0"/>
+        <joint name="arm2_j2" value="0"/>
+        <joint name="arm2_j3" value="0"/>
+        <joint name="arm2_j4" value="0"/>
+        <joint name="arm2_j5" value="0"/>
+        <joint name="arm2_j6" value="0"/>
+        <joint name="diana7_joint_1" value="0"/>
+        <joint name="diana7_joint_2" value="0"/>
+        <joint name="diana7_joint_3" value="0"/>
+        <joint name="diana7_joint_4" value="0"/>
+        <joint name="diana7_joint_5" value="0"/>
+        <joint name="diana7_joint_6" value="0"/>
+        <joint name="diana7_joint_7" value="0"/>
+    </group_state>
+
+    <!-- VIRTUAL JOINTS -->
+    <virtual_joint name="virtual_joint" type="fixed" parent_frame="world" child_link="world"/>
+
+    <!-- DISABLE COLLISIONS -->
+    <!-- FR5 Arm 1 Internal -->
+    <disable_collisions link1="arm1_base0_link" link2="arm1_base1_link" reason="Adjacent"/>
+    <disable_collisions link1="arm1_base0_link" link2="arm1_base2_link" reason="Never"/>
+    <disable_collisions link1="arm1_base0_link" link2="arm1_j1_link" reason="Never"/>
+    <disable_collisions link1="arm1_base1_link" link2="arm1_base2_link" reason="Adjacent"/>
+    <disable_collisions link1="arm1_base1_link" link2="arm1_j1_link" reason="Never"/>
+    <disable_collisions link1="arm1_base1_link" link2="arm1_j2_link" reason="Never"/>
+    <disable_collisions link1="arm1_base2_link" link2="arm1_j1_link" reason="Adjacent"/>
+    <disable_collisions link1="arm1_base2_link" link2="arm1_j2_link" reason="Never"/>
+    <disable_collisions link1="arm1_j1_link" link2="arm1_j2_link" reason="Adjacent"/>
+    <disable_collisions link1="arm1_j1_link" link2="arm1_j3_link" reason="Never"/>
+    <disable_collisions link1="arm1_j1_link" link2="arm1_j4_link" reason="Never"/>
+    <disable_collisions link1="arm1_j2_link" link2="arm1_j3_link" reason="Adjacent"/>
+    <disable_collisions link1="arm1_j2_link" link2="arm1_j4_link" reason="Never"/>
+    <disable_collisions link1="arm1_j3_link" link2="arm1_j4_link" reason="Adjacent"/>
+    <disable_collisions link1="arm1_j4_link" link2="arm1_j5_link" reason="Adjacent"/>
+    <disable_collisions link1="arm1_j4_link" link2="arm1_j6_link" reason="Never"/>
+    <disable_collisions link1="arm1_j5_link" link2="arm1_j6_link" reason="Adjacent"/>
+
+    <!-- FR5 Arm 2 Internal -->
+    <disable_collisions link1="arm2_base0_link" link2="arm2_base1_link" reason="Adjacent"/>
+    <disable_collisions link1="arm2_base0_link" link2="arm2_base2_link" reason="Never"/>
+    <disable_collisions link1="arm2_base0_link" link2="arm2_j1_link" reason="Never"/>
+    <disable_collisions link1="arm2_base1_link" link2="arm2_base2_link" reason="Adjacent"/>
+    <disable_collisions link1="arm2_base1_link" link2="arm2_j1_link" reason="Never"/>
+    <disable_collisions link1="arm2_base1_link" link2="arm2_j2_link" reason="Never"/>
+    <disable_collisions link1="arm2_base2_link" link2="arm2_j1_link" reason="Adjacent"/>
+    <disable_collisions link1="arm2_base2_link" link2="arm2_j2_link" reason="Never"/>
+    <disable_collisions link1="arm2_j1_link" link2="arm2_j2_link" reason="Adjacent"/>
+    <disable_collisions link1="arm2_j1_link" link2="arm2_j3_link" reason="Never"/>
+    <disable_collisions link1="arm2_j1_link" link2="arm2_j4_link" reason="Never"/>
+    <disable_collisions link1="arm2_j2_link" link2="arm2_j3_link" reason="Adjacent"/>
+    <disable_collisions link1="arm2_j2_link" link2="arm2_j4_link" reason="Never"/>
+    <disable_collisions link1="arm2_j3_link" link2="arm2_j4_link" reason="Adjacent"/>
+    <disable_collisions link1="arm2_j4_link" link2="arm2_j5_link" reason="Adjacent"/>
+    <disable_collisions link1="arm2_j4_link" link2="arm2_j6_link" reason="Never"/>
+    <disable_collisions link1="arm2_j5_link" link2="arm2_j6_link" reason="Adjacent"/>
+
+    <!-- Diana7 Internal -->
+    <disable_collisions link1="diana7_base_link" link2="diana7_link_1" reason="Adjacent" />
+    <disable_collisions link1="diana7_link_1" link2="diana7_link_2" reason="Adjacent" />
+    <disable_collisions link1="diana7_link_2" link2="diana7_link_3" reason="Adjacent" />
+    <disable_collisions link1="diana7_link_3" link2="diana7_link_4" reason="Adjacent" />
+    <disable_collisions link1="diana7_link_4" link2="diana7_link_5" reason="Adjacent" />
+    <disable_collisions link1="diana7_link_5" link2="diana7_link_6" reason="Adjacent" />
+    <disable_collisions link1="diana7_link_6" link2="diana7_link_7" reason="Adjacent" />
+
+    <!-- Cross Collisions (Base links might be close, but usually safe to disable base-base if they are static) -->
+    <!-- We leave cross-collisions enabled for safety, except maybe bases if they overlap in model but not reality -->
+    <!-- Assuming bases are far enough apart (0.8m) -->
+
+</robot>
