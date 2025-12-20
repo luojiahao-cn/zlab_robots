@@ -41,7 +41,13 @@ target_link_libraries(diana7_hw_main
   ${catkin_LIBRARIES}
 )
 
-install(TARGETS ${PROJECT_NAME} diana7_hw_main
+add_executable(test_diana_api src/test_diana_api.cpp)
+target_link_libraries(test_diana_api
+  ${catkin_LIBRARIES}
+  DianaApi
+)
+
+install(TARGETS ${PROJECT_NAME} diana7_hw_main test_diana_api
   ARCHIVE DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
   LIBRARY DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
   RUNTIME DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}

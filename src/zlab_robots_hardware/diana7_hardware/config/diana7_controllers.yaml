@@ -28,15 +28,15 @@ diana7:
       - joint_6
       - joint_7
     constraints:
-      goal_time: 1.0
-      stopped_velocity_tolerance: 0.05
-      joint_1: {trajectory: 0.5, goal: 0.2}
-      joint_2: {trajectory: 0.5, goal: 0.2}
-      joint_3: {trajectory: 0.5, goal: 0.2}
-      joint_4: {trajectory: 0.5, goal: 0.2}
-      joint_5: {trajectory: 0.5, goal: 0.2}
-      joint_6: {trajectory: 0.5, goal: 0.2}
-      joint_7: {trajectory: 0.5, goal: 0.2}
+      goal_time: 2.0
+      stopped_velocity_tolerance: 0.1
+      joint_1: {trajectory: 1.0, goal: 0.5}
+      joint_2: {trajectory: 1.0, goal: 0.5}
+      joint_3: {trajectory: 1.0, goal: 0.5}
+      joint_4: {trajectory: 1.0, goal: 0.5}
+      joint_5: {trajectory: 1.0, goal: 0.5}
+      joint_6: {trajectory: 1.0, goal: 0.5}
+      joint_7: {trajectory: 1.0, goal: 0.5}
     stop_trajectory_duration: 0.5
     state_publish_rate:  25
     action_monitor_rate: 10

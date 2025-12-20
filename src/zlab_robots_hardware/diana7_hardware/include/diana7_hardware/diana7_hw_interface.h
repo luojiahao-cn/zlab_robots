@@ -42,6 +42,9 @@ private:
   
   // Helper to check API errors
   bool checkApiError(int result, const std::string& func_name);
+  
+  // Store last read result for debug
+  int ret_read = 0;
 };
 
 } // namespace diana7_hardware

@@ -3,6 +3,17 @@
 namespace diana7_hardware
 {
 
+// Callback functions for DianaAPI
+void errorControlCallback(int e, const char *strIpAddress)
+{
+  // ROS_ERROR("DianaAPI Error: %d", e);
+}
+
+void robotStateCallback(StrRobotStateInfo *pinfo, const char *strIpAddress)
+{
+  // Heartbeat or state update
+}
+
 Diana7HWInterface::Diana7HWInterface()
 {
 }
@@ -46,16 +57,20 @@ bool Diana7HWInterface::init(ros::NodeHandle& root_nh, ros::NodeHandle& robot_hw
   net_info.LocRealtimeSrvPort = 0;
   net_info.LocPassThroughSrvPort = 0;
   
-  int ret = initSrv(nullptr, nullptr, &net_info);
+  int ret = initSrv(errorControlCallback, robotStateCallback, &net_info);
   if (!checkApiError(ret, "initSrv")) return false;
 
   // Ensure we are in Position Control Mode
   ret = changeControlMode(T_MODE_POSITION, ip_address_.c_str());
   if (!checkApiError(ret, "changeControlMode")) return false;
 
-  // Release brake (optional, be careful)
-  // ret = releaseBrake(ip_address_.c_str());
-  // if (!checkApiError(ret, "releaseBrake")) return false;
+  // Release brake (Required to move)
+  ROS_INFO("Diana7HWInterface: Releasing brake...");
+  ret = releaseBrake(ip_address_.c_str());
+  if (!checkApiError(ret, "releaseBrake")) return false;
+  
+  // Wait for brake release (2 seconds as per reference)
+  ros::Duration(2.0).sleep();
 
   ROS_INFO("Diana7HWInterface: Connected to robot at %s", ip_address_.c_str());
 
@@ -75,6 +90,9 @@ bool Diana7HWInterface::init(ros::NodeHandle& root_nh, ros::NodeHandle& robot_hw
       joint_position_[i] = initial_joints[i];
       joint_position_command_[i] = initial_joints[i]; // Sync command to current pos
     }
+    ROS_INFO("Diana7HWInterface: Initial Joint Pos: [%.4f, %.4f, %.4f, %.4f, %.4f, %.4f, %.4f]",
+             initial_joints[0], initial_joints[1], initial_joints[2], 
+             initial_joints[3], initial_joints[4], initial_joints[5], initial_joints[6]);
   }
   else
   {
@@ -109,58 +127,50 @@ void Diana7HWInterface::read(const ros::Time& time, const ros::Duration& period)
   double torques[7];
 
   // Read Position
-  int ret = getJointPos(joints, ip_address_.c_str());
-  if (ret == 0)
+  int ret_read = getJointPos(joints, ip_address_.c_str());
+  if (ret_read == 0)
   {
     for (int i = 0; i < 7; ++i) joint_position_[i] = joints[i];
   }
+  else
+  {
+    ROS_WARN_THROTTLE(1.0, "Diana7HWInterface: getJointPos failed: %d", ret_read);
+  }
 
   // Read Velocity
-  ret = getJointAngularVel(vels, ip_address_.c_str());
-  if (ret == 0)
-  {
-    for (int i = 0; i < 7; ++i) joint_velocity_[i] = vels[i];
-  }
+  getJointAngularVel(vels, ip_address_.c_str()); // Ignore errors for now to reduce log noise
+  for (int i = 0; i < 7; ++i) joint_velocity_[i] = vels[i];
 
   // Read Torque
-  ret = getJointTorque(torques, ip_address_.c_str());
-  if (ret == 0)
-  {
-    for (int i = 0; i < 7; ++i) joint_effort_[i] = torques[i];
-  }
+  getJointTorque(torques, ip_address_.c_str());
+  for (int i = 0; i < 7; ++i) joint_effort_[i] = torques[i];
 }
 
 void Diana7HWInterface::write(const ros::Time& time, const ros::Duration& period)
 {
-  // Use servoJ for high-frequency position control
-  // servoJ(double *joints, double time, double look_ahead_time, double gain, const char *strIpAddress)
-  // time: expected time to reach target (e.g. 0.001s for 1000Hz)
-  // look_ahead_time: usually slightly larger than time (e.g. 0.02)
-  // gain: control gain (e.g. 100-300)
-  
   double target_joints[7];
   for (int i = 0; i < 7; ++i)
   {
     target_joints[i] = joint_position_command_[i];
   }
 
-  // Parameters need tuning based on real robot behavior
-  double t = period.toSec(); // e.g. 0.001
-  if (t < 0.002) t = 0.002;  // Clamp min time to 2ms (500Hz) or higher if needed
-  
-  double look_ahead = 0.05; 
-  double gain = 300.0;
+  // Use servoJ_ex for high-frequency position control
+  // Parameters tuned based on successful standalone test
+  double servo_period = 0.01;      // 100Hz
+  double lookahead = 0.03;         // 3 * period
+  double gain = 200.0;             // Stiffness
+  bool reliable = true;            // Reliable UDP/TCP
 
-  int ret = servoJ(target_joints, t, look_ahead, gain, ip_address_.c_str());
-  if (ret != 0)
+  int ret_write = servoJ_ex(target_joints, servo_period, lookahead, gain, reliable, ip_address_.c_str());
+
+  if (ret_write != 0)
   {
-    // Don't spam error logs in high freq loop, maybe throttle
-    ROS_WARN_THROTTLE(1.0, "Diana7HWInterface: servoJ failed: %d", ret);
+    ROS_WARN_THROTTLE(1.0, "Diana7HWInterface: servoJ_ex failed: %d", ret_write);
   }
   
   // Debug print (throttle to 1Hz)
-  ROS_INFO_THROTTLE(1.0, "Write: [%.4f, %.4f, ...], Read: [%.4f, %.4f, ...]", 
-      target_joints[6], target_joints[6], joint_position_[6], joint_position_[6]);
+  // ROS_INFO_THROTTLE(1.0, "Write: [%.4f...], Read: [%.4f...], RetWrite: %d", 
+  //     target_joints[6], joint_position_[6], ret_write);
 }
 
 bool Diana7HWInterface::checkApiError(int result, const std::string& func_name)
