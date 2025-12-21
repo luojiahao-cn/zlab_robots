@@ -25,7 +25,7 @@
 
   <!-- Set the robot urdf on the parameter server -->
   <param name="robot_description"
-         command="$(find xacro)/xacro '$(find fr5_description)/fr/urdf/zlab_dual_arms.xacro'
+         command="$(find xacro)/xacro '$(find fr5_description)/fr5_description/urdf/zlab_dual_arms.xacro'
                  arm1_tool:=$(arg arm1_tool) arm2_tool:=$(arg arm2_tool)
                  arm1_xyz:='$(arg arm1_xyz)' arm1_rpy:='$(arg arm1_rpy)'
                  arm2_xyz:='$(arg arm2_xyz)' arm2_rpy:='$(arg arm2_rpy)'"/>

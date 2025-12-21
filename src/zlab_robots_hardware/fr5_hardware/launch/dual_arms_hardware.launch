@@ -14,7 +14,7 @@
   <!-- Load URDF -->
   <arg name="load_robot_description" default="true"/>
   <param if="$(arg load_robot_description)" name="robot_description"
-         command="$(find xacro)/xacro '$(find fr5_description)/fr/urdf/zlab_dual_arms.xacro'
+         command="$(find xacro)/xacro '$(find fr5_description)/fr5_description/urdf/zlab_dual_arms.xacro'
                  arm1_tool:=$(arg arm1_tool) arm2_tool:=$(arg arm2_tool)"/>
 
   <!-- Arm1 hardware interface -->

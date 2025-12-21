@@ -25,7 +25,7 @@
   <!-- Load URDF -->
   <arg name="load_robot_description" default="true"/>
   <param if="$(arg load_robot_description)" name="robot_description"
-         command="$(find xacro)/xacro '$(find fr5_description)/fr/urdf/fr.xacro'
+         command="$(find xacro)/xacro '$(find fr5_description)/fr5_description/urdf/fr.xacro'
                  arm_id:=$(arg arm_id) tool_name:=$(arg tool_name)"/>
 
   <!-- Load controller yaml based on arm_id -->
