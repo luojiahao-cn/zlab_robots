@@ -1,0 +1,8 @@
+prefix=/home/zhang/zlab_robots/install
+
+Name: triple_arm_moveit_config
+Description: Description of triple_arm_moveit_config
+Version: 0.3.0
+Cflags: 
+Libs: -L${prefix}/lib 
+Requires: 

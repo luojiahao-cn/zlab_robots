@@ -1,0 +1,12 @@
+tag_family: tag36h11
+
+# 你用的 tag 尺寸（单位：米）
+tag_size: 0.04
+
+# 多个 tag（3~4 个）
+tag_ids: [0, 1, 2, 3]
+
+# 坐标系
+camera_frame: camera_color_optical_frame
+
+publish_tf: true

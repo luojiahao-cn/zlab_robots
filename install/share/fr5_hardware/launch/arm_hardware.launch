@@ -1,0 +1,76 @@
+<?xml version="1.0"?>
+<launch>
+  <!-- Arm ID: arm1 or arm2 -->
+  <arg name="arm_id" default="arm1" doc="Arm ID (arm1 or arm2)"/>
+  
+  <!-- Robot IP address -->
+  <!-- Default IP: arm1 -> 192.168.31.202, arm2 -> 192.168.31.203 -->
+  <arg name="robot_ip" default="" doc="IP address of the robot (if empty, uses default based on arm_id)"/>
+  
+  <!-- Set default IP based on arm_id if robot_ip not provided -->
+  <arg if="$(eval arg('robot_ip') == '' and arg('arm_id') == 'arm1')" name="actual_robot_ip" value="192.168.31.202"/>
+  <arg if="$(eval arg('robot_ip') == '' and arg('arm_id') == 'arm2')" name="actual_robot_ip" value="192.168.31.203"/>
+  <arg unless="$(eval arg('robot_ip') == '')" name="actual_robot_ip" value="$(arg robot_ip)"/>
+  
+  <!-- Control loop frequency -->
+  <arg name="loop_hz" default="60.0" doc="Control loop frequency (Hz)"/>
+  
+  <!-- Tool parameter (optional) -->
+  <arg name="tool_name" default="none" doc="Tool name to use"/>
+  
+  <!-- Controller and publisher options -->
+  <arg name="spawn_joint_state_controller" default="true" doc="Whether to spawn joint_state_controller (set to false for dual arms, only one needed)"/>
+  <arg name="publish_robot_state" default="true" doc="Whether to publish robot state (set to false for dual arms)"/>
+  
+  <!-- Load URDF -->
+  <arg name="load_robot_description" default="true"/>
+  <param if="$(arg load_robot_description)" name="robot_description"
+         command="$(find xacro)/xacro '$(find fr5_description)/fr/urdf/fr.xacro'
+                 arm_id:=$(arg arm_id) tool_name:=$(arg tool_name)"/>
+
+  <!-- Load controller yaml based on arm_id -->
+  <arg if="$(eval arg('arm_id') == 'arm1')" name="controller_yaml" value="$(find fr5_hardware)/config/arm1_controllers.yaml"/>
+  <arg if="$(eval arg('arm_id') == 'arm2')" name="controller_yaml" value="$(find fr5_hardware)/config/arm2_controllers.yaml"/>
+
+  <!-- Use group namespace (like archive approach) -->
+  <group ns="$(arg arm_id)">
+    <!-- Hardware interface node -->
+    <node name="fr5_hardware" pkg="fr5_hardware" type="fr5_hw_main" output="screen">
+      <param name="robot_ip" value="$(arg actual_robot_ip)"/>
+      <param name="loop_hz" value="$(arg loop_hz)"/>
+      <param name="cycle_time_error_threshold" value="0.01"/>
+      
+      <!-- Set joints based on arm_id (for hardware interface) -->
+      <rosparam param="hardware_interface/joints" subst_value="true">
+        - $(arg arm_id)_j1
+        - $(arg arm_id)_j2
+        - $(arg arm_id)_j3
+        - $(arg arm_id)_j4
+        - $(arg arm_id)_j5
+        - $(arg arm_id)_j6
+      </rosparam>
+    </node>
+
+    <!-- Load controller settings -->
+    <rosparam file="$(arg controller_yaml)" command="load" subst_value="true"/>
+
+    <!-- Controller manager -->
+    <group if="$(arg spawn_joint_state_controller)">
+      <node name="controller_spawner" pkg="controller_manager" type="spawner" respawn="false"
+            output="screen" args="joint_state_controller $(arg arm_id)_controller"/>
+    </group>
+    <group unless="$(arg spawn_joint_state_controller)">
+      <node name="controller_spawner" pkg="controller_manager" type="spawner" respawn="false"
+            output="screen" args="$(arg arm_id)_controller"/>
+    </group>
+
+    <!-- Robot state publisher (only for single arm, dual arms has its own) -->
+    <node if="$(arg publish_robot_state)" name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher"/>
+  </group>
+
+  <!-- Joint state publisher to merge joint_states from namespace (for single arm) -->
+  <node if="$(arg publish_robot_state)" name="joint_state_publisher" pkg="joint_state_publisher" type="joint_state_publisher">
+    <rosparam param="source_list" subst_value="true">[/$(arg arm_id)/joint_states]</rosparam>
+  </node>
+
+</launch>

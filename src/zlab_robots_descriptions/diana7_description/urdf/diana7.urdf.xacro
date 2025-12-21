@@ -14,6 +14,67 @@
         rpy="0 0 0" />
   </link>
 
+  <!-- Optional base assembly (default: included) -->
+  <link name="diana7_base_link">
+    <inertial>
+      <origin xyz="-0.0554345295309022 -0.000128426199742461 0.380705746455594" rpy="0 0 0" />
+      <mass value="94.0798220497049" />
+      <inertia ixx="11.6812698745749" ixy="0.000483119972220811" ixz="0.0946190239054891"
+              iyy="10.7627891849386" iyz="0.00470248742831138" izz="8.47191505976327" />
+    </inertial>
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <mesh filename="package://diana7_description/meshes/base/diana7_base_link.STL" />
+      </geometry>
+      <material name="">
+        <color rgba="0.8 0.8 0.8 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <mesh filename="package://diana7_description/meshes/base/diana7_base_link.STL" />
+      </geometry>
+    </collision>
+  </link>
+
+  <link name="diana7_base_flange_link">
+    <inertial>
+      <origin xyz="-0.039655 0.021372 -0.3992" rpy="0 0 0" />
+      <mass value="94.08" />
+      <inertia ixx="11.681" ixy="0.00048312" ixz="0.094619" iyy="10.763"
+              iyz="0.0047025" izz="8.4719" />
+    </inertial>
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <mesh filename="package://diana7_description/meshes/base/diana7_base_flange_link.STL" />
+      </geometry>
+      <material name="">
+        <color rgba="0.8 0.8 0.8 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <mesh filename="package://diana7_description/meshes/base/diana7_base_flange_link.STL" />
+      </geometry>
+    </collision>
+  </link>
+
+  <joint name="world_to_diana7_base" type="fixed">
+    <origin xyz="0 0 0" rpy="0 0 0" />
+    <parent link="world" />
+    <child link="diana7_base_link" />
+  </joint>
+
+  <joint name="diana7_base_to_flange" type="fixed">
+    <origin xyz="-0.015779 -0.0215 0.7799" rpy="0 0 0" />
+    <parent link="diana7_base_link" />
+    <child link="diana7_base_flange_link" />
+  </joint>
+
   <link name="base_link">
     <inertial>
       <origin
@@ -50,8 +111,9 @@
   </link>
 
   <joint name="base_joint" type="fixed">
-    <parent link="world"/>
+    <parent link="diana7_base_flange_link"/>
     <child link="base_link"/>
+    <origin xyz="0 0 0" rpy="0 0 0" />
   </joint>
 
   <link name="link_1">

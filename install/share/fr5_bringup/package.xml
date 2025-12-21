@@ -1,0 +1,30 @@
+<?xml version="1.0"?>
+<package format="2">
+  <name>fr5_bringup</name>
+  <version>0.0.0</version>
+  <description>Launch files for bringing up ZLab arm hardware and MoveIt</description>
+  <maintainer email="user@todo.todo">user</maintainer>
+  <license>TODO</license>
+
+  <buildtool_depend>catkin</buildtool_depend>
+
+  <build_depend>moveit_core</build_depend>
+  <build_depend>moveit_ros_planning_interface</build_depend>
+  <build_depend>yaml-cpp</build_depend>
+  <build_depend>roscpp</build_depend>
+  <build_depend>roslib</build_depend>
+
+  <exec_depend>roscpp</exec_depend>
+  <exec_depend>roslib</exec_depend>
+  <exec_depend>moveit_core</exec_depend>
+  <exec_depend>moveit_ros_planning_interface</exec_depend>
+  <exec_depend>fr5_hardware</exec_depend>
+  <exec_depend>fr5_single_moveit_config</exec_depend>
+  <exec_depend>fr5_dual_moveit_config</exec_depend>
+  <exec_depend>gazebo_ros</exec_depend>
+  <exec_depend>controller_manager</exec_depend>
+  <exec_depend>robot_state_publisher</exec_depend>
+
+  <export>
+  </export>
+</package>

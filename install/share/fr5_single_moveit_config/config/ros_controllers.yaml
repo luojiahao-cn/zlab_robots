@@ -1,0 +1,62 @@
+$(arg arm_id)_controller:
+  type: position_controllers/JointTrajectoryController
+  joints:
+    - $(arg arm_id)_j1
+    - $(arg arm_id)_j2
+    - $(arg arm_id)_j3
+    - $(arg arm_id)_j4
+    - $(arg arm_id)_j5
+    - $(arg arm_id)_j6
+  constraints:
+    goal_time: 3.0
+    stopped_velocity_tolerance: 0.0
+    $(arg arm_id)_j1:
+      trajectory: 0.05
+      goal: 0.01
+    $(arg arm_id)_j2:
+      trajectory: 0.05
+      goal: 0.01
+    $(arg arm_id)_j3:
+      trajectory: 0.05
+      goal: 0.01
+    $(arg arm_id)_j4:
+      trajectory: 0.05
+      goal: 0.01
+    $(arg arm_id)_j5:
+      trajectory: 0.05
+      goal: 0.01
+    $(arg arm_id)_j6:
+      trajectory: 0.05
+      goal: 0.01
+  gains:
+    $(arg arm_id)_j1:
+      p: 100
+      d: 1
+      i: 1
+      i_clamp: 1
+    $(arg arm_id)_j2:
+      p: 100
+      d: 1
+      i: 1
+      i_clamp: 1
+    $(arg arm_id)_j3:
+      p: 100
+      d: 1
+      i: 1
+      i_clamp: 1
+    $(arg arm_id)_j4:
+      p: 100
+      d: 1
+      i: 1
+      i_clamp: 1
+    $(arg arm_id)_j5:
+      p: 100
+      d: 1
+      i: 1
+      i_clamp: 1
+    $(arg arm_id)_j6:
+      p: 100
+      d: 1
+      i: 1
+      i_clamp: 1
+

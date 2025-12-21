@@ -1,0 +1,37 @@
+# Joint state controller
+joint_state_controller:
+  type: joint_state_controller/JointStateController
+  publish_rate: 50
+
+# Trajectory controller
+arm2_controller:
+  type: position_controllers/JointTrajectoryController
+  joints:
+    - arm2_j1
+    - arm2_j2
+    - arm2_j3
+    - arm2_j4
+    - arm2_j5
+    - arm2_j6
+  constraints:
+    goal_time: 3.0
+    stopped_velocity_tolerance: 0.0
+    arm2_j1:
+      trajectory: 0.60
+      goal: 0.15
+    arm2_j2:
+      trajectory: 0.60
+      goal: 0.15
+    arm2_j3:
+      trajectory: 0.60
+      goal: 0.15
+    arm2_j4:
+      trajectory: 0.60
+      goal: 0.15
+    arm2_j5:
+      trajectory: 0.60
+      goal: 0.15
+    arm2_j6:
+      trajectory: 0.60
+      goal: 0.15
+

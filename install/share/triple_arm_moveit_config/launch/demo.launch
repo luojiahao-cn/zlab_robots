@@ -1,0 +1,89 @@
+<launch>
+
+  <!-- Tool parameters (optional, defaults to none) -->
+  <arg name="arm1_tool" default="none" doc="Tool name for arm1 (e.g., permanent_magnet, magnetic_sensor_bracket, electronic_magnet)"/>
+  <arg name="arm2_tool" default="none" doc="Tool name for arm2 (e.g., permanent_magnet, magnetic_sensor_bracket, electronic_magnet)"/>
+  <arg name="diana7_tool" default="none" doc="Tool name for diana7"/>
+
+  <!-- Arm position parameters (optional) -->
+  <arg name="diana7_xyz" default="0 0 0" doc="Position of diana7 (x y z)"/>
+  <arg name="diana7_rpy" default="0 0 0" doc="Orientation of diana7 (roll pitch yaw)"/>
+  <arg name="arm1_xyz" default="1.5 -0.4 0" doc="Position of arm1 (x y z)"/>
+  <arg name="arm1_rpy" default="0 0 0" doc="Orientation of arm1 (roll pitch yaw)"/>
+  <arg name="arm2_xyz" default="1.5 0.6 0" doc="Position of arm2 (x y z)"/>
+  <arg name="arm2_rpy" default="0 0 0" doc="Orientation of arm2 (roll pitch yaw)"/>
+
+  <!-- specify the planning pipeline -->
+  <arg name="pipeline" default="ompl" />
+
+  <!-- By default, we do not start a database (it can be large) -->
+  <arg name="db" default="false" />
+  <!-- Allow user to specify database location -->
+  <arg name="db_path" default="$(find triple_arm_moveit_config)/default_warehouse_mongo_db" />
+
+  <!-- By default, we are not in debug mode -->
+  <arg name="debug" default="false" />
+
+  <!-- By default, we will load or override the robot_description -->
+  <arg name="load_robot_description" default="true"/>
+
+  <!-- Choose controller manager: fake, simple, or ros_control -->
+  <arg name="moveit_controller_manager" default="fake" />
+  <!-- Set execution mode for fake execution controllers -->
+  <arg name="fake_execution_type" default="interpolate" />
+
+  <!-- By default, hide joint_state_publisher's GUI in 'fake' controller_manager mode -->
+  <arg name="use_gui" default="false" />
+  <arg name="use_rviz" default="true" />
+
+  <!-- If needed, broadcast static tf for robot root -->
+  <node pkg="tf2_ros" type="static_transform_publisher" name="virtual_joint_broadcaster_0" args="0 0 0 0 0 0 virtual_world world" />
+
+  <group if="$(eval arg('moveit_controller_manager') == 'fake')">
+    <!-- We do not have a real robot connected, so publish fake joint states via a joint_state_publisher
+         MoveIt's fake controller's joint states are considered via the 'source_list' parameter -->
+    <node name="joint_state_publisher" pkg="joint_state_publisher" type="joint_state_publisher" unless="$(arg use_gui)">
+      <rosparam param="source_list">[move_group/fake_controller_joint_states]</rosparam>
+    </node>
+    <!-- If desired, a GUI version is available allowing to move the simulated robot around manually
+         This corresponds to moving around the real robot without the use of MoveIt. -->
+    <node name="joint_state_publisher" pkg="joint_state_publisher_gui" type="joint_state_publisher_gui" if="$(arg use_gui)">
+      <rosparam param="source_list">[move_group/fake_controller_joint_states]</rosparam>
+    </node>
+
+    <!-- Given the published joint states, publish tf for the robot links -->
+    <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher" respawn="true" output="screen" />
+  </group>
+
+  <!-- Run the main MoveIt executable without trajectory execution (we do not have controllers configured by default) -->
+  <include file="$(dirname)/move_group.launch">
+    <arg name="allow_trajectory_execution" value="true"/>
+    <arg name="fake_execution_type" value="$(arg fake_execution_type)"/>
+    <arg name="info" value="true"/>
+    <arg name="debug" value="$(arg debug)"/>
+    <arg name="pipeline" value="$(arg pipeline)"/>
+    <arg name="load_robot_description" value="$(arg load_robot_description)"/>
+    <arg name="arm1_tool" value="$(arg arm1_tool)"/>
+    <arg name="arm2_tool" value="$(arg arm2_tool)"/>
+    <arg name="diana7_tool" value="$(arg diana7_tool)"/>
+    <arg name="diana7_xyz" value="$(arg diana7_xyz)"/>
+    <arg name="diana7_rpy" value="$(arg diana7_rpy)"/>
+    <arg name="arm1_xyz" value="$(arg arm1_xyz)"/>
+    <arg name="arm1_rpy" value="$(arg arm1_rpy)"/>
+    <arg name="arm2_xyz" value="$(arg arm2_xyz)"/>
+    <arg name="arm2_rpy" value="$(arg arm2_rpy)"/>
+    <arg name="moveit_controller_manager" value="$(arg moveit_controller_manager)" />
+  </include>
+
+  <!-- Run Rviz and load the default config to see the state of the move_group node -->
+  <include file="$(dirname)/moveit_rviz.launch" if="$(arg use_rviz)">
+    <arg name="rviz_config" value="$(dirname)/moveit.rviz"/>
+    <arg name="debug" value="$(arg debug)"/>
+  </include>
+
+  <!-- If database loading was enabled, start mongodb as well -->
+  <include file="$(dirname)/default_warehouse_db.launch" if="$(arg db)">
+    <arg name="moveit_warehouse_database_path" value="$(arg db_path)"/>
+  </include>
+
+</launch>

@@ -1,0 +1,13 @@
+controller_list:
+  - name: $(arg arm_id)/$(arg arm_id)_controller
+    action_ns: follow_joint_trajectory
+    type: FollowJointTrajectory
+    default: True
+    joints:
+      - $(arg arm_id)_j1
+      - $(arg arm_id)_j2
+      - $(arg arm_id)_j3
+      - $(arg arm_id)_j4
+      - $(arg arm_id)_j5
+      - $(arg arm_id)_j6
+

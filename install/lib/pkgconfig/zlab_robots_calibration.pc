@@ -1,0 +1,8 @@
+prefix=/home/zhang/zlab_robots/install
+
+Name: zlab_robots_calibration
+Description: Description of zlab_robots_calibration
+Version: 0.0.0
+Cflags: 
+Libs: -L${prefix}/lib 
+Requires: 

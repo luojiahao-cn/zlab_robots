@@ -1,0 +1,34 @@
+<launch>
+
+  <!-- ================= RealSense ================= -->
+    <include file="$(find realsense2_camera)/launch/rs_camera.launch">
+        <arg name="enable_color" value="true"/>
+        <arg name="enable_depth" value="true"/>
+        <arg name="align_depth" value="true"/>
+    </include>
+
+  <!-- ================= AprilTag ================= -->
+    <node pkg="apriltag_ros"
+            type="continuous_detection"
+            name="apriltag_node"
+            output="screen">
+
+        <remap from="image_rect" to="/camera/color/image_raw"/>
+        <remap from="camera_info" to="/camera/color/camera_info"/>
+
+        <rosparam file="$(find zlab_robots_calibration)/config/apriltag.yaml"
+                command="load"/>
+    </node>
+
+  <!-- ================= Calibration Node ================= -->
+    <node pkg="camera_calibration" type="calibration_node" name="calibration_node" output="screen">
+    <param name="image_topic" value="/camera/color/image_raw"/>
+    <param name="detections_topic" value="/apriltag_ros/tag_detections"/>
+    <param name="show_window" value="true"/>
+    <param name="overlay_pose" value="true"/>
+    <param name="print_to_console" value="true"/>
+    <param name="stale_timeout_sec" value="0.5"/>
+    <rosparam param="tag_ids">[0, 1, 2, 3]</rosparam>
+    </node>
+
+</launch>

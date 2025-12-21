@@ -1,0 +1,14 @@
+<launch>
+
+  <!-- This file makes it easy to include different planning pipelines;
+       It is assumed that all planning pipelines are named XXX_planning_pipeline.launch  -->
+
+  <arg name="pipeline" default="ompl" />
+  <!-- Arm ID parameter -->
+  <arg name="arm_id" default="arm1" doc="Arm ID to use"/>
+
+  <include ns="$(arg pipeline)" file="$(dirname)/$(arg pipeline)_planning_pipeline.launch.xml">
+    <arg name="arm_id" value="$(arg arm_id)" />
+  </include>
+
+</launch>
