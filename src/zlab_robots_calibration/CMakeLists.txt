@@ -2,10 +2,8 @@ cmake_minimum_required(VERSION 3.0.2)
 project(zlab_robots_calibration)
 
 ## Use C++14
-add_compile_options(-std=c++14)
-add_executable(calibration_node
-  src/calibration_node.cpp
-)
+# add_compile_options(-std=c++14)
+
 find_package(catkin REQUIRED COMPONENTS
   roscpp
   rospy
@@ -38,7 +36,9 @@ include_directories(
   ${OpenCV_INCLUDE_DIRS}
 )
 
-
+add_executable(calibration_node
+  src/calibration_node.cpp
+)
 
 target_link_libraries(calibration_node
   ${catkin_LIBRARIES}

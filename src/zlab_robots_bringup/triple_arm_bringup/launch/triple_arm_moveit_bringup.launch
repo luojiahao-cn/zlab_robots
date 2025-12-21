@@ -1,0 +1,37 @@
+<launch>
+  <arg name="diana7_ip" default="192.168.31.200"/>
+  <arg name="arm1_ip" default="192.168.31.201"/>
+  <arg name="arm2_ip" default="192.168.31.202"/>
+  <arg name="diana7_tool" default="none"/>
+  <arg name="arm1_tool" default="none"/>
+  <arg name="arm2_tool" default="none"/>
+  <arg name="use_rviz" default="true"/>
+  <arg name="debug" default="false"/>
+
+  <!-- 1. Bringup Real Robots -->
+  <include file="$(find triple_arm_bringup)/launch/triple_arm_robot.launch">
+    <arg name="diana7_ip" value="$(arg diana7_ip)"/>
+    <arg name="arm1_ip" value="$(arg arm1_ip)"/>
+    <arg name="arm2_ip" value="$(arg arm2_ip)"/>
+    <arg name="diana7_tool" value="$(arg diana7_tool)"/>
+    <arg name="arm1_tool" value="$(arg arm1_tool)"/>
+    <arg name="arm2_tool" value="$(arg arm2_tool)"/>
+  </include>
+
+  <!-- 2. Launch MoveIt -->
+  <include file="$(find triple_arm_moveit_config)/launch/move_group.launch">
+    <arg name="load_robot_description" value="false"/>
+    <arg name="info" value="true"/>
+    <arg name="debug" value="$(arg debug)"/>
+  </include>
+
+  <!-- 3. Launch Rviz -->
+  <include if="$(arg use_rviz)" file="$(find triple_arm_moveit_config)/launch/moveit_rviz.launch">
+    <arg name="rviz_config" value="$(find triple_arm_moveit_config)/launch/moveit.rviz"/>
+    <arg name="debug" value="$(arg debug)"/>
+  </include>
+
+  <!-- 4. Add Environment (Optional) -->
+  <node name="add_environment" pkg="triple_arm_bringup" type="add_environment.py" output="screen"/>
+
+</launch>

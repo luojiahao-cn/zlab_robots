@@ -1,0 +1,20 @@
+<?xml version="1.0"?>
+<package format="2">
+  <name>triple_arm_bringup</name>
+  <version>0.0.0</version>
+  <description>The triple_arm_bringup package</description>
+
+  <maintainer email="user@todo.todo">user</maintainer>
+  <license>TODO</license>
+
+  <buildtool_depend>catkin</buildtool_depend>
+  <depend>roscpp</depend>
+  <depend>rospy</depend>
+  <depend>std_msgs</depend>
+  <depend>fr5_hardware</depend>
+  <depend>diana7_hardware</depend>
+  <depend>fr5_description</depend>
+  <depend>diana7_description</depend>
+  <depend>triple_arm_moveit_config</depend>
+
+</package>

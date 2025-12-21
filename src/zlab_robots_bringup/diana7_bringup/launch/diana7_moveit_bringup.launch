@@ -2,11 +2,13 @@
   <arg name="robot_ip" default="192.168.31.200"/>
   <arg name="debug" default="false" />
   <arg name="use_rviz" default="true" />
+  <arg name="tool_name" default="none"/>
 
   <!-- 1. Bringup Real Robot (Driver + Controllers + TF) -->
   <include file="$(find diana7_bringup)/launch/diana7_robot.launch">
     <arg name="robot_ip" value="$(arg robot_ip)"/>
     <arg name="load_robot_description" value="true"/>
+    <arg name="tool_name" value="$(arg tool_name)"/>
   </include>
 
   <!-- 2. Launch MoveIt -->

@@ -3,10 +3,11 @@
   <!-- Arguments -->
   <arg name="robot_ip" default="192.168.31.200"/>
   <arg name="load_robot_description" default="true"/>
+  <arg name="tool_name" default="none"/>
 
   <!-- Load Robot Description -->
   <group if="$(arg load_robot_description)">
-    <param name="robot_description" command="$(find xacro)/xacro '$(find diana7_description)/urdf/diana7.urdf.xacro'" />
+    <param name="robot_description" command="$(find xacro)/xacro '$(find diana7_description)/urdf/diana7.urdf.xacro' tool_name:=$(arg tool_name)" />
   </group>
 
   <!-- Load Controller Config -->

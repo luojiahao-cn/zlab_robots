@@ -3,7 +3,7 @@
     name="model" />
   <param
     name="robot_description"
-    textfile="$(find magnetometer_array)/urdf/magnetometer_array.urdf" />
+    command="$(find xacro)/xacro $(find zlab_tools_description)/magnetometer_array/urdf/magnetometer_array.urdf.xacro" />
   <node
     name="joint_state_publisher_gui"
     pkg="joint_state_publisher_gui"
@@ -16,5 +16,5 @@
     name="rviz"
     pkg="rviz"
     type="rviz"
-    args="-d $(find magnetometer_array)/urdf.rviz" />
+    args="-d $(find zlab_tools_description)/magnetometer_array/urdf.rviz" />
 </launch>

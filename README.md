@@ -205,6 +205,21 @@ roslaunch triple_arm_moveit_config demo.launch \
 - 检查网络延迟。
 - 尝试降低 `loop_hz`。
 
+## 更新日志
+
+### 2025-12-21
+1. **Diana7 描述包重构**：
+   - 将 `diana7_base` 包完全整合进 `diana7_description`，移除了独立的 `diana7_base` 包。
+   - 修复了底座模型在 MoveIt/RViz 中显示位置错误（陷入地下）的问题。
+
+2. **启动文件优化**：
+   - `diana7_bringup` 中的启动文件（`diana7_robot.launch`, `diana7_moveit_bringup.launch`）现在支持 `tool_name` 参数，可正确加载末端工具。
+   - 移除了 `diana7_moveit_config` 中冗余的 `diana7_moveit_planning_execution.launch`，统一使用 `diana7_bringup` 进行实机启动。
+
+3. **MoveIt 配置修复**：
+   - 修正了 `diana7.srdf` 中的 `virtual_joint` 定义，将参考系修正为 `world`。
+   - 修正了 `moveit.rviz` 的固定帧设置。
+
 ## 许可证
 
 TODO
