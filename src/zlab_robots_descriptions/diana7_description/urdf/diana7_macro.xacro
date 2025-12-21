@@ -40,10 +40,10 @@
 
     <link name="${prefix}pedestal_link">
       <inertial>
-        <origin xyz="-0.0554345295309022 -0.000128426199742461 0.380705746455594" rpy="0 0 0" />
-        <mass value="94.0798220497049" />
-        <inertia ixx="11.6812698745749" ixy="0.000483119972220811" ixz="0.0946190239054891"
-              iyy="10.7627891849386" iyz="0.00470248742831138" izz="8.47191505976327" />
+        <origin xyz="-0.042824 -0.00012843 0.38233" rpy="0 0 0" />
+        <mass value="94.08" />
+        <inertia ixx="11.684" ixy="0.00063824" ixz="-0.011577"
+              iyy="10.763" iyz="0.004684" izz="8.4692" />
       </inertial>
       <visual>
         <origin xyz="0 0 0" rpy="0 0 0" />
@@ -64,10 +64,10 @@
 
     <link name="${prefix}pedestal_flange_link">
       <inertial>
-        <origin xyz="-0.039655 0.021372 -0.3992" rpy="0 0 0" />
+        <origin xyz="-0.052824 0.021372 -0.39767" rpy="0 0 0" />
         <mass value="94.08" />
-        <inertia ixx="11.681" ixy="0.00048312" ixz="0.094619" iyy="10.763"
-              iyz="0.0047025" izz="8.4719" />
+        <inertia ixx="11.684" ixy="0.00063824" ixz="-0.011577" iyy="10.763"
+              iyz="0.004684" izz="8.4692" />
       </inertial>
       <visual>
         <origin xyz="0 0 0" rpy="0 0 0" />
@@ -93,7 +93,7 @@
     </joint>
 
     <joint name="${prefix}pedestal_to_flange" type="fixed">
-      <origin xyz="-0.015779 -0.0215 0.7799" rpy="0 0 0" />
+      <origin xyz="0.01 -0.0215 0.78" rpy="0 0 0" />
       <parent link="${prefix}pedestal_link" />
       <child link="${prefix}pedestal_flange_link" />
     </joint>
