@@ -1,8 +1,0 @@
-prefix=/home/zhang/zlab_robots/install
-
-Name: diana7_hardware
-Description: Description of diana7_hardware
-Version: 0.0.1
-Cflags: -I${prefix}/include
-Libs: -L${prefix}/lib -ldiana7_hardware
-Requires: roscpp hardware_interface controller_manager joint_limits_interface sensor_msgs std_msgs std_srvs

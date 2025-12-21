@@ -1,9 +1,0 @@
-<launch>
-
-  <!-- OMPL Plugin for MoveIt -->
-  <arg name="pipeline" default="ompl" />
-
-  <!-- OMPL Plugin for MoveIt -->
-  <include file="$(find diana7_moveit_config)/launch/$(arg pipeline)_planning_pipeline.launch.xml" />
-
-</launch>

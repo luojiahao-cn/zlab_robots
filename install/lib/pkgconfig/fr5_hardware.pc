@@ -1,8 +1,0 @@
-prefix=/home/zhang/zlab_robots/install
-
-Name: fr5_hardware
-Description: Description of fr5_hardware
-Version: 0.1.0
-Cflags: -I${prefix}/include
-Libs: -L${prefix}/lib -lfr5_hardware
-Requires: hardware_interface controller_manager roscpp control_msgs trajectory_msgs urdf joint_limits_interface transmission_interface sensor_msgs

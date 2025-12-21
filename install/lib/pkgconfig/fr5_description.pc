@@ -1,8 +1,0 @@
-prefix=/home/zhang/zlab_robots/install
-
-Name: fr5_description
-Description: Description of fr5_description
-Version: 0.0.1
-Cflags: 
-Libs: -L${prefix}/lib 
-Requires: roscpp tf2 tf2_ros tf2_geometry_msgs moveit_ros_planning_interface apriltag_ros

@@ -1,8 +1,0 @@
-prefix=/home/zhang/zlab_robots/install
-
-Name: fr5_bringup
-Description: Description of fr5_bringup
-Version: 0.0.0
-Cflags: -I${prefix}/include
-Libs: -L${prefix}/lib 
-Requires: roscpp roslib moveit_core moveit_ros_planning_interface

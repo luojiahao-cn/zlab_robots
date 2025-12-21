@@ -1,8 +1,0 @@
-prefix=/home/zhang/zlab_robots/install
-
-Name: fr5_single_moveit_config
-Description: Description of fr5_single_moveit_config
-Version: 0.3.0
-Cflags: 
-Libs: -L${prefix}/lib 
-Requires: 

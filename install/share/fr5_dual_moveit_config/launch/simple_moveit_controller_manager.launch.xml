@@ -1,9 +1,0 @@
-<launch>
-  <!-- Define the MoveIt controller manager plugin to use for trajectory execution -->
-  <param name="moveit_controller_manager" value="moveit_simple_controller_manager/MoveItSimpleControllerManager" />
-
-  <!-- Load controller list to the parameter server -->
-  <!-- Dual arms configuration already contains both arm1 and arm2, no parameter substitution needed -->
-  <rosparam command="load" file="$(find fr5_dual_moveit_config)/config/simple_moveit_controllers.yaml"/>
-  <rosparam command="load" file="$(find fr5_dual_moveit_config)/config/ros_controllers.yaml"/>
-</launch>
