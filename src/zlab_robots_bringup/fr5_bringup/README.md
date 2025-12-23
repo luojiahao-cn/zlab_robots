@@ -8,11 +8,11 @@
 
 #### 单臂启动
 ```bash
-# 启动 arm1（默认 IP: 192.168.31.202）
+# 启动 arm1（默认 IP: 192.168.31.201）
 roslaunch fr5_bringup single_arm_bringup.launch arm_id:=arm1
 
 # 指定 IP 地址
-roslaunch fr5_bringup single_arm_bringup.launch arm_id:=arm1 robot_ip:=192.168.31.202
+roslaunch fr5_bringup single_arm_bringup.launch arm_id:=arm1 robot_ip:=192.168.31.201
 
 # 指定工具
 roslaunch fr5_bringup single_arm_bringup.launch arm_id:=arm1 tool_name:=permanent_magnet
@@ -35,8 +35,8 @@ roslaunch fr5_bringup dual_arms_bringup.launch
 
 # 指定 IP 地址
 roslaunch fr5_bringup dual_arms_bringup.launch \
-    arm1_ip:=192.168.31.202 \
-    arm2_ip:=192.168.31.203
+    arm1_ip:=192.168.31.201 \
+    arm2_ip:=192.168.31.202
 
 # 指定工具
 roslaunch fr5_bringup dual_arms_bringup.launch \
@@ -93,8 +93,8 @@ roslaunch fr5_bringup dual_arms_gazebo.launch \
 ### 硬件启动参数
 
 - `robot_ip`: 机械臂 IP 地址（单臂）
-- `arm1_ip`: arm1 的 IP 地址，默认 192.168.31.202
-- `arm2_ip`: arm2 的 IP 地址，默认 192.168.31.203
+- `arm1_ip`: arm1 的 IP 地址，默认 192.168.31.201
+- `arm2_ip`: arm2 的 IP 地址，默认 192.168.31.202
 - `loop_hz`: 控制循环频率，默认 60.0 Hz
 
 ### Gazebo 仿真参数

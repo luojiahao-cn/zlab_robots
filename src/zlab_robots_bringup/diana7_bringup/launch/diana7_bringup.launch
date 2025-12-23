@@ -1,0 +1,37 @@
+<?xml version="1.0"?>
+<launch>
+  <!-- Robot IP address -->
+  <arg name="robot_ip" default="192.168.31.200" doc="IP address of the robot"/>
+  
+  <!-- Tool parameter (optional) -->
+  <arg name="tool_name" default="none" doc="Tool name to use"/>
+  
+  <!-- MoveIt options -->
+  <arg name="pipeline" default="ompl" doc="Planning pipeline to use with MoveIt"/>
+  <arg name="use_rviz" default="true" doc="Start RViz"/>
+  <arg name="debug" default="false" doc="Debug mode"/>
+  
+  <!-- Launch hardware interface -->
+  <include file="$(find diana7_hardware)/launch/diana7_hardware.launch">
+    <arg name="robot_ip" value="$(arg robot_ip)"/>
+    <arg name="tool_name" value="$(arg tool_name)"/>
+    <arg name="load_robot_description" value="true"/>
+  </include>
+  
+  <!-- Launch MoveIt -->
+  <include file="$(find diana7_moveit_config)/launch/move_group.launch">
+    <arg name="tool_name" value="$(arg tool_name)"/>
+    <arg name="pipeline" value="$(arg pipeline)"/>
+    <arg name="debug" value="$(arg debug)"/>
+    <arg name="load_robot_description" value="false"/>
+    <arg name="publish_monitored_planning_scene" value="true"/>
+  </include>
+  
+  <!-- Launch RViz -->
+  <include if="$(arg use_rviz)" file="$(find diana7_moveit_config)/launch/moveit_rviz.launch">
+    <arg name="rviz_config" value="$(find diana7_moveit_config)/launch/moveit.rviz"/>
+    <arg name="debug" value="$(arg debug)"/>
+  </include>
+
+  
+</launch>

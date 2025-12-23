@@ -1,12 +1,25 @@
 tag_family: tag36h11
 
-# 你用的 tag 尺寸（单位：米）
-tag_size: 0.04
-
-# 多个 tag（3~4 个）
-tag_ids: [0, 1, 2, 3]
-
-# 坐标系
+# 相机坐标系
 camera_frame: camera_color_optical_frame
 
+# 是否发布 TF
 publish_tf: true
+
+# ===== 独立 AprilTag（推荐）=====
+standalone_tags:
+  - id: 109
+    size: 0.04
+    frame_name: tag_dianna
+
+  - id: 208
+    size: 0.04
+    frame_name: tag_red
+
+  - id: 104
+    size: 0.04
+    frame_name: tag_green
+
+# [ INFO] [1766479730.040229447]: [tag_green] xyz = [0.13746, -0.00864736, 0.945434]  rpy = [-3.10793, 0.0689071, -2.97548]
+# [ INFO] [1766479730.040258869]: [tag_red] xyz = [0.49389, -0.0112933, 0.717041]  rpy = [-2.74371, -0.818342, 3.09237]
+# [ INFO] [1766479730.040269091]: [dianna] xyz = [-0.275304, -0.0761575, 0.599911]  rpy = [-2.4283, 1.13937, -2.57777]

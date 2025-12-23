@@ -4,12 +4,12 @@
   <arg name="arm_id" default="arm1" doc="Arm ID (arm1 or arm2)"/>
   
   <!-- Robot IP address -->
-  <!-- Default IP: arm1 -> 192.168.31.202, arm2 -> 192.168.31.203 -->
+  <!-- Default IP: arm1 -> 192.168.31.201, arm2 -> 192.168.31.202 -->
   <arg name="robot_ip" default="" doc="IP address of the robot (if empty, uses default based on arm_id)"/>
   
   <!-- Set default IP based on arm_id if robot_ip not provided -->
-  <arg if="$(eval arg('robot_ip') == '' and arg('arm_id') == 'arm1')" name="actual_robot_ip" value="192.168.31.202"/>
-  <arg if="$(eval arg('robot_ip') == '' and arg('arm_id') == 'arm2')" name="actual_robot_ip" value="192.168.31.203"/>
+  <arg if="$(eval arg('robot_ip') == '' and arg('arm_id') == 'arm1')" name="actual_robot_ip" value="192.168.31.201"/>
+  <arg if="$(eval arg('robot_ip') == '' and arg('arm_id') == 'arm2')" name="actual_robot_ip" value="192.168.31.202"/>
   <arg unless="$(eval arg('robot_ip') == '')" name="actual_robot_ip" value="$(arg robot_ip)"/>
   
   <!-- Control loop frequency -->

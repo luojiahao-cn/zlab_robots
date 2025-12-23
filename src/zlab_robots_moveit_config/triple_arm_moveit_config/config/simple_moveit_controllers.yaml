@@ -21,7 +21,7 @@ controller_list:
       - arm2_j4
       - arm2_j5
       - arm2_j6
-  - name: diana7_controller
+  - name: diana7/position_trajectory_controller
     action_ns: follow_joint_trajectory
     type: FollowJointTrajectory
     default: True

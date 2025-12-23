@@ -1,6 +1,7 @@
 <?xml version="1.0"?>
 <launch>
   <!-- Robot IP addresses -->
+  <arg name="diana7_ip" default="192.168.31.200" doc="IP address of diana7"/>
   <arg name="arm1_ip" default="192.168.31.201" doc="IP address of arm1"/>
   <arg name="arm2_ip" default="192.168.31.202" doc="IP address of arm2"/>
   
@@ -8,6 +9,7 @@
   <arg name="loop_hz" default="60.0" doc="Control loop frequency (Hz)"/>
   
   <!-- Tool parameters -->
+  <arg name="diana7_tool" default="none" doc="Tool name for diana7"/>
   <arg name="arm1_tool" default="none" doc="Tool name for arm1"/>
   <arg name="arm2_tool" default="none" doc="Tool name for arm2"/>
   
@@ -16,24 +18,31 @@
   <arg name="use_rviz" default="true" doc="Start RViz"/>
   
   <!-- Arm position parameters (optional) -->
-  <arg name="arm1_xyz" default="0 0 0" doc="Position of arm1 (x y z)"/>
-  <arg name="arm1_rpy" default="0 0 0" doc="Orientation of arm1 (roll pitch yaw)"/>
+  <arg name="diana7_xyz" default="0 0 0" doc="Position of diana7 (x y z)"/>
+  <arg name="diana7_rpy" default="0 0 0" doc="Orientation of diana7 (roll pitch yaw)"/>
+  <arg name="arm1_xyz" default="" doc="Position of arm1 (x y z), empty for default"/>
+  <arg name="arm1_rpy" default="" doc="Orientation of arm1 (roll pitch yaw), empty for default"/>
   <arg name="arm2_xyz" default="" doc="Position of arm2 (x y z), empty for default"/>
   <arg name="arm2_rpy" default="" doc="Orientation of arm2 (roll pitch yaw), empty for default"/>
   
   <!-- Launch hardware interface -->
-  <include file="$(find fr5_hardware)/launch/dual_arms_hardware.launch">
+  <include file="$(find fr5_hardware)/launch/triple_arms_hardware.launch">
+    <arg name="diana7_ip" value="$(arg diana7_ip)"/>
     <arg name="arm1_ip" value="$(arg arm1_ip)"/>
     <arg name="arm2_ip" value="$(arg arm2_ip)"/>
     <arg name="loop_hz" value="$(arg loop_hz)"/>
+    <arg name="diana7_tool" value="$(arg diana7_tool)"/>
     <arg name="arm1_tool" value="$(arg arm1_tool)"/>
     <arg name="arm2_tool" value="$(arg arm2_tool)"/>
   </include>
   
   <!-- Launch MoveIt -->
-  <include file="$(find fr5_dual_moveit_config)/launch/demo.launch">
+  <include file="$(find triple_arm_moveit_config)/launch/demo.launch">
+    <arg name="diana7_tool" value="$(arg diana7_tool)"/>
     <arg name="arm1_tool" value="$(arg arm1_tool)"/>
     <arg name="arm2_tool" value="$(arg arm2_tool)"/>
+    <arg name="diana7_xyz" value="$(arg diana7_xyz)"/>
+    <arg name="diana7_rpy" value="$(arg diana7_rpy)"/>
     <arg name="arm1_xyz" value="$(arg arm1_xyz)"/>
     <arg name="arm1_rpy" value="$(arg arm1_rpy)"/>
     <arg name="arm2_xyz" value="$(arg arm2_xyz)"/>

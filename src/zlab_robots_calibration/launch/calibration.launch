@@ -1,54 +1,53 @@
 <launch>
 
-  <!-- ===================== -->
-  <!-- 1. RealSense D405 -->
-  <!-- ===================== -->
-  <include file="$(find realsense2_camera)/launch/rs_camera.launch">
-    <!-- 基本开关 -->
-    <arg name="enable_color" value="true"/>
-    <arg name="enable_depth" value="true"/>
-    <arg name="align_depth" value="true"/>
+<!-- ===================== -->
+<!-- 1. RealSense D405 -->
+<!-- ===================== -->
+<include file="$(find realsense2_camera)/launch/rs_camera.launch">
+  <!-- 基本开关 -->
+  <arg name="enable_color" value="true"/>
+  <arg name="enable_depth" value="true"/>
+  <arg name="align_depth" value="true"/>
 
-    <!-- 推荐：固定分辨率和帧率（利于标定稳定） -->
-    <arg name="color_width"  value="848"/>
-    <arg name="color_height" value="480"/>
-    <arg name="color_fps"    value="30"/>
+  <!-- 推荐：固定分辨率和帧率（利于标定稳定） -->
+  <arg name="color_width"  value="848"/>
+  <arg name="color_height" value="480"/>
+  <arg name="color_fps"    value="30"/>
 
-    <arg name="depth_width"  value="848"/>
-    <arg name="depth_height" value="480"/>
-    <arg name="depth_fps"    value="30"/>
-  </include>
+  <arg name="depth_width"  value="848"/>
+  <arg name="depth_height" value="480"/>
+  <arg name="depth_fps"    value="30"/>
+</include>
+<!-- ===================== -->
+<!-- 2. AprilTag Node -->
+<!-- ===================== -->
+<node pkg="apriltag_ros"
+    type="apriltag_ros_continuous_node"
+    name="apriltag"
+    output="screen">
 
-  <!-- ===================== -->
-  <!-- 2. AprilTag detection -->
-  <!-- ===================== -->
-    <include file="$(find apriltag_ros)/launch/continuous_detection.launch">
-    <arg name="camera_name" value="camera"/>
-    <arg name="image_topic" value="/camera/color/image_raw"/>
-  </include>
+  <remap from="image_rect" to="/camera/color/image_raw"/>
+  <remap from="camera_info" to="/camera/color/camera_info"/>
 
-  
+  <param name="publish_tf" value="true"/>
+  <param name="publish_tag_detections_image" value="true"/>
 
-  <!-- ===================== -->
-  <!-- 3. Calibration Node -->
-  <!-- ===================== -->
-  <node pkg="zlab_robots_calibration"
-        type="calibration_node"
-        name="calibration_node"
-        output="screen">
+  <rosparam command="load"
+              file="$(find zlab_robots_calibration)/config/apriltag.yaml"/>
+</node>
 
-    <!-- 输入 topic -->
-    <param name="image_topic"      value="/camera/color/image_raw"/>
-    <param name="detections_topic" value="/apriltag_ros/tag_detections"/>
+<node pkg="image_view" type="image_view" name="image_tag_view" output="screen">
+  <remap from="image" to="/tag_detections_image"/>
+</node>
 
-    <!-- 行为控制 -->
-    <param name="show_window"        value="true"/>   <!-- OpenCV 窗口 -->
-    <param name="overlay_pose"       value="true"/>   <!-- 画面叠加 xyz+rpy -->
-    <param name="print_to_console"   value="true"/>   <!-- 终端输出 -->
-    <param name="stale_timeout_sec"  value="0.5"/>    <!-- 位姿超时 -->
+<!-- ===================== -->
+<!-- 3. Calibration Node -->
+<!-- ===================== -->
+<node pkg="zlab_robots_calibration"
+      type="calibration_node"
+      name="calibration_node"
+      output="screen">
 
-    <!-- 只关注的 tag ID（3~4 个） -->
-    <rosparam param="tag_ids">[0, 1, 2, 3]</rosparam>
-  </node>
+</node>
 
 </launch>

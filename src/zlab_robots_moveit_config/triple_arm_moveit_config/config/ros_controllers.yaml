@@ -121,7 +121,7 @@ arm2_controller:
       i: 1
       i_clamp: 1
 
-diana7_controller:
+position_trajectory_controller:
   type: position_controllers/JointTrajectoryController
   joints:
     - diana7_joint_1

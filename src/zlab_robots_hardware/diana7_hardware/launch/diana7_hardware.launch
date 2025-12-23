@@ -4,36 +4,47 @@
   <arg name="robot_ip" default="192.168.31.200"/>
   <arg name="load_robot_description" default="true"/>
   <arg name="tool_name" default="none"/>
+  <arg name="prefix" default=""/>
 
   <!-- Load Robot Description -->
   <group if="$(arg load_robot_description)">
     <param name="robot_description" command="$(find xacro)/xacro '$(find diana7_description)/urdf/diana7.urdf.xacro' tool_name:=$(arg tool_name)" />
   </group>
 
-  <!-- Load Controller Config -->
-  <rosparam file="$(find diana7_hardware)/config/diana7_controllers.yaml" command="load"/>
+  <!-- Controller and publisher options -->
+  <arg name="publish_robot_state" default="true" doc="Whether to publish robot state (set to false for multi-arm setups)"/>
 
-  <!-- Start Hardware Interface Node -->
-  <node name="diana7_hardware" pkg="diana7_hardware" type="diana7_hw_main" output="screen" ns="diana7">
-    <param name="ip_address" value="$(arg robot_ip)"/>
-    <rosparam param="joints">
-      - joint_1
-      - joint_2
-      - joint_3
-      - joint_4
-      - joint_5
-      - joint_6
-      - joint_7
-    </rosparam>
-    <!-- Remap joint_states if needed, but usually controller publishes it -->
-  </node>
+  <!-- Use group namespace (like FR5 approach) -->
+  <group ns="diana7">
+    <!-- Load Controller Config -->
+    <rosparam file="$(find diana7_hardware)/config/diana7_controllers.yaml" command="load" subst_value="true"/>
 
-  <!-- Load Controllers -->
-  <node name="controller_spawner" pkg="controller_manager" type="spawner" respawn="false" output="screen" ns="diana7"
-        args="joint_state_controller position_trajectory_controller"/>
+    <!-- Start Hardware Interface Node -->
+    <node name="diana7_hardware" pkg="diana7_hardware" type="diana7_hw_main" output="screen">
+      <param name="ip_address" value="$(arg robot_ip)"/>
+      <rosparam param="joints" subst_value="true">
+        - $(arg prefix)joint_1
+        - $(arg prefix)joint_2
+        - $(arg prefix)joint_3
+        - $(arg prefix)joint_4
+        - $(arg prefix)joint_5
+        - $(arg prefix)joint_6
+        - $(arg prefix)joint_7
+      </rosparam>
+      <!-- Remap joint_states if needed, but usually controller publishes it -->
+    </node>
 
-  <!-- Robot State Publisher -->
-  <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher" output="screen" ns="diana7">
+    <!-- Load Controllers -->
+    <node name="controller_spawner" pkg="controller_manager" type="spawner" respawn="false" output="screen"
+          args="joint_state_controller position_trajectory_controller"/>
+
+    <!-- Robot state publisher (only for single arm, multi-arm setups have their own) -->
+    <node if="$(arg publish_robot_state)" name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher" output="screen"/>
+  </group>
+
+  <!-- Joint state publisher to merge joint_states from namespace (for single arm) -->
+  <node if="$(arg publish_robot_state)" name="joint_state_publisher" pkg="joint_state_publisher" type="joint_state_publisher">
+    <rosparam param="source_list">[/diana7/joint_states]</rosparam>
   </node>
   
 </launch>

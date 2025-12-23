@@ -14,12 +14,6 @@
   <arg name="pipeline" default="ompl" doc="Planning pipeline to use with MoveIt"/>
   <arg name="use_rviz" default="true" doc="Use Rviz to visualize the robot"/>
   
-  <!-- Environment loading options -->
-  <arg name="load_environment" default="false" doc="Whether to load environment obstacles (walls, etc.)"/>
-  <arg name="environment_config" 
-       default="$(find fr5_bringup)/config/default_environment.yaml"
-       doc="Path to environment configuration YAML file"/>
-  
   <!-- Gazebo options -->
   <arg name="gazebo_gui" default="true" doc="Start Gazebo GUI"/>
   <arg name="paused" default="false" doc="Start Gazebo paused"/>
@@ -44,12 +38,5 @@
     <arg name="use_rviz" value="$(arg use_rviz)"/>
   </include>
   
-  <!-- Load environment (walls, obstacles) - must be after MoveIt -->
-  <!-- Note: For dual arms, you may want to use arm1 or create a separate config -->
-  <include file="$(find fr5_bringup)/launch/load_environment.launch">
-    <arg name="environment_config" value="$(arg environment_config)"/>
-    <arg name="load_environment" value="$(arg load_environment)"/>
-    <arg name="arm_id" value="arm1"/>  <!-- Default to arm1 for dual arm environment -->
-  </include>
 </launch>
 

@@ -26,19 +26,19 @@
 
 ### 单机械臂
 
-启动 arm1（默认 IP: 192.168.31.202）：
+启动 arm1（默认 IP: 192.168.31.201）：
 ```bash
 roslaunch fr5_hardware arm_hardware.launch arm_id:=arm1
 ```
 
-启动 arm2（默认 IP: 192.168.31.203）：
+启动 arm2（默认 IP: 192.168.31.202）：
 ```bash
 roslaunch fr5_hardware arm_hardware.launch arm_id:=arm2
 ```
 
 指定 IP 地址：
 ```bash
-roslaunch fr5_hardware arm_hardware.launch arm_id:=arm1 robot_ip:=192.168.31.202
+roslaunch fr5_hardware arm_hardware.launch arm_id:=arm1 robot_ip:=192.168.31.201
 ```
 
 指定工具：
@@ -50,8 +50,8 @@ roslaunch fr5_hardware arm_hardware.launch arm_id:=arm1 tool_name:=permanent_mag
 
 ```bash
 roslaunch fr5_hardware dual_arms_hardware.launch \
-    arm1_ip:=192.168.31.202 \
-    arm2_ip:=192.168.31.203 \
+    arm1_ip:=192.168.31.201 \
+    arm2_ip:=192.168.31.202 \
     arm1_tool:=permanent_magnet \
     arm2_tool:=electronic_magnet
 ```
