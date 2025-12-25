@@ -22,20 +22,42 @@
 项目包含以下主要包：
 
 ### 1. 启动包 (Bringup)
-- **fr5_bringup**: FR5 机械臂的启动文件包，提供单臂/双臂硬件及仿真启动脚本。
+- **zlab_robots_bringup**: 统一的启动文件包，提供单臂/双臂/三臂硬件及仿真启动脚本。
 
 ### 2. 描述包 (Descriptions)
-- **fr5_description**: FR5 机器人描述文件（URDF/Xacro）。
-- **diana7_description**: Diana7 机器人描述文件。
+- **zlab_robots_descriptions**: 包含所有机器人的描述文件。
+  - **fr5_description**: FR5 机器人描述文件（URDF/Xacro）。
+  - **diana7_description**: Diana7 机器人描述文件。
+  - **zlab_tools_description**: 各种末端工具描述文件。
 
 ### 3. 硬件接口包 (Hardware)
-- **fr5_hardware**: FR5 硬件接口，支持 TCP 通信协议。
-- **diana7_hardware**: Diana7 硬件接口，使用 **DianaApi** 进行通信。
+- **zlab_robots_hardware**: 包含所有机器人的硬件接口。
+  - **fr5_hardware**: FR5 硬件接口，支持 TCP 通信协议。
+  - **diana7_hardware**: Diana7 硬件接口，使用 **DianaApi** 进行通信。
 
 ### 4. MoveIt 配置包 (MoveIt Config)
-- **fr5_single_moveit_config**: FR5 单臂 MoveIt 配置。
-- **fr5_dual_moveit_config**: FR5 双臂 MoveIt 配置。
-- **diana7_moveit_config**: Diana7 MoveIt 配置。
+- **zlab_robots_moveit_config**: 包含所有机器人的 MoveIt 配置。
+  - **fr5_single_moveit_config**: FR5 单臂 MoveIt 配置。
+  - **fr5_dual_moveit_config**: FR5 双臂 MoveIt 配置。
+  - **diana7_moveit_config**: Diana7 MoveIt 配置。
+  - **triple_arm_moveit_config**: 三臂协作系统 MoveIt 配置。
+
+## 命名规范
+
+为了保证系统的统一性和可扩展性，所有机械臂遵循以下命名规范：
+
+- **关节命名**：`[arm_id]_joint_1` 到 `[arm_id]_joint_N`（例如 `arm1_joint_1`, `diana7_joint_1`）。
+- **连杆命名**：`[arm_id]_link_1` 到 `[arm_id]_link_N`。
+- **底座结构**：`world` -> `[arm_id]_pedestal_link` (固定底座) -> `[arm_id]_base_link` (机械臂基点)。
+- **末端结构**：`[arm_id]_link_N` -> `[arm_id]_flange` -> `[arm_id]_ee_link` (工具挂载点)。
+
+## 末端工具加载
+
+系统支持静态加载末端工具，通过 `tool_name` 参数指定。
+
+- **工具库**：位于 `zlab_tools_description/urdf/zlab_tools.xacro`。
+- **支持的工具**：`electronic_magnet`, `permanent_magnet`, `soft_finger`, `vacuum_gripper` 等。
+- **加载方式**：在启动文件或 Xacro 中设置 `tool_name` 参数即可，无需额外的配置文件。
 
 ## 特别说明：DianaApi
 
@@ -98,28 +120,32 @@ echo "source ~/zlab_robots/devel/setup.bash" >> ~/.bashrc
 #### 单臂启动
 
 ```bash
-# 启动 arm1（默认 IP: 192.168.31.202）
-roslaunch fr5_bringup single_arm_bringup.launch arm_id:=arm1
+# 启动 arm1（默认 IP: 192.168.31.201）
+roslaunch zlab_robots_bringup fr5_single_bringup.launch arm_id:=arm1
 
-# 启动 arm2（默认 IP: 192.168.31.203）
-roslaunch fr5_bringup single_arm_bringup.launch arm_id:=arm2
+# 启动 arm2（默认 IP: 192.168.31.202）
+roslaunch zlab_robots_bringup fr5_single_bringup.launch arm_id:=arm2
 ```
 
 #### 双臂启动
 
 ```bash
-# 使用默认 IP 地址
-roslaunch fr5_bringup dual_arms_bringup.launch
+# 使用默认 IP 地址 (arm1: 201, arm2: 202)
+roslaunch zlab_robots_bringup fr5_dual_bringup.launch
 ```
 
 ### Diana7 真实硬件启动
 
 ```bash
-# 启动 Diana7 硬件接口
-roslaunch diana7_hardware diana7_hardware.launch
+# 启动 Diana7 硬件及 MoveIt
+roslaunch zlab_robots_bringup diana7_bringup.launch robot_ip:=192.168.31.200
+```
 
-# 启动 Diana7 MoveIt 规划
-roslaunch diana7_moveit_config demo.launch
+### 三臂协作系统启动 (Diana7 + 2*FR5)
+
+```bash
+# 启动三臂硬件及 MoveIt
+roslaunch zlab_robots_bringup triple_arm_bringup.launch
 ```
 
 ### Gazebo 仿真启动 (FR5)
@@ -128,27 +154,28 @@ roslaunch diana7_moveit_config demo.launch
 
 ```bash
 # 启动单臂 Gazebo 仿真
-roslaunch fr5_bringup single_arm_gazebo.launch arm_id:=arm1
+roslaunch zlab_robots_bringup fr5_single_gazebo.launch arm_id:=arm1
 ```
 
 #### 双臂仿真
 
 ```bash
 # 启动双臂 Gazebo 仿真
-roslaunch fr5_bringup dual_arms_gazebo.launch
+roslaunch zlab_robots_bringup fr5_dual_gazebo.launch
 ```
 
 ### 仅启动硬件接口（不使用 MoveIt）
 
 ```bash
 # FR5 单臂
-roslaunch fr5_hardware arm_hardware.launch arm_id:=arm1
+roslaunch zlab_robots_hardware fr5_hardware.launch arm_id:=arm1
 
-# FR5 双臂
-roslaunch fr5_hardware dual_arms_hardware.launch
+# FR5 双臂 (需要分别启动两个硬件节点)
+roslaunch zlab_robots_hardware fr5_hardware.launch arm_id:=arm1
+roslaunch zlab_robots_hardware fr5_hardware.launch arm_id:=arm2
 
 # Diana7
-roslaunch diana7_hardware diana7_hardware.launch
+roslaunch zlab_robots_hardware diana7_hardware.launch
 ```
 
 ## 参数说明
@@ -163,8 +190,8 @@ roslaunch diana7_hardware diana7_hardware.launch
 ### 硬件启动参数 (FR5)
 
 - `robot_ip`: 机械臂 IP 地址（单臂启动时使用）
-- `arm1_ip`: arm1 的 IP 地址，默认 192.168.31.202
-- `arm2_ip`: arm2 的 IP 地址，默认 192.168.31.203
+- `arm1_ip`: arm1 的 IP 地址，默认 192.168.31.201
+- `arm2_ip`: arm2 的 IP 地址，默认 192.168.31.202
 - `loop_hz`: 控制循环频率，默认 60.0 Hz
 
 ## 标定后位姿修改
@@ -206,6 +233,22 @@ roslaunch triple_arm_moveit_config demo.launch \
 - 尝试降低 `loop_hz`。
 
 ## 更新日志
+
+### 2025-12-25
+1. **系统架构大重构**：
+   - 统一了所有机械臂的命名规范（`[arm_id]_joint_N` 和 `[arm_id]_link_N`）。
+   - 简化了 URDF 树结构，统一使用 `pedestal_link`、`base_link`、`flange` 和 `ee_link`。
+   - 整合了所有启动文件到 `zlab_robots_bringup` 包中。
+   - 重新组织了 FR5 启动文件，分为 `single` 和 `dual` 子目录。
+   - 更新了所有 MoveIt 配置以匹配新的命名规范。
+2. **工具加载机制简化**：
+   - 移除了动态工具加载逻辑（YAML/JSON），改为基于 `zlab_tools.xacro` 的静态加载。
+   - 删除了全局的 `tool_config` 参数，统一通过 `tool_name` 进行工具切换。
+3. **文件与资源清理**：
+   - 将 `fr.xacro` 重命名为 `fr5.xacro`。
+   - 将 `tools_library.xacro` 重命名为 `zlab_tools.xacro`。
+   - 重命名了 FR5 的原始网格文件（Mesh），使其符合 `link_N` 命名规范。
+   - 修复了标定节点（Calibration Nodes）和 RViz 配置中的硬编码链接名称。
 
 ### 2025-12-21
 1. **Diana7 描述包重构**：

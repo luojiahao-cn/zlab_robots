@@ -28,7 +28,7 @@
   <arg name="xyz" default="0 0 0"/>
   <arg name="rpy" default="0 0 0"/>
   <param if="$(arg load_robot_description)" name="robot_description"
-         command="$(find xacro)/xacro '$(find fr5_description)/fr5_description/urdf/fr.xacro'
+         command="$(find xacro)/xacro '$(find fr5_description)/urdf/fr5.xacro'
                  arm_id:=$(arg arm_id) tool_name:=$(arg tool_name)
                  layout_config:=$(arg layout_config) xyz:='$(arg xyz)' rpy:='$(arg rpy)'"/>
 
@@ -45,12 +45,12 @@
       
       <!-- Set joints based on arm_id (for hardware interface) -->
       <rosparam param="hardware_interface/joints" subst_value="true">
-        - $(arg arm_id)_j1
-        - $(arg arm_id)_j2
-        - $(arg arm_id)_j3
-        - $(arg arm_id)_j4
-        - $(arg arm_id)_j5
-        - $(arg arm_id)_j6
+        - $(arg arm_id)_joint_1
+        - $(arg arm_id)_joint_2
+        - $(arg arm_id)_joint_3
+        - $(arg arm_id)_joint_4
+        - $(arg arm_id)_joint_5
+        - $(arg arm_id)_joint_6
       </rosparam>
     </node>
 

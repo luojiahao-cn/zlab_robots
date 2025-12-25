@@ -434,8 +434,8 @@ private:
     // 获取两个机械臂末端变换
     bool getArmEndEffectorTransforms(geometry_msgs::TransformStamped &arm1_transform, geometry_msgs::TransformStamped &arm2_transform)
     {
-        arm1_transform = tf_buffer_.lookupTransform("arm1_base2_link", "arm1_ee_link", ros::Time(0));
-        arm2_transform = tf_buffer_.lookupTransform("arm2_base2_link", "arm2_ee_link", ros::Time(0));
+        arm1_transform = tf_buffer_.lookupTransform("arm1_base_link", "arm1_ee_link", ros::Time(0));
+        arm2_transform = tf_buffer_.lookupTransform("arm2_base_link", "arm2_ee_link", ros::Time(0));
         return true;
     }
 

@@ -16,7 +16,7 @@
     <!-- 加载机器人描述 -->
     <!-- xacro文件会自动处理标定文件加载 -->
     <param name="robot_description"
-        command="$(find xacro)/xacro $(find fr5_description)/fr5_description/urdf/zlab_dual_arms.xacro
+        command="$(find xacro)/xacro $(find fr5_description)/urdf/zlab_dual_arms.xacro
                 arm1_tool:=$(arg arm1_tool)
                 arm2_tool:=$(arg arm2_tool)
                 arm1_xyz:='$(arg arm1_xyz)'

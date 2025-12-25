@@ -1,4 +1,4 @@
-#include <fr5_bringup/environment_loader.h>
+#include <zlab_environment/environment_loader.h>
 #include <ros/package.h>
 #include <ros/ros.h>
 #include <geometry_msgs/Pose.h>
@@ -9,7 +9,7 @@
 #include <cstdlib>
 #include <sstream>
 
-namespace fr5_bringup
+namespace zlab_environment
 {
 
 EnvironmentLoader::EnvironmentLoader(ros::NodeHandle& nh) : nh_(nh), planning_scene_interface_("")
@@ -30,7 +30,7 @@ EnvironmentLoader::EnvironmentLoader(ros::NodeHandle& nh) : nh_(nh), planning_sc
   if (!nh_.getParam("environment_config", config_file_))
   {
     config_file_ = nh_.param<std::string>("environment_config", 
-      "$(find fr5_bringup)/config/default_environment.yaml");
+      "$(find zlab_environment)/config/default_environment.yaml");
   }
   
   ROS_INFO("Environment config file: %s", config_file_.c_str());
@@ -336,7 +336,7 @@ std::string EnvironmentLoader::replaceFrameId(const std::string& frame_id)
   }
   
   // 如果 frame_id 包含 arm1 或 arm2，但当前 arm_id 不同，则替换
-  // 支持 base_link, base0_link, base1_link, base2_link 等
+  // 支持 base_link, pedestal_link 等
   if (result.find("arm1_") == 0 && arm_id_ != "arm1")
   {
     result.replace(0, 5, arm_id_);
@@ -362,7 +362,7 @@ bool EnvironmentLoader::loadEnvironment()
   return true;
 }
 
-} // namespace fr5_bringup
+} // namespace zlab_environment
 
 // Main function
 int main(int argc, char** argv)
@@ -370,7 +370,7 @@ int main(int argc, char** argv)
   ros::init(argc, argv, "environment_loader");
   ros::NodeHandle nh("~");
   
-  fr5_bringup::EnvironmentLoader loader(nh);
+  zlab_environment::EnvironmentLoader loader(nh);
   
   if (loader.loadEnvironment())
   {

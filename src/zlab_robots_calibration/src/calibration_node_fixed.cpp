@@ -140,8 +140,8 @@ private:
       ros::Duration timeout(0.1);
 
       if (!tf_buffer_.canTransform("diana7_pedestal_link", "diana7_tcp", lookup_time, timeout) ||
-          !tf_buffer_.canTransform("arm1_base0_link", "arm1_tcp", lookup_time, timeout) ||
-          !tf_buffer_.canTransform("arm2_base0_link", "arm2_tcp", lookup_time, timeout))
+          !tf_buffer_.canTransform("arm1_pedestal_link", "arm1_tcp", lookup_time, timeout) ||
+          !tf_buffer_.canTransform("arm2_pedestal_link", "arm2_tcp", lookup_time, timeout))
       {
           // 如果这一帧的 TF 还没到，就跳过，不报错
           return;
@@ -150,9 +150,9 @@ private:
       auto T_diana_base_ee_msg =
           tf_buffer_.lookupTransform("diana7_pedestal_link", "diana7_tcp", lookup_time);
       auto T_fr1_base_ee_msg =
-          tf_buffer_.lookupTransform("arm1_base0_link", "arm1_tcp", lookup_time);
+          tf_buffer_.lookupTransform("arm1_pedestal_link", "arm1_tcp", lookup_time);
       auto T_fr2_base_ee_msg =
-          tf_buffer_.lookupTransform("arm2_base0_link", "arm2_tcp", lookup_time);
+          tf_buffer_.lookupTransform("arm2_pedestal_link", "arm2_tcp", lookup_time);
       // [修改结束]
 
       tf2::Transform T_diana_base_ee, T_fr1_base_ee, T_fr2_base_ee;

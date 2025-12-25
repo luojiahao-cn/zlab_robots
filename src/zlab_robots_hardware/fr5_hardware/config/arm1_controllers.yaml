@@ -7,31 +7,31 @@ joint_state_controller:
 arm1_controller:
   type: position_controllers/JointTrajectoryController
   joints:
-    - arm1_j1
-    - arm1_j2
-    - arm1_j3
-    - arm1_j4
-    - arm1_j5
-    - arm1_j6
+    - arm1_joint_1
+    - arm1_joint_2
+    - arm1_joint_3
+    - arm1_joint_4
+    - arm1_joint_5
+    - arm1_joint_6
   constraints:
     goal_time: 3.0
     stopped_velocity_tolerance: 0.0
-    arm1_j1:
+    arm1_joint_1:
       trajectory: 0.60
       goal: 0.15
-    arm1_j2:
+    arm1_joint_2:
       trajectory: 0.60
       goal: 0.15
-    arm1_j3:
+    arm1_joint_3:
       trajectory: 0.60
       goal: 0.15
-    arm1_j4:
+    arm1_joint_4:
       trajectory: 0.60
       goal: 0.15
-    arm1_j5:
+    arm1_joint_5:
       trajectory: 0.60
       goal: 0.15
-    arm1_j6:
+    arm1_joint_6:
       trajectory: 0.60
       goal: 0.15
 

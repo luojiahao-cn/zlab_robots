@@ -14,12 +14,12 @@
 
 #### 硬件启动
 ```bash
-roslaunch zlab_robots_bringup diana7/diana7_bringup.launch robot_ip:=192.168.31.200
+roslaunch zlab_robots_bringup diana7_bringup.launch robot_ip:=192.168.31.200
 ```
 
 #### 仿真/MoveIt 预览 (Fake Execution)
 ```bash
-roslaunch zlab_robots_bringup diana7/diana7_moveit.launch
+roslaunch zlab_robots_bringup diana7_moveit.launch
 ```
 
 ### 2. FR5 机械臂
@@ -27,45 +27,40 @@ roslaunch zlab_robots_bringup diana7/diana7_moveit.launch
 #### 单臂硬件启动
 ```bash
 # 启动 arm1
-roslaunch zlab_robots_bringup fr5/single/fr5_single_bringup.launch arm_id:=arm1
+roslaunch zlab_robots_bringup fr5_single_bringup.launch arm_id:=arm1
 ```
 
 #### 单臂 MoveIt 预览
 ```bash
-roslaunch zlab_robots_bringup fr5/single/fr5_single_moveit.launch arm_id:=arm1
+roslaunch zlab_robots_bringup fr5_single_moveit.launch arm_id:=arm1
 ```
 
 #### 双臂硬件启动
 ```bash
-roslaunch zlab_robots_bringup fr5/dual/fr5_dual_bringup.launch
+roslaunch zlab_robots_bringup fr5_dual_bringup.launch
 ```
 
 #### 双臂 MoveIt 预览
 ```bash
-roslaunch zlab_robots_bringup fr5/dual/fr5_dual_moveit.launch
+roslaunch zlab_robots_bringup fr5_dual_moveit.launch
 ```
 
 #### Gazebo 仿真
 ```bash
 # 单臂
-roslaunch zlab_robots_bringup fr5/single/fr5_single_gazebo.launch
+roslaunch zlab_robots_bringup fr5_single_gazebo.launch
 # 双臂
-roslaunch zlab_robots_bringup fr5/dual/fr5_dual_gazebo.launch
+roslaunch zlab_robots_bringup fr5_dual_gazebo.launch
 ```
 
 ### 3. 三臂协作系统 (Diana7 + 2*FR5)
 
 #### 硬件启动
 ```bash
-roslaunch zlab_robots_bringup triple_arm/triple_arm_bringup.launch
+roslaunch zlab_robots_bringup triple_arm_bringup.launch
 ```
 
 #### MoveIt 预览
-```bash
-roslaunch zlab_robots_bringup triple_arm/triple_arm_moveit.launch
-```
-
-#### 三臂 MoveIt 预览
 ```bash
 roslaunch zlab_robots_bringup triple_arm_moveit.launch
 ```
@@ -80,7 +75,7 @@ roslaunch zlab_robots_bringup triple_arm_moveit.launch
 ### 环境加载参数
 
 - `load_environment`: 是否加载环境障碍物（墙壁等），默认 true
-- `environment_config`: 环境配置文件路径，默认 `$(find fr5_bringup)/config/default_environment.yaml`
+- `environment_config`: 环境配置文件路径，默认 `$(find zlab_robots_bringup)/config/default_environment.yaml`
 
 ### 硬件启动参数
 

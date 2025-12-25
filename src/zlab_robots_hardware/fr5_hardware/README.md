@@ -50,7 +50,7 @@ roslaunch fr5_hardware fr5_hardware.launch arm_id:=arm1 tool_name:=permanent_mag
 
 使用 bringup 包启动：
 ```bash
-roslaunch fr5_bringup dual_arms_bringup.launch \
+roslaunch zlab_robots_bringup fr5_dual_bringup.launch \
     arm1_ip:=192.168.31.201 \
     arm2_ip:=192.168.31.202 \
     arm1_tool:=permanent_magnet \
@@ -79,12 +79,10 @@ roslaunch fr5_bringup dual_arms_bringup.launch \
 
 ```bash
 # 单臂
-roslaunch fr5_single_moveit_config demo.launch \
-    moveit_controller_manager:=ros_control
+roslaunch zlab_robots_bringup fr5_single_bringup.launch arm_id:=arm1
 
 # 双臂
-roslaunch fr5_dual_moveit_config demo.launch \
-    moveit_controller_manager:=ros_control
+roslaunch zlab_robots_bringup fr5_dual_bringup.launch
 ```
 
 ## 文件结构

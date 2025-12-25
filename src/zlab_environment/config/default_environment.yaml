@@ -1,14 +1,14 @@
 # 环境障碍物配置
 # 坐标系：相对于机器人基座（使用 {arm_id} 占位符，会自动替换为实际的 arm_id）
 # 单位：米
-# 注意：机械臂的基座链接是 {arm_id}_base0_link（最底部）或 {arm_id}_base2_link（上层）
+# 注意：机械臂的基座链接是 {arm_id}_pedestal_link（最底部）或 {arm_id}_base_link（上层）
 # 也可以使用 world 坐标系（固定坐标系）
 
 collision_objects:
   # 左墙（机器人左侧）
   - id: left_wall
     type: box
-    frame_id: "{arm_id}_base0_link"  # 使用最底部的基座链接
+    frame_id: "{arm_id}_pedestal_link"  # 使用最底部的基座链接
     position: [0.0, -0.7, 0.8]  # 墙中心在机器人后方 0.7m，高度中心 0.8m
     orientation: [0, 0, 0, 1]   # quaternion (x, y, z, w)
     dimensions: [1.6, 0.05, 1.6]  # 长、厚、 高
@@ -17,7 +17,7 @@ collision_objects:
   # 后墙（机器人后方）
   - id: back_wall
     type: box
-    frame_id: "{arm_id}_base0_link"
+    frame_id: "{arm_id}_pedestal_link"
     position: [-0.7, 0.0, 0.8]       # 左侧 0.7m
     orientation: [0, 0, 0, 1]
     dimensions: [0.05, 1.6, 1.6]     # 厚度 0.05m，高度 1.6m，宽度 1.6m
@@ -26,7 +26,7 @@ collision_objects:
   # 前墙（机器人前方）
   # - id: front_wall
   #   type: box
-  #   frame_id: "{arm_id}_base0_link"
+  #   frame_id: "{arm_id}_pedestal_link"
   #   position: [0.7, 0.0, 0.8]        # 右侧 0.7m
   #   orientation: [0, 0, 0, 1]
   #   dimensions: [0.05, 1.6, 1.6]
@@ -35,7 +35,7 @@ collision_objects:
   # 右墙（机器人右侧）
   - id: right_wall
     type: box
-    frame_id: "{arm_id}_base0_link"
+    frame_id: "{arm_id}_pedestal_link"
     position: [0.0, 0.7, 0.8]     # 前方 0.7m
     orientation: [0, 0, 0, 1]
     dimensions: [1.6, 0.05, 1.6]
@@ -44,7 +44,7 @@ collision_objects:
   # 地面（防止向下碰撞，可选）
   - id: floor
     type: box
-    frame_id: "{arm_id}_base0_link"
+    frame_id: "{arm_id}_pedestal_link"
     position: [0.0, 0.0, -0.051]      # 厚度 0.1m，顶面与 base0 高度齐平
     orientation: [0, 0, 0, 1]
     dimensions: [1.6, 1.6, 0.1]

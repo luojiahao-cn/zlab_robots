@@ -1,60 +1,60 @@
 arm1_controller:
   type: position_controllers/JointTrajectoryController
   joints:
-    - arm1_j1
-    - arm1_j2
-    - arm1_j3
-    - arm1_j4
-    - arm1_j5
-    - arm1_j6
+    - arm1_joint_1
+    - arm1_joint_2
+    - arm1_joint_3
+    - arm1_joint_4
+    - arm1_joint_5
+    - arm1_joint_6
   constraints:
     goal_time: 3.0
     stopped_velocity_tolerance: 0.0
-    arm1_j1:
+    arm1_joint_1:
       trajectory: 0.05
       goal: 0.01
-    arm1_j2:
+    arm1_joint_2:
       trajectory: 0.05
       goal: 0.01
-    arm1_j3:
+    arm1_joint_3:
       trajectory: 0.05
       goal: 0.01
-    arm1_j4:
+    arm1_joint_4:
       trajectory: 0.05
       goal: 0.01
-    arm1_j5:
+    arm1_joint_5:
       trajectory: 0.05
       goal: 0.01
-    arm1_j6:
+    arm1_joint_6:
       trajectory: 0.05
       goal: 0.01
   gains:
-    arm1_j1:
+    arm1_joint_1:
       p: 100
       d: 1
       i: 1
       i_clamp: 1
-    arm1_j2:
+    arm1_joint_2:
       p: 100
       d: 1
       i: 1
       i_clamp: 1
-    arm1_j3:
+    arm1_joint_3:
       p: 100
       d: 1
       i: 1
       i_clamp: 1
-    arm1_j4:
+    arm1_joint_4:
       p: 100
       d: 1
       i: 1
       i_clamp: 1
-    arm1_j5:
+    arm1_joint_5:
       p: 100
       d: 1
       i: 1
       i_clamp: 1
-    arm1_j6:
+    arm1_joint_6:
       p: 100
       d: 1
       i: 1
@@ -62,60 +62,60 @@ arm1_controller:
 arm2_controller:
   type: position_controllers/JointTrajectoryController
   joints:
-    - arm2_j1
-    - arm2_j2
-    - arm2_j3
-    - arm2_j4
-    - arm2_j5
-    - arm2_j6
+    - arm2_joint_1
+    - arm2_joint_2
+    - arm2_joint_3
+    - arm2_joint_4
+    - arm2_joint_5
+    - arm2_joint_6
   constraints:
     goal_time: 3.0
     stopped_velocity_tolerance: 0.0
-    arm2_j1:
+    arm2_joint_1:
       trajectory: 0.05
       goal: 0.01
-    arm2_j2:
+    arm2_joint_2:
       trajectory: 0.05
       goal: 0.01
-    arm2_j3:
+    arm2_joint_3:
       trajectory: 0.05
       goal: 0.01
-    arm2_j4:
+    arm2_joint_4:
       trajectory: 0.05
       goal: 0.01
-    arm2_j5:
+    arm2_joint_5:
       trajectory: 0.05
       goal: 0.01
-    arm2_j6:
+    arm2_joint_6:
       trajectory: 0.05
       goal: 0.01
   gains:
-    arm2_j1:
+    arm2_joint_1:
       p: 100
       d: 1
       i: 1
       i_clamp: 1
-    arm2_j2:
+    arm2_joint_2:
       p: 100
       d: 1
       i: 1
       i_clamp: 1
-    arm2_j3:
+    arm2_joint_3:
       p: 100
       d: 1
       i: 1
       i_clamp: 1
-    arm2_j4:
+    arm2_joint_4:
       p: 100
       d: 1
       i: 1
       i_clamp: 1
-    arm2_j5:
+    arm2_joint_5:
       p: 100
       d: 1
       i: 1
       i_clamp: 1
-    arm2_j6:
+    arm2_joint_6:
       p: 100
       d: 1
       i: 1
@@ -124,34 +124,34 @@ arm2_controller:
 position_trajectory_controller:
   type: position_controllers/JointTrajectoryController
   joints:
-    - diana7_j1
-    - diana7_j2
-    - diana7_j3
-    - diana7_j4
-    - diana7_j5
-    - diana7_j6
-    - diana7_j7
+    - diana7_joint_1
+    - diana7_joint_2
+    - diana7_joint_3
+    - diana7_joint_4
+    - diana7_joint_5
+    - diana7_joint_6
+    - diana7_joint_7
   constraints:
     goal_time: 3.0
     stopped_velocity_tolerance: 0.0
-    diana7_j1:
+    diana7_joint_1:
       trajectory: 0.05
       goal: 0.01
-    diana7_j2:
+    diana7_joint_2:
       trajectory: 0.05
       goal: 0.01
-    diana7_j3:
+    diana7_joint_3:
       trajectory: 0.05
       goal: 0.01
-    diana7_j4:
+    diana7_joint_4:
       trajectory: 0.05
       goal: 0.01
-    diana7_j5:
+    diana7_joint_5:
       trajectory: 0.05
       goal: 0.01
-    diana7_j6:
+    diana7_joint_6:
       trajectory: 0.05
       goal: 0.01
-    diana7_j7:
+    diana7_joint_7:
       trajectory: 0.05
       goal: 0.01

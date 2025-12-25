@@ -3,7 +3,8 @@
 
     <!-- Layout configuration file -->
     <xacro:arg name="layout_config" default=""/>
-    <xacro:property name="layout" value="${xacro.load_yaml(arg('layout_config')) if arg('layout_config') else dict()}"/>
+    <xacro:property name="layout_config_file" value="$(arg layout_config)"/>
+    <xacro:property name="layout" value="${xacro.load_yaml(layout_config_file) if layout_config_file else dict()}"/>
 
     <!-- 定义参数 -->
     <!-- arm_id: 机械臂ID，可以是 arm1, arm2 等，默认为 arm1 -->
@@ -16,10 +17,10 @@
     <xacro:arg name="rpy" default="0 0 0"/>
 
     <!-- 加载工具库 -->
-    <xacro:include filename="$(find zlab_tools_description)/urdf/tools_library.xacro" />
+    <xacro:include filename="$(find zlab_tools_description)/urdf/zlab_tools.xacro" />
 
     <!-- 加载机械臂库 -->
-    <xacro:include filename="$(find fr5_description)/fr5_description/urdf/fr5_library.xacro" />
+    <xacro:include filename="$(find fr5_description)/urdf/fr5_library.xacro" />
 
     <!-- 添加虚拟根链接 -->
     <link name="world" />
@@ -38,18 +39,14 @@
         connected_to="world" 
         xyz="${xyz_final}" 
         rpy="${rpy_final}"
-        tool_name="none"
-        tool_config="{}" />
+        tool_name="$(arg tool_name)" />
 
-    <!-- 加载工具 -->
-    <xacro:load_tool tool_name="$(arg tool_name)" prefix="$(arg arm_id)_" parent="$(arg arm_id)_ee_link"/>
-
-    <xacro:gazebo-joint joint="$(arg arm_id)_j1" />
-    <xacro:gazebo-joint joint="$(arg arm_id)_j2" />
-    <xacro:gazebo-joint joint="$(arg arm_id)_j3" />
-    <xacro:gazebo-joint joint="$(arg arm_id)_j4" />
-    <xacro:gazebo-joint joint="$(arg arm_id)_j5" />
-    <xacro:gazebo-joint joint="$(arg arm_id)_j6" />
+    <xacro:gazebo-joint joint="$(arg arm_id)_joint_1" />
+    <xacro:gazebo-joint joint="$(arg arm_id)_joint_2" />
+    <xacro:gazebo-joint joint="$(arg arm_id)_joint_3" />
+    <xacro:gazebo-joint joint="$(arg arm_id)_joint_4" />
+    <xacro:gazebo-joint joint="$(arg arm_id)_joint_5" />
+    <xacro:gazebo-joint joint="$(arg arm_id)_joint_6" />
 
     <!-- load ros_control plugin -->
     <gazebo>

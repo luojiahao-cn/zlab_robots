@@ -29,7 +29,7 @@
 
   <!-- Set the robot urdf on the parameter server -->
   <param name="robot_description"
-         command="$(find xacro)/xacro '$(find fr5_description)/fr5_description/urdf/fr.xacro'
+         command="$(find xacro)/xacro '$(find fr5_description)/urdf/fr5.xacro'
                  arm_id:=$(arg arm_id) tool_name:=$(arg tool_name)"/>
 
   <!-- Unpause the simulation after loading the robot model -->

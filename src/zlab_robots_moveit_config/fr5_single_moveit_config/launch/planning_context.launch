@@ -13,14 +13,14 @@
 
   <!-- Load universal robot description format (URDF) -->
   <param if="$(arg load_robot_description)" name="$(arg robot_description)"
-         command="$(find xacro)/xacro '$(find fr5_description)/fr5_description/urdf/fr.xacro'
+         command="$(find xacro)/xacro '$(find fr5_description)/urdf/fr5.xacro'
                  arm_id:=$(arg arm_id) tool_name:=$(arg tool_name)"/>
 
   <!-- The semantic description that corresponds to the URDF -->
-  <!-- Use xacro to process SRDF file with arm_id and tool_name parameters for dynamic collision disable -->
+  <!-- Use xacro to process SRDF file with arm_id parameter -->
   <param name="$(arg robot_description)_semantic" 
-         command="$(find xacro)/xacro '$(find fr5_single_moveit_config)/config/fr.srdf.xacro' 
-                 arm_id:=$(arg arm_id) tool_name:=$(arg tool_name)" />
+         command="$(find xacro)/xacro '$(find fr5_single_moveit_config)/config/fr5.srdf.xacro' 
+                 arm_id:=$(arg arm_id)" />
 
   <!-- Load updated joint limits (override information from URDF) -->
   <group ns="$(arg robot_description)_planning">

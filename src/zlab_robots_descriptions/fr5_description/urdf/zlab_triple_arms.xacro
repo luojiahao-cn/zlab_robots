@@ -3,7 +3,8 @@
 
     <!-- Layout configuration file -->
     <xacro:arg name="layout_config" default=""/>
-    <xacro:property name="layout" value="${xacro.load_yaml(arg('layout_config')) if arg('layout_config') else dict()}"/>
+    <xacro:property name="layout_config_file" value="$(arg layout_config)"/>
+    <xacro:property name="layout" value="${xacro.load_yaml(layout_config_file) if layout_config_file else dict()}"/>
 
     <!-- Arguments for positions -->
     <!-- Diana7 (Center) -->
@@ -40,31 +41,55 @@
     <xacro:arg name="diana7_tool" default="none"/>
 
     <!-- Include Macros -->
-    <xacro:include filename="$(find fr5_description)/fr5_description/urdf/fr5_library.xacro" />
+    <xacro:include filename="$(find fr5_description)/urdf/fr5_library.xacro" />
     <xacro:include filename="$(find diana7_description)/urdf/diana7_macro.xacro" />
-    <xacro:include filename="$(find zlab_tools_description)/urdf/tools_library.xacro" />
+    <xacro:include filename="$(find zlab_tools_description)/urdf/zlab_tools.xacro" />
 
     <!-- World Link -->
     <link name="world" />
 
     <!-- Instantiate Diana7 -->
-    <xacro:diana7_robot prefix="diana7_" parent="world">
+    <xacro:diana7_robot 
+        prefix="diana7_" 
+        parent="world"
+        tool_name="$(arg diana7_tool)">
         <origin xyz="${diana7_xyz_final}" rpy="${diana7_rpy_final}"/>
     </xacro:diana7_robot>
 
-    <!-- Load Tool for Diana7 -->
-    <xacro:load_tool tool_name="$(arg diana7_tool)" prefix="diana7_" parent="diana7_link_7"/>
-
     <!-- Instantiate FR5 Arm 1 -->
-    <xacro:fr arm_id="arm1" connected_to="world" xyz="${arm1_xyz_final}" rpy="${arm1_rpy_final}" tool_name="none"/>
+    <xacro:fr 
+        arm_id="arm1" 
+        connected_to="world" 
+        xyz="${arm1_xyz_final}" 
+        rpy="${arm1_rpy_final}" 
+        tool_name="$(arg arm1_tool)"/>
     
-    <!-- Load Tool for Arm 1 -->
-    <xacro:load_tool tool_name="$(arg arm1_tool)" prefix="arm1_" parent="arm1_ee_link"/>
-
     <!-- Instantiate FR5 Arm 2 -->
-    <xacro:fr arm_id="arm2" connected_to="world" xyz="${arm2_xyz_final}" rpy="${arm2_rpy_final}" tool_name="none"/>
-    
-    <!-- Load Tool for Arm 2 -->
-    <xacro:load_tool tool_name="$(arg arm2_tool)" prefix="arm2_" parent="arm2_ee_link"/>
+    <xacro:fr 
+        arm_id="arm2" 
+        connected_to="world" 
+        xyz="${arm2_xyz_final}" 
+        rpy="${arm2_rpy_final}" 
+        tool_name="$(arg arm2_tool)"/>
+
+    <!-- Gazebo Transmissions for FR5 arms -->
+    <xacro:gazebo-joint joint="arm1_joint_1" />
+    <xacro:gazebo-joint joint="arm1_joint_2" />
+    <xacro:gazebo-joint joint="arm1_joint_3" />
+    <xacro:gazebo-joint joint="arm1_joint_4" />
+    <xacro:gazebo-joint joint="arm1_joint_5" />
+    <xacro:gazebo-joint joint="arm1_joint_6" />
+
+    <xacro:gazebo-joint joint="arm2_joint_1" />
+    <xacro:gazebo-joint joint="arm2_joint_2" />
+    <xacro:gazebo-joint joint="arm2_joint_3" />
+    <xacro:gazebo-joint joint="arm2_joint_4" />
+    <xacro:gazebo-joint joint="arm2_joint_5" />
+    <xacro:gazebo-joint joint="arm2_joint_6" />
+
+    <!-- load ros_control plugin -->
+    <gazebo>
+        <plugin name="gazebo_ros_control" filename="libgazebo_ros_control.so" />
+    </gazebo>
 
 </robot>

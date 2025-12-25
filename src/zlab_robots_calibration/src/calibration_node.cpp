@@ -194,9 +194,9 @@ private:
       auto T_diana_base_ee_msg =
           tf_buffer_.lookupTransform("diana7_pedestal_link", "diana7_tcp", stamp, ros::Duration(0.05));
       auto T_fr1_base_ee_msg =
-          tf_buffer_.lookupTransform("arm1_base0_link", "arm1_tcp", stamp, ros::Duration(0.05));
+          tf_buffer_.lookupTransform("arm1_pedestal_link", "arm1_tcp", stamp, ros::Duration(0.05));
       auto T_fr2_base_ee_msg =
-          tf_buffer_.lookupTransform("arm2_base0_link", "arm2_tcp", stamp, ros::Duration(0.05));
+          tf_buffer_.lookupTransform("arm2_pedestal_link", "arm2_tcp", stamp, ros::Duration(0.05));
       tf2::Transform T_diana_base_ee, T_fr1_base_ee, T_fr2_base_ee;
       tf2::fromMsg(T_diana_base_ee_msg.transform, T_diana_base_ee);
       tf2::fromMsg(T_fr1_base_ee_msg.transform,   T_fr1_base_ee);

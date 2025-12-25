@@ -3,7 +3,8 @@
 
     <!-- Layout configuration file -->
     <xacro:arg name="layout_config" default=""/>
-    <xacro:property name="layout" value="${xacro.load_yaml(arg('layout_config')) if arg('layout_config') else dict()}"/>
+    <xacro:property name="layout_config_file" value="$(arg layout_config)"/>
+    <xacro:property name="layout" value="${xacro.load_yaml(layout_config_file) if layout_config_file else dict()}"/>
 
     <!-- 定义参数 -->
     <!-- arm1 工具参数 -->
@@ -18,9 +19,9 @@
     <xacro:arg name="arm2_rpy" default=""/>
 
     <!-- 加载机械臂库 -->
-    <xacro:include filename="$(find fr5_description)/fr5_description/urdf/fr5_library.xacro" />
+    <xacro:include filename="$(find fr5_description)/urdf/fr5_library.xacro" />
     <!-- 加载工具库 -->
-    <xacro:include filename="$(find zlab_tools_description)/urdf/tools_library.xacro" />
+    <xacro:include filename="$(find zlab_tools_description)/urdf/zlab_tools.xacro" />
 
     <!-- 创建世界坐标系 -->
     <link name="world" />
@@ -69,18 +70,14 @@
         connected_to="world" 
         xyz="${arm1_xyz_final}"
         rpy="${arm1_rpy_final}"
-        tool_name="none"
-        tool_config="{}" />
+        tool_name="$(arg arm1_tool)" />
     
-    <!-- 加载 arm1 工具 -->
-    <xacro:load_tool tool_name="$(arg arm1_tool)" prefix="arm1_" parent="arm1_ee_link"/>
-
-    <xacro:gazebo-joint joint="arm1_j1" />
-    <xacro:gazebo-joint joint="arm1_j2" />
-    <xacro:gazebo-joint joint="arm1_j3" />
-    <xacro:gazebo-joint joint="arm1_j4" />
-    <xacro:gazebo-joint joint="arm1_j5" />
-    <xacro:gazebo-joint joint="arm1_j6" />
+    <xacro:gazebo-joint joint="arm1_joint_1" />
+    <xacro:gazebo-joint joint="arm1_joint_2" />
+    <xacro:gazebo-joint joint="arm1_joint_3" />
+    <xacro:gazebo-joint joint="arm1_joint_4" />
+    <xacro:gazebo-joint joint="arm1_joint_5" />
+    <xacro:gazebo-joint joint="arm1_joint_6" />
 
     <!-- ========== 实例化 arm2 ========== -->
     <xacro:fr 
@@ -88,18 +85,14 @@
         connected_to="world" 
         xyz="${arm2_xyz_final}"
         rpy="${arm2_rpy_final}"
-        tool_name="none"
-        tool_config="{}" />
+        tool_name="$(arg arm2_tool)" />
 
-    <!-- 加载 arm2 工具 -->
-    <xacro:load_tool tool_name="$(arg arm2_tool)" prefix="arm2_" parent="arm2_ee_link"/>
-
-    <xacro:gazebo-joint joint="arm2_j1" />
-    <xacro:gazebo-joint joint="arm2_j2" />
-    <xacro:gazebo-joint joint="arm2_j3" />
-    <xacro:gazebo-joint joint="arm2_j4" />
-    <xacro:gazebo-joint joint="arm2_j5" />
-    <xacro:gazebo-joint joint="arm2_j6" />
+    <xacro:gazebo-joint joint="arm2_joint_1" />
+    <xacro:gazebo-joint joint="arm2_joint_2" />
+    <xacro:gazebo-joint joint="arm2_joint_3" />
+    <xacro:gazebo-joint joint="arm2_joint_4" />
+    <xacro:gazebo-joint joint="arm2_joint_5" />
+    <xacro:gazebo-joint joint="arm2_joint_6" />
 
     <!-- load ros_control plugin -->
     <gazebo>

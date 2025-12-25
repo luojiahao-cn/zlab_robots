@@ -9,32 +9,32 @@ default_acceleration_scaling_factor: 0.1
 # Joint limits can be turned off with [has_velocity_limits, has_acceleration_limits]
 # Note: Joint names use $(arg arm_id) placeholder which will be replaced in launch files
 joint_limits:
-  $(arg arm_id)_j1:
+  $(arg arm_id)_joint_1:
     has_velocity_limits: true
     max_velocity: 3.15
     has_acceleration_limits: false
     max_acceleration: 0
-  $(arg arm_id)_j2:
+  $(arg arm_id)_joint_2:
     has_velocity_limits: true
     max_velocity: 3.15
     has_acceleration_limits: false
     max_acceleration: 0
-  $(arg arm_id)_j3:
+  $(arg arm_id)_joint_3:
     has_velocity_limits: true
     max_velocity: 3.15
     has_acceleration_limits: false
     max_acceleration: 0
-  $(arg arm_id)_j4:
+  $(arg arm_id)_joint_4:
     has_velocity_limits: true
     max_velocity: 3.2
     has_acceleration_limits: false
     max_acceleration: 0
-  $(arg arm_id)_j5:
+  $(arg arm_id)_joint_5:
     has_velocity_limits: true
     max_velocity: 3.2
     has_acceleration_limits: false
     max_acceleration: 0
-  $(arg arm_id)_j6:
+  $(arg arm_id)_joint_6:
     has_velocity_limits: true
     max_velocity: 3.2
     has_acceleration_limits: false

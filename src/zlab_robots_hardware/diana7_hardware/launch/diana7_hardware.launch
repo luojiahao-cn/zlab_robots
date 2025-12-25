@@ -32,13 +32,13 @@
       <param name="ip_address" value="$(arg robot_ip)"/>
       <param name="loop_hz" value="$(arg loop_hz)"/>
       <rosparam param="joints" subst_value="true">
-        - $(arg prefix)j1
-        - $(arg prefix)j2
-        - $(arg prefix)j3
-        - $(arg prefix)j4
-        - $(arg prefix)j5
-        - $(arg prefix)j6
-        - $(arg prefix)j7
+        - $(arg prefix)joint_1
+        - $(arg prefix)joint_2
+        - $(arg prefix)joint_3
+        - $(arg prefix)joint_4
+        - $(arg prefix)joint_5
+        - $(arg prefix)joint_6
+        - $(arg prefix)joint_7
       </rosparam>
       <!-- Remap joint_states if needed, but usually controller publishes it -->
     </node>

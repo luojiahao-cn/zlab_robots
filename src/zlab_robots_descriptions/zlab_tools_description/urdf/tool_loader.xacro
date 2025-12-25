@@ -1,8 +1,8 @@
 <?xml version="1.0"?>
 <robot xmlns:xacro="http://www.ros.org/wiki/xacro">
 
-    <!-- ========== 加载工具宏 ========== -->
-    <xacro:macro name="load_tool" params="arm_id tool_name tool_config">
+    <!-- ========== 加载工具宏 (从配置加载) ========== -->
+    <xacro:macro name="load_tool_from_config" params="arm_id tool_name tool_config parent">
         <!-- 解析工具配置 -->
         <xacro:property name="tool_type" value="${tool_config['tool_type']}" />
 
@@ -86,9 +86,9 @@
                 </xacro:if>
             </link>
 
-            <!-- 创建从ee_link到工具链接的关节 -->
+            <!-- 创建从父链接到工具链接的关节 -->
             <joint name="${arm_id}_${tool_name}_joint" type="fixed">
-                <parent link="${arm_id}_ee_link" />
+                <parent link="${parent}" />
                 <child link="${arm_id}_${tool_name}_link" />
                 <origin xyz="0 0 0" rpy="0 0 0" />
             </joint>
@@ -143,9 +143,9 @@
                 <xacro:include filename="${tool_file_path}"/>
             </xacro:unless>
             
-            <!-- 创建从ee_link到工具根链接的关节 -->
+            <!-- 创建从父链接到工具根链接的关节 -->
             <joint name="${arm_id}_${tool_name}_joint" type="fixed">
-                <parent link="${arm_id}_ee_link" />
+                <parent link="${parent}" />
                 <child link="${arm_id}_${root_link_name}" />
                 <origin
                     xyz="${mount_xyz[0]} ${mount_xyz[1]} ${mount_xyz[2]}"

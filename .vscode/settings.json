@@ -98,5 +98,6 @@
     "python.analysis.extraPaths": [
         "/home/zhang/magmed_ws/devel/lib/python3/dist-packages",
         "/opt/ros/noetic/lib/python3/dist-packages"
-    ]
+    ],
+    "github.copilot.chat.codeGeneration.useInstructionFiles": true
 }

@@ -1,5 +1,5 @@
-#ifndef ZLAB_ARM_BRINGUP_ENVIRONMENT_LOADER_H
-#define ZLAB_ARM_BRINGUP_ENVIRONMENT_LOADER_H
+#ifndef ZLAB_ENVIRONMENT_ENVIRONMENT_LOADER_H
+#define ZLAB_ENVIRONMENT_ENVIRONMENT_LOADER_H
 
 #include <ros/ros.h>
 #include <moveit_msgs/CollisionObject.h>
@@ -8,7 +8,7 @@
 #include <string>
 #include <vector>
 
-namespace fr5_bringup
+namespace zlab_environment
 {
 
 class EnvironmentLoader
@@ -34,7 +34,7 @@ private:
   std::string arm_id_;  // 用于动态替换 frame_id
 };
 
-} // namespace fr5_bringup
+} // namespace zlab_environment
 
-#endif // ZLAB_ARM_BRINGUP_ENVIRONMENT_LOADER_H
+#endif // ZLAB_ENVIRONMENT_ENVIRONMENT_LOADER_H
 
