@@ -1,3 +1,5 @@
+
+// filepath: /home/chen/Downloads/zlab_robots-master/sss.cpp
 #include <ros/ros.h>
 
 #include <sensor_msgs/Image.h>
@@ -14,14 +16,9 @@
 
 #include <opencv2/opencv.hpp>
 #include <tf2_ros/transform_listener.h>
-#include <tf2_ros/transform_broadcaster.h>
 #include <tf2_ros/buffer.h>
 #include <tf2_geometry_msgs/tf2_geometry_msgs.h>
 
-#include <thread>
-
-#include "zlab_robots_calibration/calibrate_algorithm.h"
-std::thread keyboard_thread_;
 
 class CalibrationNode
 {
@@ -33,17 +30,8 @@ public:
         "/tag_detections", 1,
         &CalibrationNode::tagCallback, this);
 
-    // rgb_sub_ = it_.subscribe(
-    //     "/camera/color/image_raw", 1,
-    //     &CalibrationNode::rgbCallback, this);
-
-    // depth_sub_ = it_.subscribe(
-    //     "/camera/aligned_depth_to_color/image_raw", 1,
-    //     &CalibrationNode::depthCallback, this);
-    keyboard_thread_ = std::thread(&CalibrationNode::keyboardLoop, this);
-
+    cv::namedWindow("Calibration View", cv::WINDOW_NORMAL);
     ROS_INFO("CalibrationNode initialized.");
-    ROS_INFO("Press 'c' to trigger calibration, 'r' to reset.");
   }
 
   ~CalibrationNode()
@@ -53,12 +41,9 @@ public:
 
 private:
   ros::Subscriber tag_sub_;
-  tf2_ros::TransformBroadcaster tf_broadcaster_;
   image_transport::ImageTransport it_;
   image_transport::Subscriber rgb_sub_;
   image_transport::Subscriber depth_sub_;
-
-  bool trigger_calibration_ = false;
 
   cv::Mat latest_rgb_;
   cv::Mat latest_depth_;
@@ -73,53 +58,14 @@ private:
   tf2_ros::Buffer tf_buffer_;
   tf2_ros::TransformListener tf_listener_;
 
-  CalibrateAlgorithm calibrate_algorithm{200}; // 需要 200 帧数据进行标定
-
-  void keyboardLoop()
-  {
-    while (ros::ok())
-    {
-      char c;
-      std::cin >> c;
-
-      if (c == 'c')
-      {
-        trigger_calibration_ = true;
-        ROS_WARN("Calibration triggered. Waiting for stable detection...");
-      }
-      else if (c == 'r')
-      {
-        trigger_calibration_ = false;
-        ROS_WARN("Calibration reset.");
-      }
-    }
-  }
-
   int valid_count_ = 0;
+  const int MAX_COUNT = 100;
+
   /* ================= Tag Callback ================= */
 
-  void printTf(const std::string &name, const tf2::Transform &T) const
+  void tagCallback(
+      const apriltag_ros::AprilTagDetectionArray::ConstPtr &msg)
   {
-    tf2::Vector3 t = T.getOrigin();
-    tf2::Quaternion q = T.getRotation();
-    double r, p, y;
-    tf2::Matrix3x3(q).getRPY(r, p, y);
-
-    ROS_INFO_STREAM(
-        name << " xyz = ["
-             << t.x() << ", "
-             << t.y() << ", "
-             << t.z() << "]  rpy = ["
-             << r << ", "
-             << p << ", "
-             << y << "]");
-  }
-
-  void tagCallback(const apriltag_ros::AprilTagDetectionArray::ConstPtr &msg)
-  {
-    if (!trigger_calibration_){
-      return;
-    }
     // -------------------------------
     // 1. 检查是否同时检测到 3 个 tag
     // -------------------------------
@@ -178,25 +124,37 @@ private:
     ROS_INFO_STREAM("Tag distances (m): diana-fr1 = " << d_diana_fr1
                      << ", diana-fr2 = " << d_diana_fr2
                      << ", fr1-fr2 = " << d_fr1_fr2);
+
     tf2::Transform T_cam_diana_ee = poseToTf(diana_pose);
     tf2::Transform T_cam_fr1_ee   = poseToTf(fr1_pose);
     tf2::Transform T_cam_fr2_ee   = poseToTf(fr2_pose);
-    printTf("CAMERA -> DIANA_EE", T_cam_diana_ee);
-    printTf("CAMERA -> FR1_EE", T_cam_fr1_ee);
-    printTf("CAMERA -> FR2_EE", T_cam_fr2_ee);
 
     try
     {
       // --------------------------------------------------
       // 3. 从 TF 中获取 T_base_ee
       // --------------------------------------------------
-      ros::Time stamp = msg->header.stamp;
+      
+      // [修改开始] 使用消息时间戳并等待 TF
+      ros::Time lookup_time = msg->header.stamp;
+      ros::Duration timeout(0.1);
+
+      if (!tf_buffer_.canTransform("diana7_pedestal_link", "diana7_tcp", lookup_time, timeout) ||
+          !tf_buffer_.canTransform("arm1_base0_link", "arm1_tcp", lookup_time, timeout) ||
+          !tf_buffer_.canTransform("arm2_base0_link", "arm2_tcp", lookup_time, timeout))
+      {
+          // 如果这一帧的 TF 还没到，就跳过，不报错
+          return;
+      }
+
       auto T_diana_base_ee_msg =
-          tf_buffer_.lookupTransform("diana7_pedestal_link", "diana7_tcp", stamp, ros::Duration(0.05));
+          tf_buffer_.lookupTransform("diana7_pedestal_link", "diana7_tcp", lookup_time);
       auto T_fr1_base_ee_msg =
-          tf_buffer_.lookupTransform("arm1_base0_link", "arm1_tcp", stamp, ros::Duration(0.05));
+          tf_buffer_.lookupTransform("arm1_base0_link", "arm1_tcp", lookup_time);
       auto T_fr2_base_ee_msg =
-          tf_buffer_.lookupTransform("arm2_base0_link", "arm2_tcp", stamp, ros::Duration(0.05));
+          tf_buffer_.lookupTransform("arm2_base0_link", "arm2_tcp", lookup_time);
+      // [修改结束]
+
       tf2::Transform T_diana_base_ee, T_fr1_base_ee, T_fr2_base_ee;
       tf2::fromMsg(T_diana_base_ee_msg.transform, T_diana_base_ee);
       tf2::fromMsg(T_fr1_base_ee_msg.transform,   T_fr1_base_ee);
@@ -228,64 +186,41 @@ private:
       tf2::Transform T_world_fr2_base =
           T_cam_diana_base.inverse() * T_cam_fr2_base;
 
-      // tf2::Transform T_world_fr2_ee = 
-      //     T_diana_base_ee * T_cam_diana_ee.inverse() * T_cam_fr2_ee;
-      
-      // tf2::Transform T_world_fr1_ee = 
-      //     T_diana_base_ee * T_cam_diana_ee.inverse() * T_cam_fr1_ee;        
-
       // --------------------------------------------------
-      // 6. 将本次回调的计算结果输入标定算法，进行一次标定
+      // 6. 输出一次标定结果
       // --------------------------------------------------
-      tf2::Transform T_world_diana_base;
-      T_world_diana_base.setIdentity();
+      auto printTf = [](const std::string &name,
+                        const tf2::Transform &T)
+      {
+        auto t = T.getOrigin();
+        auto q = T.getRotation();
+        double r, p, y;
+        tf2::Matrix3x3(q).getRPY(r, p, y);
 
-      bool accepted = calibrate_algorithm.addSample(
-      T_world_fr1_base,
-      T_world_fr2_base,
-      T_world_diana_base);
+        ROS_INFO_STREAM(
+            name << " xyz = ["
+                << t.x() << ", "
+                << t.y() << ", "
+                << t.z() << "]  rpy = ["
+                << r << ", "
+                << p << ", "
+                << y << "]");
+      };
 
-      if (!accepted)
-        return;
+      printTf("WORLD -> FR1_BASE", T_world_fr1_base);
+      printTf("WORLD -> FR2_BASE", T_world_fr2_base);
 
       valid_count_++;
       ROS_INFO_STREAM("Valid calibration count = " << valid_count_);
 
-      if (calibrate_algorithm.isReady())
+      if (valid_count_ >= MAX_COUNT)
       {
-        // --------------------------------------------------
-        // 7. 标定完成，输出结果
-        // --------------------------------------------------
-        tf2::Transform FR1, FR2, DA;
-        calibrate_algorithm.getMedian(FR1, FR2, DA);
-        printTf("WORLD -> FR1_BASE", FR1);
-        printTf("WORLD -> FR2_BASE", FR2);
-        ROS_INFO("Calibration finished!");
-        // 用 FR1, FR2, DA 做最终标定
-
-        ROS_WARN("Stable calibration ready.");
-        trigger_calibration_ = false;
-        valid_count_ = 0;
+        ROS_WARN("Calibration finished. You can stop the node.");
       }
-
-      // Broadcast EE transforms
-      // auto broadcastTf = [&](const tf2::Transform &T, const std::string &parent, const std::string &child) {
-      //   geometry_msgs::TransformStamped ts;
-      //   ts.header.stamp = ros::Time::now();
-      //   ts.header.frame_id = parent;
-      //   ts.child_frame_id = child;
-      //   ts.transform = tf2::toMsg(T);
-      //   tf_broadcaster_.sendTransform(ts);
-      // };
-
-      // broadcastTf(T_world_fr1_ee, "diana7_pedestal_link", "calib_fr1_ee");
-      // broadcastTf(T_world_fr2_ee, "diana7_pedestal_link", "calib_fr2_ee");
-
     }
     catch (tf2::TransformException &ex)
     {
       ROS_WARN("TF error: %s", ex.what());
-      // 只打印相机坐标系中三个tag的位姿
     }
   }
 

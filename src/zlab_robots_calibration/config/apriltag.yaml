@@ -9,15 +9,15 @@ publish_tf: true
 # ===== 独立 AprilTag（推荐）=====
 standalone_tags:
   - id: 109
-    size: 0.04
+    size: 0.032
     frame_name: tag_dianna
 
   - id: 208
-    size: 0.04
+    size: 0.032
     frame_name: tag_red
 
   - id: 104
-    size: 0.04
+    size: 0.032
     frame_name: tag_green
 
 # [ INFO] [1766479730.040229447]: [tag_green] xyz = [0.13746, -0.00864736, 0.945434]  rpy = [-3.10793, 0.0689071, -2.97548]

@@ -32,18 +32,24 @@ catkin_package(
 )
 
 include_directories(
+  include
   ${catkin_INCLUDE_DIRS}
   ${OpenCV_INCLUDE_DIRS}
 )
 
 add_executable(calibration_node
   src/calibration_node.cpp
+  src/calibrate_algorithm.cpp
 )
+
+
 
 target_link_libraries(calibration_node
   ${catkin_LIBRARIES}
   ${OpenCV_LIBRARIES}
 )
+
+
 
 add_dependencies(calibration_node
   ${catkin_EXPORTED_TARGETS}
