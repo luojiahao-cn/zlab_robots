@@ -1,0 +1,15 @@
+# ZLab Robot Layout Configuration
+# This file defines the default physical positions (xyz) and orientations (rpy) 
+# of the robots in the laboratory setup.
+
+diana7:
+  xyz: "0 0 0"
+  rpy: "0 0 0"
+
+arm1:
+  xyz: "1.42368 0.421054 0.071386"
+  rpy: "0.0377814 0.0623607 -2.39063"
+
+arm2:
+  xyz: "1.30315 -0.727054 0.0589083"
+  rpy: "0.0674776 -0.00760393 2.77198"

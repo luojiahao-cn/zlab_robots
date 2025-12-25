@@ -1,11 +1,19 @@
 <?xml version="1.0"?>
 <robot name="fr" xmlns:xacro="http://www.ros.org/wiki/xacro">
 
+    <!-- Layout configuration file -->
+    <xacro:arg name="layout_config" default=""/>
+    <xacro:property name="layout" value="${xacro.load_yaml(arg('layout_config')) if arg('layout_config') else dict()}"/>
+
     <!-- 定义参数 -->
     <!-- arm_id: 机械臂ID，可以是 arm1, arm2 等，默认为 arm1 -->
     <xacro:arg name="arm_id" default="arm1" />
     <!-- 定义工具参数 -->
     <xacro:arg name="tool_name" default="none"/>
+
+    <!-- Position Arguments -->
+    <xacro:arg name="xyz" default="0 0 0"/>
+    <xacro:arg name="rpy" default="0 0 0"/>
 
     <!-- 加载工具库 -->
     <xacro:include filename="$(find zlab_tools_description)/urdf/tools_library.xacro" />
@@ -16,12 +24,20 @@
     <!-- 添加虚拟根链接 -->
     <link name="world" />
 
+    <!-- Resolve position with priority: 1. CLI/Launch > 2. Layout YAML > 3. Default -->
+    <xacro:property name="arm_id_str" value="$(arg arm_id)"/>
+    <xacro:property name="xyz_arg" value="$(arg xyz)"/>
+    <xacro:property name="rpy_arg" value="$(arg rpy)"/>
+    
+    <xacro:property name="xyz_final" value="${xyz_arg if xyz_arg != '0 0 0' else (layout[arm_id_str]['xyz'] if arm_id_str in layout and 'xyz' in layout[arm_id_str] else '0 0 0')}"/>
+    <xacro:property name="rpy_final" value="${rpy_arg if rpy_arg != '0 0 0' else (layout[arm_id_str]['rpy'] if arm_id_str in layout and 'rpy' in layout[arm_id_str] else '0 0 0')}"/>
+
     <!-- 实例化机械臂 -->
     <xacro:fr 
         arm_id="$(arg arm_id)" 
         connected_to="world" 
-        xyz="0 0 0" 
-        rpy="0 0 0"
+        xyz="${xyz_final}" 
+        rpy="${rpy_final}"
         tool_name="none"
         tool_config="{}" />
 

@@ -1,6 +1,10 @@
 <?xml version="1.0"?>
 <robot name="zlab_triple_arms" xmlns:xacro="http://www.ros.org/wiki/xacro">
 
+    <!-- Layout configuration file -->
+    <xacro:arg name="layout_config" default=""/>
+    <xacro:property name="layout" value="${xacro.load_yaml(arg('layout_config')) if arg('layout_config') else dict()}"/>
+
     <!-- Arguments for positions -->
     <!-- Diana7 (Center) -->
     <xacro:arg name="diana7_xyz" default="0 0 0"/>
@@ -13,6 +17,22 @@
     <!-- FR5 Arm 2 (Right) -->
     <xacro:arg name="arm2_xyz" default="1.5 0.4 0"/>
     <xacro:arg name="arm2_rpy" default="0 0 0"/>
+
+    <!-- Resolve positions (Priority: CLI/Launch > YAML > Xacro Default) -->
+    <xacro:property name="d7_xyz_arg" value="$(arg diana7_xyz)"/>
+    <xacro:property name="d7_rpy_arg" value="$(arg diana7_rpy)"/>
+    <xacro:property name="diana7_xyz_final" value="${d7_xyz_arg if d7_xyz_arg != '' else (layout['diana7']['xyz'] if 'diana7' in layout and 'xyz' in layout['diana7'] else '0 0 0')}"/>
+    <xacro:property name="diana7_rpy_final" value="${d7_rpy_arg if d7_rpy_arg != '' else (layout['diana7']['rpy'] if 'diana7' in layout and 'rpy' in layout['diana7'] else '0 0 0')}"/>
+
+    <xacro:property name="a1_xyz_arg" value="$(arg arm1_xyz)"/>
+    <xacro:property name="a1_rpy_arg" value="$(arg arm1_rpy)"/>
+    <xacro:property name="arm1_xyz_final" value="${a1_xyz_arg if a1_xyz_arg != '' else (layout['arm1']['xyz'] if 'arm1' in layout and 'xyz' in layout['arm1'] else '1.5 -0.2 0')}"/>
+    <xacro:property name="arm1_rpy_final" value="${a1_rpy_arg if a1_rpy_arg != '' else (layout['arm1']['rpy'] if 'arm1' in layout and 'rpy' in layout['arm1'] else '0 0 0')}"/>
+
+    <xacro:property name="a2_xyz_arg" value="$(arg arm2_xyz)"/>
+    <xacro:property name="a2_rpy_arg" value="$(arg arm2_rpy)"/>
+    <xacro:property name="arm2_xyz_final" value="${a2_xyz_arg if a2_xyz_arg != '' else (layout['arm2']['xyz'] if 'arm2' in layout and 'xyz' in layout['arm2'] else '1.5 0.4 0')}"/>
+    <xacro:property name="arm2_rpy_final" value="${a2_rpy_arg if a2_rpy_arg != '' else (layout['arm2']['rpy'] if 'arm2' in layout and 'rpy' in layout['arm2'] else '0 0 0')}"/>
 
     <!-- Arguments for tools -->
     <xacro:arg name="arm1_tool" default="none"/>
@@ -29,20 +49,20 @@
 
     <!-- Instantiate Diana7 -->
     <xacro:diana7_robot prefix="diana7_" parent="world">
-        <origin xyz="$(arg diana7_xyz)" rpy="$(arg diana7_rpy)"/>
+        <origin xyz="${diana7_xyz_final}" rpy="${diana7_rpy_final}"/>
     </xacro:diana7_robot>
 
     <!-- Load Tool for Diana7 -->
     <xacro:load_tool tool_name="$(arg diana7_tool)" prefix="diana7_" parent="diana7_link_7"/>
 
     <!-- Instantiate FR5 Arm 1 -->
-    <xacro:fr arm_id="arm1" connected_to="world" xyz="$(arg arm1_xyz)" rpy="$(arg arm1_rpy)" tool_name="none"/>
+    <xacro:fr arm_id="arm1" connected_to="world" xyz="${arm1_xyz_final}" rpy="${arm1_rpy_final}" tool_name="none"/>
     
     <!-- Load Tool for Arm 1 -->
     <xacro:load_tool tool_name="$(arg arm1_tool)" prefix="arm1_" parent="arm1_ee_link"/>
 
     <!-- Instantiate FR5 Arm 2 -->
-    <xacro:fr arm_id="arm2" connected_to="world" xyz="$(arg arm2_xyz)" rpy="$(arg arm2_rpy)" tool_name="none"/>
+    <xacro:fr arm_id="arm2" connected_to="world" xyz="${arm2_xyz_final}" rpy="${arm2_rpy_final}" tool_name="none"/>
     
     <!-- Load Tool for Arm 2 -->
     <xacro:load_tool tool_name="$(arg arm2_tool)" prefix="arm2_" parent="arm2_ee_link"/>

@@ -3,12 +3,20 @@
   <!-- Arguments -->
   <arg name="robot_ip" default="192.168.31.200"/>
   <arg name="load_robot_description" default="true"/>
+  <arg name="layout_config" default=""/>
+  <arg name="xyz" default="0 0 0"/>
+  <arg name="rpy" default="0 0 0"/>
   <arg name="tool_name" default="none"/>
   <arg name="prefix" default="diana7_" doc="Joint name prefix (default: diana7_ for consistency with FR5)"/>
+  <arg name="loop_hz" default="1000.0" doc="Control loop frequency (Hz)"/>
 
   <!-- Load Robot Description -->
   <group if="$(arg load_robot_description)">
-    <param name="robot_description" command="$(find xacro)/xacro '$(find diana7_description)/urdf/diana7.urdf.xacro' tool_name:=$(arg tool_name)" />
+    <param name="robot_description" command="$(find xacro)/xacro '$(find diana7_description)/urdf/diana7.urdf.xacro' 
+           layout_config:=$(arg layout_config) 
+           xyz:='$(arg xyz)' 
+           rpy:='$(arg rpy)' 
+           tool_name:=$(arg tool_name)" />
   </group>
 
   <!-- Controller and publisher options -->
@@ -22,6 +30,7 @@
     <!-- Start Hardware Interface Node -->
     <node name="diana7_hardware" pkg="diana7_hardware" type="diana7_hw_main" output="screen">
       <param name="ip_address" value="$(arg robot_ip)"/>
+      <param name="loop_hz" value="$(arg loop_hz)"/>
       <rosparam param="joints" subst_value="true">
         - $(arg prefix)j1
         - $(arg prefix)j2

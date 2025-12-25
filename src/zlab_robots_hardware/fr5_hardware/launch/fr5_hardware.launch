@@ -24,9 +24,13 @@
   
   <!-- Load URDF -->
   <arg name="load_robot_description" default="true"/>
+  <arg name="layout_config" default=""/>
+  <arg name="xyz" default="0 0 0"/>
+  <arg name="rpy" default="0 0 0"/>
   <param if="$(arg load_robot_description)" name="robot_description"
          command="$(find xacro)/xacro '$(find fr5_description)/fr5_description/urdf/fr.xacro'
-                 arm_id:=$(arg arm_id) tool_name:=$(arg tool_name)"/>
+                 arm_id:=$(arg arm_id) tool_name:=$(arg tool_name)
+                 layout_config:=$(arg layout_config) xyz:='$(arg xyz)' rpy:='$(arg rpy)'"/>
 
   <!-- Load controller yaml based on arm_id -->
   <arg if="$(eval arg('arm_id') == 'arm1')" name="controller_yaml" value="$(find fr5_hardware)/config/arm1_controllers.yaml"/>
@@ -38,7 +42,6 @@
     <node name="fr5_hardware" pkg="fr5_hardware" type="fr5_hw_main" output="screen">
       <param name="robot_ip" value="$(arg actual_robot_ip)"/>
       <param name="loop_hz" value="$(arg loop_hz)"/>
-      <param name="cycle_time_error_threshold" value="0.01"/>
       
       <!-- Set joints based on arm_id (for hardware interface) -->
       <rosparam param="hardware_interface/joints" subst_value="true">

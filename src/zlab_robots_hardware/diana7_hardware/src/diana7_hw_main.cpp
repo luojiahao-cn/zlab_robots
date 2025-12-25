@@ -29,7 +29,7 @@ int main(int argc, char** argv)
   ros::Duration desired_update_period(1.0 / loop_hz);
   
   double cycle_time_error_threshold;
-  robot_hw_nh.param<double>("cycle_time_error_threshold", cycle_time_error_threshold, 0.01);
+  robot_hw_nh.param<double>("cycle_time_error_threshold", cycle_time_error_threshold, desired_update_period.toSec() * 0.5);
 
   // Timing
   struct timespec last_time;

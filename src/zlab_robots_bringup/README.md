@@ -1,84 +1,76 @@
-# ZLab Arm Bringup
+# ZLab Robots Bringup
 
-这个包提供了启动 ZLab 机械臂硬件和 MoveIt 的便捷启动文件。
+这个包提供了启动 ZLab 机械臂集群（Diana7, FR5, 三臂协作）硬件和 MoveIt 的统一启动文件。
 
-## 启动文件
+## 启动文件组织结构
 
-### 真实硬件启动
+- `launch/diana7/`: Diana7 机械臂相关启动项
+- `launch/fr5/`: FR5 机械臂相关启动项（单臂/双臂）
+- `launch/triple_arm/`: 三臂协作系统启动项
 
-#### 单臂启动
+## 快速开始
+
+### 1. Diana7 机械臂
+
+#### 硬件启动
 ```bash
-# 启动 arm1（默认 IP: 192.168.31.201）
-roslaunch fr5_bringup single_arm_bringup.launch arm_id:=arm1
-
-# 指定 IP 地址
-roslaunch fr5_bringup single_arm_bringup.launch arm_id:=arm1 robot_ip:=192.168.31.201
-
-# 指定工具
-roslaunch fr5_bringup single_arm_bringup.launch arm_id:=arm1 tool_name:=permanent_magnet
-
-# 不启动 RViz
-roslaunch fr5_bringup single_arm_bringup.launch arm_id:=arm1 use_rviz:=false
-
-# 不加载环境（用于测试）
-roslaunch fr5_bringup single_arm_bringup.launch arm_id:=arm1 load_environment:=false
-
-# 使用自定义环境配置
-roslaunch fr5_bringup single_arm_bringup.launch arm_id:=arm1 \
-    environment_config:=$(rospack find fr5_bringup)/config/default_environment.yaml
+roslaunch zlab_robots_bringup diana7/diana7_bringup.launch robot_ip:=192.168.31.200
 ```
 
-#### 双臂启动
+#### 仿真/MoveIt 预览 (Fake Execution)
 ```bash
-# 使用默认 IP 地址
-roslaunch fr5_bringup dual_arms_bringup.launch
-
-# 指定 IP 地址
-roslaunch fr5_bringup dual_arms_bringup.launch \
-    arm1_ip:=192.168.31.201 \
-    arm2_ip:=192.168.31.202
-
-# 指定工具
-roslaunch fr5_bringup dual_arms_bringup.launch \
-    arm1_tool:=permanent_magnet \
-    arm2_tool:=electronic_magnet
+roslaunch zlab_robots_bringup diana7/diana7_moveit.launch
 ```
 
-### Gazebo 仿真启动
+### 2. FR5 机械臂
 
-#### 单臂仿真
+#### 单臂硬件启动
 ```bash
-# 启动单臂 Gazebo 仿真
-roslaunch fr5_bringup single_arm_gazebo.launch arm_id:=arm1
-
-# 指定工具
-roslaunch fr5_bringup single_arm_gazebo.launch arm_id:=arm1 tool_name:=permanent_magnet
-
-# 无 GUI 模式
-roslaunch fr5_bringup single_arm_gazebo.launch arm_id:=arm1 gazebo_gui:=false
+# 启动 arm1
+roslaunch zlab_robots_bringup fr5/single/fr5_single_bringup.launch arm_id:=arm1
 ```
 
-#### 双臂仿真
+#### 单臂 MoveIt 预览
 ```bash
-# 启动双臂 Gazebo 仿真
-roslaunch fr5_bringup dual_arms_gazebo.launch
+roslaunch zlab_robots_bringup fr5/single/fr5_single_moveit.launch arm_id:=arm1
+```
 
-# 指定工具
-roslaunch fr5_bringup dual_arms_gazebo.launch \
-    arm1_tool:=permanent_magnet \
-    arm2_tool:=electronic_magnet
+#### 双臂硬件启动
+```bash
+roslaunch zlab_robots_bringup fr5/dual/fr5_dual_bringup.launch
+```
 
-# 指定机械臂位置
-roslaunch fr5_bringup dual_arms_gazebo.launch \
-    arm1_xyz:="0 0 0" \
-    arm1_rpy:="0 0 0" \
-    arm2_xyz:="0.5 0 0" \
-    arm2_rpy:="0 0 0"
+#### 双臂 MoveIt 预览
+```bash
+roslaunch zlab_robots_bringup fr5/dual/fr5_dual_moveit.launch
+```
+
+#### Gazebo 仿真
+```bash
+# 单臂
+roslaunch zlab_robots_bringup fr5/single/fr5_single_gazebo.launch
+# 双臂
+roslaunch zlab_robots_bringup fr5/dual/fr5_dual_gazebo.launch
+```
+
+### 3. 三臂协作系统 (Diana7 + 2*FR5)
+
+#### 硬件启动
+```bash
+roslaunch zlab_robots_bringup triple_arm/triple_arm_bringup.launch
+```
+
+#### MoveIt 预览
+```bash
+roslaunch zlab_robots_bringup triple_arm/triple_arm_moveit.launch
+```
+
+#### 三臂 MoveIt 预览
+```bash
+roslaunch zlab_robots_bringup triple_arm_moveit.launch
 ```
 
 ## 参数说明
-
-### 通用参数
 
 - `arm_id`: 机械臂 ID（arm1 或 arm2），默认 arm1
 - `tool_name`: 工具名称（如 permanent_magnet, electronic_magnet 等），默认 none

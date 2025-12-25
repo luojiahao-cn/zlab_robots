@@ -1,0 +1,32 @@
+<?xml version="1.0"?>
+<package format="2">
+  <name>zlab_robots_bringup</name>
+  <version>0.1.0</version>
+  <description>Unified bringup package for ZLab robots (Diana7, FR5, and Triple Arm setup)</description>
+  <maintainer email="user@todo.todo">user</maintainer>
+  <license>TODO</license>
+
+  <buildtool_depend>catkin</buildtool_depend>
+
+  <exec_depend>roscpp</exec_depend>
+  <exec_depend>roslib</exec_depend>
+  <exec_depend>zlab_environment</exec_depend>
+  <exec_depend>diana7_description</exec_depend>
+  <exec_depend>diana7_hardware</exec_depend>
+  <exec_depend>diana7_moveit_config</exec_depend>
+  <exec_depend>fr5_description</exec_depend>
+  <exec_depend>fr5_hardware</exec_depend>
+  <exec_depend>fr5_single_moveit_config</exec_depend>
+  <exec_depend>fr5_dual_moveit_config</exec_depend>
+  <exec_depend>triple_arm_moveit_config</exec_depend>
+  <exec_depend>gazebo_ros</exec_depend>
+  <exec_depend>controller_manager</exec_depend>
+  <exec_depend>robot_state_publisher</exec_depend>
+  <exec_depend>joint_state_controller</exec_depend>
+  <exec_depend>position_controllers</exec_depend>
+  <exec_depend>joint_state_publisher</exec_depend>
+  <exec_depend>joint_state_publisher_gui</exec_depend>
+
+  <export>
+  </export>
+</package>

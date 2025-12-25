@@ -1,6 +1,10 @@
 <?xml version="1.0"?>
 <robot name="zlab_dual_arms" xmlns:xacro="http://www.ros.org/wiki/xacro">
 
+    <!-- Layout configuration file -->
+    <xacro:arg name="layout_config" default=""/>
+    <xacro:property name="layout" value="${xacro.load_yaml(arg('layout_config')) if arg('layout_config') else dict()}"/>
+
     <!-- 定义参数 -->
     <!-- arm1 工具参数 -->
     <xacro:arg name="arm1_tool" default="none"/>
@@ -21,6 +25,12 @@
     <!-- 创建世界坐标系 -->
     <link name="world" />
 
+    <!-- ========== 设置arm1位置 ========== -->
+    <xacro:property name="a1_xyz_arg" value="$(arg arm1_xyz)"/>
+    <xacro:property name="a1_rpy_arg" value="$(arg arm1_rpy)"/>
+    <xacro:property name="arm1_xyz_final" value="${a1_xyz_arg if a1_xyz_arg != '' else (layout['arm1']['xyz'] if 'arm1' in layout and 'xyz' in layout['arm1'] else '0 0 0')}"/>
+    <xacro:property name="arm1_rpy_final" value="${a1_rpy_arg if a1_rpy_arg != '' else (layout['arm1']['rpy'] if 'arm1' in layout and 'rpy' in layout['arm1'] else '0 0 0')}"/>
+
     <!-- ========== 设置arm2位置 ========== -->
     <!-- 默认值：arm1在原点，arm2在右边1米处 -->
     <xacro:property name="arm2_xyz_default" value="1.0 0.0 0.0"/>
@@ -30,31 +40,26 @@
     <xacro:property name="arm2_xyz_arg" value="$(arg arm2_xyz)"/>
     <xacro:property name="arm2_rpy_arg" value="$(arg arm2_rpy)"/>
 
-    <!-- 如果arm2_xyz参数未指定（为空），尝试从标定文件加载 -->
-    <xacro:if value="${arm2_xyz_arg == ''}">
-        <xacro:property name="calibration_file_path"
-                        value="$(find fr5_description)/config/dual_arm_calibration.yaml"/>
-        <xacro:property name="calibration_config"
-                        value="${xacro.load_yaml(calibration_file_path)}"/>
-        <xacro:property name="transform" value="${calibration_config['arm1_to_arm2_transform']}"/>
-        <xacro:property name="translation" value="${transform['translation']}"/>
-        <xacro:property name="rpy" value="${transform['rpy']}"/>
-
-        <!-- 使用标定文件中的位置和姿态 -->
-        <xacro:property name="arm2_xyz_final"
-                        value="${translation['x']} ${translation['y']} ${translation['z']}"/>
-        <xacro:property name="arm2_rpy_final"
-                        value="${rpy['roll']} ${rpy['pitch']} ${rpy['yaw']}"/>
-    </xacro:if>
-
-    <!-- 如果arm2_xyz参数已指定，使用参数值 -->
-    <xacro:unless value="${arm2_xyz_arg == ''}">
+    <!-- 优先级：1. CLI/Launch > 2. Layout YAML > 3. Calibration YAML > 4. Default -->
+    <xacro:if value="${arm2_xyz_arg != ''}">
         <xacro:property name="arm2_xyz_final" value="${arm2_xyz_arg}"/>
-        <xacro:if value="${arm2_rpy_arg == ''}">
-            <xacro:property name="arm2_rpy_final" value="${arm2_rpy_default}"/>
+        <xacro:property name="arm2_rpy_final" value="${arm2_rpy_arg if arm2_rpy_arg != '' else arm2_rpy_default}"/>
+    </xacro:if>
+    <xacro:unless value="${arm2_xyz_arg != ''}">
+        <!-- 尝试从 Layout YAML 加载 -->
+        <xacro:if value="${layout and 'arm2' in layout and 'xyz' in layout['arm2']}">
+            <xacro:property name="arm2_xyz_final" value="${layout['arm2']['xyz']}"/>
+            <xacro:property name="arm2_rpy_final" value="${layout['arm2']['rpy'] if 'rpy' in layout['arm2'] else arm2_rpy_default}"/>
         </xacro:if>
-        <xacro:unless value="${arm2_rpy_arg == ''}">
-            <xacro:property name="arm2_rpy_final" value="${arm2_rpy_arg}"/>
+        <xacro:unless value="${layout and 'arm2' in layout and 'xyz' in layout['arm2']}">
+            <!-- 尝试从标定文件加载 -->
+            <xacro:property name="calibration_file_path" value="$(find fr5_description)/config/dual_arm_calibration.yaml"/>
+            <xacro:property name="calibration_config" value="${xacro.load_yaml(calibration_file_path)}"/>
+            <xacro:property name="transform" value="${calibration_config['arm1_to_arm2_transform']}"/>
+            <xacro:property name="translation" value="${transform['translation']}"/>
+            <xacro:property name="rpy" value="${transform['rpy']}"/>
+            <xacro:property name="arm2_xyz_final" value="${translation['x']} ${translation['y']} ${translation['z']}"/>
+            <xacro:property name="arm2_rpy_final" value="${rpy['roll']} ${rpy['pitch']} ${rpy['yaw']}"/>
         </xacro:unless>
     </xacro:unless>
 
@@ -62,8 +67,8 @@
     <xacro:fr 
         arm_id="arm1" 
         connected_to="world" 
-        xyz="$(arg arm1_xyz)"
-        rpy="$(arg arm1_rpy)"
+        xyz="${arm1_xyz_final}"
+        rpy="${arm1_rpy_final}"
         tool_name="none"
         tool_config="{}" />
     

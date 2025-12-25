@@ -1,0 +1,32 @@
+<?xml version="1.0"?>
+<launch>
+  <!-- Tool parameter (optional) -->
+  <arg name="tool_name" default="none" doc="Tool name to use"/>
+
+  <!-- specify the planning pipeline -->
+  <arg name="pipeline" default="ompl" />
+
+  <!-- By default, we do not start a database -->
+  <arg name="db" default="false" />
+  
+  <!-- By default, we are not in debug mode -->
+  <arg name="debug" default="false" />
+
+  <!-- By default, we will load or override the robot_description -->
+  <arg name="load_robot_description" default="true"/>
+
+  <!-- MoveIt options -->
+  <arg name="use_gui" default="false" />
+  <arg name="use_rviz" default="true" />
+
+  <!-- Launch MoveIt in fake execution mode -->
+  <include file="$(find diana7_moveit_config)/launch/demo.launch">
+    <arg name="tool_name" value="$(arg tool_name)"/>
+    <arg name="load_robot_description" value="$(arg load_robot_description)"/>
+    <arg name="pipeline" value="$(arg pipeline)"/>
+    <arg name="use_gui" value="$(arg use_gui)"/>
+    <arg name="use_rviz" value="$(arg use_rviz)"/>
+    <arg name="db" value="$(arg db)"/>
+    <arg name="debug" value="$(arg debug)"/>
+  </include>
+</launch>

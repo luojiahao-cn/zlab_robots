@@ -14,17 +14,24 @@
   <!-- MoveIt options -->
   <arg name="pipeline" default="ompl" doc="Planning pipeline to use with MoveIt"/>
   <arg name="use_rviz" default="true" doc="Start RViz"/>
+  <arg name="debug" default="false" doc="Debug mode"/>
   
-  <!-- Arm position parameters (optional) -->
-  <arg name="arm1_xyz" default="0 0 0" doc="Position of arm1 (x y z)"/>
-  <arg name="arm1_rpy" default="0 0 0" doc="Orientation of arm1 (roll pitch yaw)"/>
-  <arg name="arm2_xyz" default="" doc="Position of arm2 (x y z), empty for default"/>
-  <arg name="arm2_rpy" default="" doc="Orientation of arm2 (roll pitch yaw), empty for default"/>
+  <!-- Layout configuration -->
+  <arg name="layout_config" default="$(find zlab_robots_bringup)/config/robot_layout.yaml" doc="Path to robot layout configuration YAML"/>
+
+  <!-- Arm position parameters (optional, overrides layout_config) -->
+  <arg name="arm1_xyz" default="" doc="Position of arm1 (x y z)"/>
+  <arg name="arm1_rpy" default="" doc="Orientation of arm1 (roll pitch yaw)"/>
+  <arg name="arm2_xyz" default="" doc="Position of arm2 (x y z)"/>
+  <arg name="arm2_rpy" default="" doc="Orientation of arm2 (roll pitch yaw)"/>
   
   <!-- Load URDF -->
   <arg name="load_robot_description" default="true"/>
   <param if="$(arg load_robot_description)" name="robot_description"
          command="$(find xacro)/xacro '$(find fr5_description)/fr5_description/urdf/zlab_dual_arms.xacro'
+                 layout_config:=$(arg layout_config)
+                 arm1_xyz:='$(arg arm1_xyz)' arm1_rpy:='$(arg arm1_rpy)'
+                 arm2_xyz:='$(arg arm2_xyz)' arm2_rpy:='$(arg arm2_rpy)'
                  arm1_tool:=$(arg arm1_tool) arm2_tool:=$(arg arm2_tool)"/>
 
   <!-- Arm1 hardware interface -->
@@ -39,7 +46,6 @@
   </include>
 
   <!-- Arm2 hardware interface -->
-  <!-- Note: Both arms need joint_state_controller to publish their joint states -->
   <include file="$(find fr5_hardware)/launch/fr5_hardware.launch">
     <arg name="arm_id" value="arm2"/>
     <arg name="robot_ip" value="$(arg arm2_ip)"/>
@@ -59,7 +65,7 @@
   </node>
   
   <!-- Launch MoveIt -->
-  <include file="$(find fr5_dual_moveit_config)/launch/demo.launch">
+  <include file="$(find fr5_dual_moveit_config)/launch/move_group.launch">
     <arg name="arm1_tool" value="$(arg arm1_tool)"/>
     <arg name="arm2_tool" value="$(arg arm2_tool)"/>
     <arg name="arm1_xyz" value="$(arg arm1_xyz)"/>
@@ -69,9 +75,14 @@
     <arg name="moveit_controller_manager" value="simple"/>
     <arg name="load_robot_description" value="false"/>
     <arg name="pipeline" value="$(arg pipeline)"/>
-    <arg name="use_rviz" value="$(arg use_rviz)"/>
+    <arg name="debug" value="$(arg debug)"/>
+    <arg name="publish_monitored_planning_scene" value="true"/>
   </include>
-  
-  
+
+  <!-- Launch RViz -->
+  <include if="$(arg use_rviz)" file="$(find fr5_dual_moveit_config)/launch/moveit_rviz.launch">
+    <arg name="rviz_config" value="$(find fr5_dual_moveit_config)/launch/moveit.rviz"/>
+    <arg name="debug" value="$(arg debug)"/>
+  </include>
 </launch>
 

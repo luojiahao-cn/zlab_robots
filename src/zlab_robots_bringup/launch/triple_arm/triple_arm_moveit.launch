@@ -1,0 +1,52 @@
+<?xml version="1.0"?>
+<launch>
+  <!-- Tool parameters -->
+  <arg name="diana7_tool" default="none" doc="Tool name for diana7"/>
+  <arg name="arm1_tool" default="none" doc="Tool name for arm1"/>
+  <arg name="arm2_tool" default="none" doc="Tool name for arm2"/>
+  
+  <!-- Arm position parameters -->
+  <arg name="diana7_xyz" default="0 0 0" doc="Position of diana7 (x y z)"/>
+  <arg name="diana7_rpy" default="0 0 0" doc="Orientation of diana7 (roll pitch yaw)"/>
+  <arg name="arm1_xyz" default="1.42368 0.421054 0.071386" doc="Position of arm1 (x y z)"/>
+  <arg name="arm1_rpy" default="0.0377814 0.0623607 -2.39063" doc="Orientation of arm1 (roll pitch yaw)"/>
+  <arg name="arm2_xyz" default="1.30315 -0.727054 0.0589083" doc="Position of arm2 (x y z)"/>
+  <arg name="arm2_rpy" default="0.0674776 -0.00760393 2.77198" doc="Orientation of arm2 (roll pitch yaw)"/>
+
+  <!-- specify the planning pipeline -->
+  <arg name="pipeline" default="ompl" />
+
+  <!-- By default, we do not start a database -->
+  <arg name="db" default="false" />
+  
+  <!-- By default, we are not in debug mode -->
+  <arg name="debug" default="false" />
+
+  <!-- By default, we will load or override the robot_description -->
+  <arg name="load_robot_description" default="true"/>
+
+  <!-- MoveIt options -->
+  <arg name="use_gui" default="false" />
+  <arg name="use_rviz" default="true" />
+
+  <!-- Launch MoveIt in fake execution mode -->
+  <include file="$(find triple_arm_moveit_config)/launch/demo.launch">
+    <arg name="diana7_tool" value="$(arg diana7_tool)"/>
+    <arg name="arm1_tool" value="$(arg arm1_tool)"/>
+    <arg name="arm2_tool" value="$(arg arm2_tool)"/>
+    <arg name="diana7_xyz" value="$(arg diana7_xyz)"/>
+    <arg name="diana7_rpy" value="$(arg diana7_rpy)"/>
+    <arg name="arm1_xyz" value="$(arg arm1_xyz)"/>
+    <arg name="arm1_rpy" value="$(arg arm1_rpy)"/>
+    <arg name="arm2_xyz" value="$(arg arm2_xyz)"/>
+    <arg name="arm2_rpy" value="$(arg arm2_rpy)"/>
+    <arg name="moveit_controller_manager" value="fake"/>
+    <arg name="load_robot_description" value="$(arg load_robot_description)"/>
+    <arg name="pipeline" value="$(arg pipeline)"/>
+    <arg name="use_gui" value="$(arg use_gui)"/>
+    <arg name="use_rviz" value="$(arg use_rviz)"/>
+    <arg name="db" value="$(arg db)"/>
+    <arg name="debug" value="$(arg debug)"/>
+  </include>
+
+</launch>

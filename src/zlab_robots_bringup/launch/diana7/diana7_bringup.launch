@@ -3,9 +3,22 @@
   <!-- Robot IP address -->
   <arg name="robot_ip" default="192.168.31.200" doc="IP address of the robot"/>
   
+  <!-- Control loop frequency -->
+  <arg name="loop_hz" default="1000.0" doc="Control loop frequency (Hz)"/>
+
+  <!-- Layout configuration -->
+  <arg name="layout_config" default="$(find zlab_robots_bringup)/config/robot_layout.yaml" doc="Path to robot layout configuration YAML"/>
+
+  <!-- Position parameters (optional, overrides layout_config) -->
+  <arg name="xyz" default="" doc="Position of robot (x y z)"/>
+  <arg name="rpy" default="" doc="Orientation of robot (roll pitch yaw)"/>
+
   <!-- Tool parameter (optional) -->
   <arg name="tool_name" default="none" doc="Tool name to use"/>
   
+  <!-- Prefix for joints -->
+  <arg name="prefix" default="diana7_" doc="Prefix for joint names"/>
+
   <!-- MoveIt options -->
   <arg name="pipeline" default="ompl" doc="Planning pipeline to use with MoveIt"/>
   <arg name="use_rviz" default="true" doc="Start RViz"/>
@@ -15,6 +28,11 @@
   <include file="$(find diana7_hardware)/launch/diana7_hardware.launch">
     <arg name="robot_ip" value="$(arg robot_ip)"/>
     <arg name="tool_name" value="$(arg tool_name)"/>
+    <arg name="loop_hz" value="$(arg loop_hz)"/>
+    <arg name="prefix" value="$(arg prefix)"/>
+    <arg name="layout_config" value="$(arg layout_config)"/>
+    <arg name="xyz" value="$(arg xyz)"/>
+    <arg name="rpy" value="$(arg rpy)"/>
     <arg name="load_robot_description" value="true"/>
   </include>
   
@@ -24,6 +42,7 @@
     <arg name="pipeline" value="$(arg pipeline)"/>
     <arg name="debug" value="$(arg debug)"/>
     <arg name="load_robot_description" value="false"/>
+    <arg name="fake_execution" value="false"/>
     <arg name="publish_monitored_planning_scene" value="true"/>
   </include>
   
@@ -32,6 +51,4 @@
     <arg name="rviz_config" value="$(find diana7_moveit_config)/launch/moveit.rviz"/>
     <arg name="debug" value="$(arg debug)"/>
   </include>
-
-  
 </launch>

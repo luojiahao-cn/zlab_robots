@@ -2,17 +2,28 @@
 
 <robot xmlns:xacro="http://wiki.ros.org/xacro" name="diana7">
   
+  <!-- Layout configuration file -->
+  <xacro:arg name="layout_config" default=""/>
+  <xacro:property name="layout" value="${xacro.load_yaml(arg('layout_config')) if arg('layout_config') else dict()}"/>
+
+  <!-- Position Arguments -->
+  <xacro:arg name="xyz" default="0 0 0"/>
+  <xacro:arg name="rpy" default="0 0 0"/>
+
   <!-- Tool Argument -->
   <xacro:arg name="tool_name" default="none"/>
 
   <!-- Include Tool Library -->
   <xacro:include filename="$(find zlab_tools_description)/urdf/tools_library.xacro" />
 
-  <link name="world">
-      <origin
-        xyz="0 0 0"
-        rpy="0 0 0" />
-  </link>
+  <link name="world" />
+
+  <!-- Resolve position with priority: 1. CLI/Launch > 2. Layout YAML > 3. Default -->
+  <xacro:property name="xyz_arg" value="$(arg xyz)"/>
+  <xacro:property name="rpy_arg" value="$(arg rpy)"/>
+  
+  <xacro:property name="xyz_final" value="${xyz_arg if xyz_arg != '0 0 0' else (layout['diana7']['xyz'] if 'diana7' in layout and 'xyz' in layout['diana7'] else '0 0 0')}"/>
+  <xacro:property name="rpy_final" value="${rpy_arg if rpy_arg != '0 0 0' else (layout['diana7']['rpy'] if 'diana7' in layout and 'rpy' in layout['diana7'] else '0 0 0')}"/>
 
   <!-- Optional base assembly (default: included) -->
   <link name="diana7_base_link">
@@ -64,7 +75,7 @@
   </link>
 
   <joint name="world_to_diana7_base" type="fixed">
-    <origin xyz="0 0 0" rpy="0 0 0" />
+    <origin xyz="${xyz_final}" rpy="${rpy_final}" />
     <parent link="world" />
     <child link="diana7_base_link" />
   </joint>
