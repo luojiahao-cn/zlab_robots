@@ -20,13 +20,13 @@ controller_list:
   - name: fake_diana7_controller
     type: $(arg fake_execution_type)
     joints:
-      - diana7_joint_1
-      - diana7_joint_2
-      - diana7_joint_3
-      - diana7_joint_4
-      - diana7_joint_5
-      - diana7_joint_6
-      - diana7_joint_7
+      - diana7_j1
+      - diana7_j2
+      - diana7_j3
+      - diana7_j4
+      - diana7_j5
+      - diana7_j6
+      - diana7_j7
 initial:  # Define initial robot poses per group
   - group: arm1
     pose: home

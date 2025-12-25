@@ -15,13 +15,11 @@ int main(int argc, char** argv)
   fr5_hardware::ZLabArmHWInterface hw(nh, private_nh);
   if (!hw.init())
   {
-    ROS_ERROR("Failed to initialize hardware interface");
+    ROS_ERROR("Failed to initialize fr5 hardware interface");
     return 1;
   }
 
   // Create controller manager
-  // Use nh (group namespace) so controller_spawner can find it
-  // In group ns="arm1", nh will be "/arm1", private_nh will be "/arm1/fr5_hardware"
   controller_manager::ControllerManager cm(&hw, nh);
 
   // Get control loop parameters
@@ -40,7 +38,7 @@ int main(int argc, char** argv)
   ros::AsyncSpinner spinner(2);
   spinner.start();
 
-  ROS_INFO("Starting control loop at %f Hz", loop_hz);
+  ROS_INFO("Starting fr5 control loop at %f Hz", loop_hz);
 
   while (ros::ok())
   {
@@ -57,7 +55,8 @@ int main(int argc, char** argv)
     const double cycle_time_error = (elapsed_time - desired_update_period).toSec();
     if (cycle_time_error > cycle_time_error_threshold)
     {
-    //   ROS_WARN("Control loop missed desired period by %.4fs", cycle_time_error);
+      ROS_WARN_THROTTLE(5.0, "[%s] Control loop missed desired period by %.4fs", 
+                        nh.getNamespace().c_str(), cycle_time_error);
     }
 
     // Read from hardware

@@ -4,7 +4,7 @@
   <arg name="robot_ip" default="192.168.31.200"/>
   <arg name="load_robot_description" default="true"/>
   <arg name="tool_name" default="none"/>
-  <arg name="prefix" default=""/>
+  <arg name="prefix" default="diana7_" doc="Joint name prefix (default: diana7_ for consistency with FR5)"/>
 
   <!-- Load Robot Description -->
   <group if="$(arg load_robot_description)">
@@ -23,13 +23,13 @@
     <node name="diana7_hardware" pkg="diana7_hardware" type="diana7_hw_main" output="screen">
       <param name="ip_address" value="$(arg robot_ip)"/>
       <rosparam param="joints" subst_value="true">
-        - $(arg prefix)joint_1
-        - $(arg prefix)joint_2
-        - $(arg prefix)joint_3
-        - $(arg prefix)joint_4
-        - $(arg prefix)joint_5
-        - $(arg prefix)joint_6
-        - $(arg prefix)joint_7
+        - $(arg prefix)j1
+        - $(arg prefix)j2
+        - $(arg prefix)j3
+        - $(arg prefix)j4
+        - $(arg prefix)j5
+        - $(arg prefix)j6
+        - $(arg prefix)j7
       </rosparam>
       <!-- Remap joint_states if needed, but usually controller publishes it -->
     </node>

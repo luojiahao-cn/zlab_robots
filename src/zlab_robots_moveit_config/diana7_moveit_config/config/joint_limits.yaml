@@ -2,37 +2,37 @@
 # Specific joint properties can be changed with the keys [min_position, max_position, max_velocity, max_acceleration]
 # Joint limits can be turned off with [has_velocity_limits, has_acceleration_limits]
 joint_limits:
-  joint_1:
+  diana7_j1:
     has_velocity_limits: true
     max_velocity: 2.61
     has_acceleration_limits: false
     max_acceleration: 0
-  joint_2:
+  diana7_j2:
     has_velocity_limits: true
     max_velocity: 2.61
     has_acceleration_limits: false
     max_acceleration: 0
-  joint_3:
+  diana7_j3:
     has_velocity_limits: true
     max_velocity: 2.61
     has_acceleration_limits: false
     max_acceleration: 0
-  joint_4:
+  diana7_j4:
     has_velocity_limits: true
     max_velocity: 2.61
     has_acceleration_limits: false
     max_acceleration: 0
-  joint_5:
+  diana7_j5:
     has_velocity_limits: true
     max_velocity: 2.61
     has_acceleration_limits: false
     max_acceleration: 0
-  joint_6:
+  diana7_j6:
     has_velocity_limits: true
     max_velocity: 2.61
     has_acceleration_limits: false
     max_acceleration: 0
-  joint_7:
+  diana7_j7:
     has_velocity_limits: true
     max_velocity: 2.61
     has_acceleration_limits: false

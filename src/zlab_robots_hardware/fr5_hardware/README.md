@@ -28,28 +28,29 @@
 
 启动 arm1（默认 IP: 192.168.31.201）：
 ```bash
-roslaunch fr5_hardware arm_hardware.launch arm_id:=arm1
+roslaunch fr5_hardware fr5_hardware.launch arm_id:=arm1
 ```
 
 启动 arm2（默认 IP: 192.168.31.202）：
 ```bash
-roslaunch fr5_hardware arm_hardware.launch arm_id:=arm2
+roslaunch fr5_hardware fr5_hardware.launch arm_id:=arm2
 ```
 
 指定 IP 地址：
 ```bash
-roslaunch fr5_hardware arm_hardware.launch arm_id:=arm1 robot_ip:=192.168.31.201
+roslaunch fr5_hardware fr5_hardware.launch arm_id:=arm1 robot_ip:=192.168.31.201
 ```
 
 指定工具：
 ```bash
-roslaunch fr5_hardware arm_hardware.launch arm_id:=arm1 tool_name:=permanent_magnet
+roslaunch fr5_hardware fr5_hardware.launch arm_id:=arm1 tool_name:=permanent_magnet
 ```
 
 ### 双机械臂
 
+使用 bringup 包启动：
 ```bash
-roslaunch fr5_hardware dual_arms_hardware.launch \
+roslaunch fr5_bringup dual_arms_bringup.launch \
     arm1_ip:=192.168.31.201 \
     arm2_ip:=192.168.31.202 \
     arm1_tool:=permanent_magnet \
@@ -99,8 +100,7 @@ fr5_hardware/
 │   ├── arm1_controllers.yaml      # arm1 控制器配置
 │   └── arm2_controllers.yaml      # arm2 控制器配置
 ├── launch/
-│   ├── arm_hardware.launch        # 通用单臂启动文件（通过arm_id参数配置）
-│   └── dual_arms_hardware.launch  # 双臂启动文件
+│   └── fr5_hardware.launch        # 通用单臂启动文件（通过arm_id参数配置）
 └── README.md
 ```
 

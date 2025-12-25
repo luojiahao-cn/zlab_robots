@@ -9,13 +9,13 @@ generic_hw_control_loop:
 # Settings for ros_control hardware interface
 hardware_interface:
   joints:
-    - joint_1
-    - joint_2
-    - joint_3
-    - joint_4
-    - joint_5
-    - joint_6
-    - joint_7
+    - diana7_j1
+    - diana7_j2
+    - diana7_j3
+    - diana7_j4
+    - diana7_j5
+    - diana7_j6
+    - diana7_j7
   sim_control_mode: 1  # 0: position, 1: velocity
 # Publish all joint states
 # Creates the /joint_states topic necessary in ROS
@@ -28,10 +28,10 @@ controller_list:
     default: True
     type: FollowJointTrajectory
     joints:
-      - joint_1
-      - joint_2
-      - joint_3
-      - joint_4
-      - joint_5
-      - joint_6
-      - joint_7
+      - diana7_j1
+      - diana7_j2
+      - diana7_j3
+      - diana7_j4
+      - diana7_j5
+      - diana7_j6
+      - diana7_j7

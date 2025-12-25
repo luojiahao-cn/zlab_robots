@@ -56,13 +56,13 @@
 
     <!-- Diana7 States -->
     <group_state name="home" group="diana7">
-        <joint name="diana7_joint_1" value="0"/>
-        <joint name="diana7_joint_2" value="0"/>
-        <joint name="diana7_joint_3" value="0"/>
-        <joint name="diana7_joint_4" value="0"/>
-        <joint name="diana7_joint_5" value="0"/>
-        <joint name="diana7_joint_6" value="0"/>
-        <joint name="diana7_joint_7" value="0"/>
+        <joint name="diana7_j1" value="0"/>
+        <joint name="diana7_j2" value="0"/>
+        <joint name="diana7_j3" value="0"/>
+        <joint name="diana7_j4" value="0"/>
+        <joint name="diana7_j5" value="0"/>
+        <joint name="diana7_j6" value="0"/>
+        <joint name="diana7_j7" value="0"/>
     </group_state>
 
     <!-- Triple Arms States -->
@@ -79,13 +79,13 @@
         <joint name="arm2_j4" value="0"/>
         <joint name="arm2_j5" value="0"/>
         <joint name="arm2_j6" value="0"/>
-        <joint name="diana7_joint_1" value="0"/>
-        <joint name="diana7_joint_2" value="0"/>
-        <joint name="diana7_joint_3" value="0"/>
-        <joint name="diana7_joint_4" value="0"/>
-        <joint name="diana7_joint_5" value="0"/>
-        <joint name="diana7_joint_6" value="0"/>
-        <joint name="diana7_joint_7" value="0"/>
+        <joint name="diana7_j1" value="0"/>
+        <joint name="diana7_j2" value="0"/>
+        <joint name="diana7_j3" value="0"/>
+        <joint name="diana7_j4" value="0"/>
+        <joint name="diana7_j5" value="0"/>
+        <joint name="diana7_j6" value="0"/>
+        <joint name="diana7_j7" value="0"/>
     </group_state>
 
     <!-- VIRTUAL JOINTS -->

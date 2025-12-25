@@ -17,7 +17,7 @@
   <arg name="use_rviz" default="true" doc="Start RViz"/>
   
   <!-- Launch hardware interface -->
-  <include file="$(find fr5_hardware)/launch/arm_hardware.launch">
+  <include file="$(find fr5_hardware)/launch/fr5_hardware.launch">
     <arg name="arm_id" value="$(arg arm_id)"/>
     <arg name="robot_ip" value="$(arg robot_ip)"/>
     <arg name="loop_hz" value="$(arg loop_hz)"/>

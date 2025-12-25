@@ -124,34 +124,34 @@ arm2_controller:
 position_trajectory_controller:
   type: position_controllers/JointTrajectoryController
   joints:
-    - diana7_joint_1
-    - diana7_joint_2
-    - diana7_joint_3
-    - diana7_joint_4
-    - diana7_joint_5
-    - diana7_joint_6
-    - diana7_joint_7
+    - diana7_j1
+    - diana7_j2
+    - diana7_j3
+    - diana7_j4
+    - diana7_j5
+    - diana7_j6
+    - diana7_j7
   constraints:
     goal_time: 3.0
     stopped_velocity_tolerance: 0.0
-    diana7_joint_1:
+    diana7_j1:
       trajectory: 0.05
       goal: 0.01
-    diana7_joint_2:
+    diana7_j2:
       trajectory: 0.05
       goal: 0.01
-    diana7_joint_3:
+    diana7_j3:
       trajectory: 0.05
       goal: 0.01
-    diana7_joint_4:
+    diana7_j4:
       trajectory: 0.05
       goal: 0.01
-    diana7_joint_5:
+    diana7_j5:
       trajectory: 0.05
       goal: 0.01
-    diana7_joint_6:
+    diana7_j6:
       trajectory: 0.05
       goal: 0.01
-    diana7_joint_7:
+    diana7_j7:
       trajectory: 0.05
       goal: 0.01

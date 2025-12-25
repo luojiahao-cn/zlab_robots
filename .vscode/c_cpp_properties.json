@@ -13,7 +13,8 @@
                 "/opt/DianaApi/include/**",
                 "${workspaceFolder}/catkin_ws/devel/include/**",
                 "${workspaceFolder}/catkin_ws/src/**/include/**",
-                "${workspaceFolder}/src/diana7_hardware/include"
+                "${workspaceFolder}/src/diana7_hardware/include",
+                "${workspaceFolder}/src/zlab_robots_calibration/include"
             ],
             "name": "ROS",
             "intelliSenseMode": "gcc-x64",

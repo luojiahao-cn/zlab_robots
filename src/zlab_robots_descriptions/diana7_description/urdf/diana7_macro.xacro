@@ -139,7 +139,7 @@
       </collision>
     </link>
 
-    <joint name="${prefix}joint_1" type="revolute">
+    <joint name="${prefix}j1" type="revolute">
       <origin
         xyz="0.0 -2.9150689157e-12 0.2856"
         rpy="-3.1415926535795866 0.0 -0.0" />
@@ -188,7 +188,7 @@
       </collision>
     </link>
 
-    <joint name="${prefix}joint_2" type="revolute">
+    <joint name="${prefix}j2" type="revolute">
       <origin
         xyz="0.0 -0.0 0.0"
         rpy="1.57079632679 -0.0 0.0" />
@@ -238,7 +238,7 @@
       </collision>
     </link>
 
-    <joint name="${prefix}joint_3" type="revolute">
+    <joint name="${prefix}j3" type="revolute">
       <origin
         xyz="0.0 -0.4586 -2.24557565126e-12"
         rpy="-1.57079632679 0.0 0.0" />
@@ -287,7 +287,7 @@
       </collision>
     </link>
 
-    <joint name="${prefix}joint_4" type="revolute">
+    <joint name="${prefix}j4" type="revolute">
       <origin
         xyz="0.065 -0.0 0.0"
         rpy="1.57079632679 -0.0 0.0" />
@@ -336,7 +336,7 @@
       </collision>
     </link>
 
-    <joint name="${prefix}joint_5" type="revolute">
+    <joint name="${prefix}j5" type="revolute">
       <origin
         xyz="-0.0528 -0.4554 -2.22990656691e-12"
         rpy="-1.57079632679 0.0 0.0" />
@@ -385,7 +385,7 @@
       </collision>
     </link>
 
-    <joint name="${prefix}joint_6" type="revolute">
+    <joint name="${prefix}j6" type="revolute">
       <origin
         xyz="-0.0122 0.0 0.0"
         rpy="1.57079632679 -1.0206823934513925e-11 -3.141592653589793" />
@@ -434,7 +434,7 @@
       </collision>
     </link>
 
-    <joint name="${prefix}joint_7" type="revolute">
+    <joint name="${prefix}j7" type="revolute">
       <origin
         xyz="0.087 -0.1169 -5.72411237751e-13"
         rpy="-1.57079632679 0.0 0.0" />
