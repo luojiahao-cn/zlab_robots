@@ -14,17 +14,23 @@
        <xacro:electronic_magnet prefix="${prefix}" parent="${parent}"/>
     </xacro:if>
     
-    <xacro:elif value="${tool_name == 'permanent_magnet'}">
-       <xacro:permanent_magnet prefix="${prefix}" parent="${parent}"/>
-    </xacro:elif>
-
-    <xacro:elif value="${tool_name == 'magnetic_sensor_bracket'}">
-       <xacro:magnetic_sensor_bracket prefix="${prefix}" parent="${parent}"/>
-    </xacro:elif>
-
-    <xacro:elif value="${tool_name == 'magnetometer_array'}">
-       <xacro:magnetometer_array prefix="${prefix}" parent="${parent}"/>
-    </xacro:elif>
+    <xacro:unless value="${tool_name == 'electronic_magnet'}">
+      <xacro:if value="${tool_name == 'permanent_magnet'}">
+         <xacro:permanent_magnet prefix="${prefix}" parent="${parent}"/>
+      </xacro:if>
+      
+      <xacro:unless value="${tool_name == 'permanent_magnet'}">
+        <xacro:if value="${tool_name == 'magnetic_sensor_bracket'}">
+           <xacro:magnetic_sensor_bracket prefix="${prefix}" parent="${parent}"/>
+        </xacro:if>
+        
+        <xacro:unless value="${tool_name == 'magnetic_sensor_bracket'}">
+          <xacro:if value="${tool_name == 'magnetometer_array'}">
+             <xacro:magnetometer_array prefix="${prefix}" parent="${parent}"/>
+          </xacro:if>
+        </xacro:unless>
+      </xacro:unless>
+    </xacro:unless>
     
   </xacro:macro>
 </robot>
