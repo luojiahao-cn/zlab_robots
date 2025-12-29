@@ -26,23 +26,10 @@
             diana7_base_link arm2_pedestal_link"/> -->
 
 <!-- ===================== -->
-<!-- 1. RealSense D405 -->
+<!-- 1. ZED2i Camera -->
 <!-- ===================== -->
 
-<include file="$(find realsense2_camera)/launch/rs_camera.launch">
-  <!-- 基本开关 -->
-  <arg name="enable_color" value="true"/>
-  <arg name="enable_depth" value="true"/>
-  <arg name="align_depth" value="true"/>
-
-  <!-- 推荐：固定分辨率和帧率（利于标定稳定） -->
-  <arg name="color_width"  value="848"/>
-  <arg name="color_height" value="480"/>
-  <arg name="color_fps"    value="30"/>
-
-  <arg name="depth_width"  value="848"/>
-  <arg name="depth_height" value="480"/>
-  <arg name="depth_fps"    value="30"/>
+<include file="$(find zed_wrapper)/launch/zed2i.launch">
 </include>
 <!-- ===================== -->
 <!-- 2. AprilTag Node -->
@@ -52,8 +39,8 @@
     name="apriltag"
     output="screen">
 
-  <remap from="image_rect" to="/camera/color/image_raw"/>
-  <remap from="camera_info" to="/camera/color/camera_info"/>
+  <remap from="image_rect" to="/zed2i/zed_node/left_raw/image_raw_color"/>
+  <remap from="camera_info" to="/zed2i/zed_node/left_raw/camera_info"/>
 
   <param name="publish_tf" value="true"/>
   <param name="publish_tag_detections_image" value="true"/>

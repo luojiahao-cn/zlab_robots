@@ -8,16 +8,16 @@
 
     <!-- Arguments for positions -->
     <!-- Diana7 (Center) -->
-    <xacro:arg name="diana7_xyz" default="0 0 0"/>
-    <xacro:arg name="diana7_rpy" default="0 0 0"/>
+    <xacro:arg name="diana7_xyz" default=""/>
+    <xacro:arg name="diana7_rpy" default=""/>
 
     <!-- FR5 Arm 1 (Left) -->
-    <xacro:arg name="arm1_xyz" default="1.5 -0.2 0"/>
-    <xacro:arg name="arm1_rpy" default="0 0 0"/>
+    <xacro:arg name="arm1_xyz" default=""/>
+    <xacro:arg name="arm1_rpy" default=""/>
 
     <!-- FR5 Arm 2 (Right) -->
-    <xacro:arg name="arm2_xyz" default="1.5 0.4 0"/>
-    <xacro:arg name="arm2_rpy" default="0 0 0"/>
+    <xacro:arg name="arm2_xyz" default=""/>
+    <xacro:arg name="arm2_rpy" default=""/>
 
     <!-- Resolve positions (Priority: CLI/Launch > YAML > Xacro Default) -->
     <xacro:property name="d7_xyz_arg" value="$(arg diana7_xyz)"/>
@@ -57,7 +57,7 @@
     </xacro:diana7_robot>
 
     <!-- Instantiate FR5 Arm 1 -->
-    <xacro:fr 
+    <xacro:fr5 
         arm_id="arm1" 
         connected_to="world" 
         xyz="${arm1_xyz_final}" 
@@ -65,7 +65,7 @@
         tool_name="$(arg arm1_tool)"/>
     
     <!-- Instantiate FR5 Arm 2 -->
-    <xacro:fr 
+    <xacro:fr5 
         arm_id="arm2" 
         connected_to="world" 
         xyz="${arm2_xyz_final}" 

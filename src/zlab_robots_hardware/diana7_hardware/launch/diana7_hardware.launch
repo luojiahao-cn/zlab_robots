@@ -9,6 +9,7 @@
   <arg name="tool_name" default="none"/>
   <arg name="prefix" default="diana7_" doc="Joint name prefix (default: diana7_ for consistency with FR5)"/>
   <arg name="loop_hz" default="1000.0" doc="Control loop frequency (Hz)"/>
+  <arg name="show_cycle_time_warn" default="true" doc="Whether to show control loop cycle time warning"/>
 
   <!-- Load Robot Description -->
   <group if="$(arg load_robot_description)">
@@ -31,6 +32,7 @@
     <node name="diana7_hardware" pkg="diana7_hardware" type="diana7_hw_main" output="screen">
       <param name="ip_address" value="$(arg robot_ip)"/>
       <param name="loop_hz" value="$(arg loop_hz)"/>
+      <param name="show_cycle_time_warn" value="$(arg show_cycle_time_warn)"/>
       <rosparam param="joints" subst_value="true">
         - $(arg prefix)joint_1
         - $(arg prefix)joint_2

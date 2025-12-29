@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<robot name="fr" xmlns:xacro="http://www.ros.org/wiki/xacro">
-    <xacro:macro name="fr"
+<robot name="fr5" xmlns:xacro="http://www.ros.org/wiki/xacro">
+    <xacro:macro name="fr5"
         params="arm_id:='fr1' connected_to:='' xyz:='0 0 0' rpy:='0 0 0' tool_name:='none' tool_config:='{}'">
         <xacro:unless value="${not connected_to}">
             <joint name="${arm_id}_joint_world_to_pedestal" type="fixed">
@@ -222,14 +222,6 @@
                 k_velocity="10" />
         </joint>
 
-        <!-- Flange Link -->
-        <link name="${arm_id}_flange" />
-        <joint name="${arm_id}_joint_flange" type="fixed">
-            <parent link="${arm_id}_link_6" />
-            <child link="${arm_id}_flange" />
-            <origin xyz="0 0 0.1" rpy="0 0 0" />
-        </joint>
-
         <!-- 如果工具名称为none，只创建ee_link，不加载工具 -->
         <xacro:if value="${tool_name == 'none'}">
             <link name="${arm_id}_ee_link">
@@ -243,9 +235,9 @@
             </link>
             
             <joint name="${arm_id}_ee_joint" type="fixed">
-                <parent link="${arm_id}_flange" />
+                <parent link="${arm_id}_link_6" />
                 <child link="${arm_id}_ee_link" />
-                <origin xyz="0 0 0" rpy="0 0 0" />
+                <origin xyz="0 0 0.1" rpy="0 0 0" />
             </joint>
         </xacro:if>
         
@@ -259,7 +251,7 @@
             
             <!-- 如果使用工具包系统，先创建ee_link作为中间链接 -->
             <xacro:if value="${use_tool_package}">
-                <!-- 创建ee_link（连接到flange） -->
+                <!-- 创建ee_link（连接到link_6） -->
                 <link name="${arm_id}_ee_link">
                     <inertial>
                         <origin xyz="0 0 0" rpy="0 0 0"/>
@@ -270,11 +262,11 @@
                     </inertial>
                 </link>
                 
-                <!-- 创建从flange到ee_link的关节 -->
+                <!-- 创建从link_6到ee_link的关节 -->
                 <joint name="${arm_id}_ee_joint" type="fixed">
-                    <parent link="${arm_id}_flange" />
+                    <parent link="${arm_id}_link_6" />
                     <child link="${arm_id}_ee_link" />
-                    <origin xyz="0 0 0" rpy="0 0 0" />
+                    <origin xyz="0 0 0.1" rpy="0 0 0" />
                 </joint>
                 
                 <!-- 使用新的工具加载器，工具将连接到ee_link -->

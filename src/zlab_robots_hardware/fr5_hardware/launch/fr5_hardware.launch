@@ -15,6 +15,9 @@
   <!-- Control loop frequency -->
   <arg name="loop_hz" default="60.0" doc="Control loop frequency (Hz)"/>
   
+  <!-- Show cycle time warning -->
+  <arg name="show_cycle_time_warn" default="true" doc="Whether to show control loop cycle time warning"/>
+  
   <!-- Tool parameter (optional) -->
   <arg name="tool_name" default="none" doc="Tool name to use"/>
   
@@ -42,6 +45,7 @@
     <node name="fr5_hardware" pkg="fr5_hardware" type="fr5_hw_main" output="screen">
       <param name="robot_ip" value="$(arg actual_robot_ip)"/>
       <param name="loop_hz" value="$(arg loop_hz)"/>
+      <param name="show_cycle_time_warn" value="$(arg show_cycle_time_warn)"/>
       
       <!-- Set joints based on arm_id (for hardware interface) -->
       <rosparam param="hardware_interface/joints" subst_value="true">

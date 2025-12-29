@@ -30,6 +30,9 @@ int main(int argc, char** argv)
   double cycle_time_error_threshold;
   private_nh.param("cycle_time_error_threshold", cycle_time_error_threshold, desired_update_period.toSec() * 0.5);
 
+  bool show_cycle_time_warn;
+  private_nh.param("show_cycle_time_warn", show_cycle_time_warn, true);
+
   // Timing
   struct timespec last_time;
   struct timespec current_time;
@@ -53,10 +56,10 @@ int main(int argc, char** argv)
 
     // Check cycle time
     const double cycle_time_error = (elapsed_time - desired_update_period).toSec();
-    if (cycle_time_error > cycle_time_error_threshold)
+    if (show_cycle_time_warn && cycle_time_error > cycle_time_error_threshold)
     {
-      ROS_WARN_THROTTLE(5.0, "[%s] Control loop missed desired period by %.4fs", 
-                        nh.getNamespace().c_str(), cycle_time_error);
+      ROS_WARN_THROTTLE(5.0, "[%s] 控制循环未达到预期频率。预期耗时: %.4fs, 实际耗时: %.4fs, 超时: %.4fs。建议降低 loop_hz 参数。", 
+                        nh.getNamespace().c_str(), desired_update_period.toSec(), elapsed_time.toSec(), cycle_time_error);
     }
 
     // Read from hardware

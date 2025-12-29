@@ -33,6 +33,13 @@ public:
   // 是否已经收集完成
   bool isReady() const;
 
+  double translationStd(
+    const std::vector<tf2::Transform>& buf) const;
+
+  double rotationStd(
+    const std::vector<tf2::Transform>& buf,
+    const tf2::Quaternion& q_ref) const;
+
   // 获取 median 结果（调用前必须 isReady() == true）
   void getMedian(tf2::Transform& T1_out,
                  tf2::Transform& T2_out,

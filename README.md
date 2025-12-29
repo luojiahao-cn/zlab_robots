@@ -49,7 +49,7 @@
 - **关节命名**：`[arm_id]_joint_1` 到 `[arm_id]_joint_N`（例如 `arm1_joint_1`, `diana7_joint_1`）。
 - **连杆命名**：`[arm_id]_link_1` 到 `[arm_id]_link_N`。
 - **底座结构**：`world` -> `[arm_id]_pedestal_link` (固定底座) -> `[arm_id]_base_link` (机械臂基点)。
-- **末端结构**：`[arm_id]_link_N` -> `[arm_id]_flange` -> `[arm_id]_ee_link` (工具挂载点)。
+- **末端结构**：`[arm_id]_link_N` -> `[arm_id]_ee_link` (工具挂载点)。
 
 ## 末端工具加载
 
@@ -237,7 +237,7 @@ roslaunch triple_arm_moveit_config demo.launch \
 ### 2025-12-25
 1. **系统架构大重构**：
    - 统一了所有机械臂的命名规范（`[arm_id]_joint_N` 和 `[arm_id]_link_N`）。
-   - 简化了 URDF 树结构，统一使用 `pedestal_link`、`base_link`、`flange` 和 `ee_link`。
+   - 简化了 URDF 树结构，统一使用 `pedestal_link`、`base_link` 和 `ee_link`。
    - 整合了所有启动文件到 `zlab_robots_bringup` 包中。
    - 重新组织了 FR5 启动文件，分为 `single` 和 `dual` 子目录。
    - 更新了所有 MoveIt 配置以匹配新的命名规范。

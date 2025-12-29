@@ -20,6 +20,33 @@
 
 #include <thread>
 
+#include "zlab_robots_calibration/calibrate_algorithm.h"
+
+#include <yaml-cpp/yaml.h>
+#include <fstream>
+
+YAML::Node transformToYaml(
+    const tf2::Transform& T)
+{
+  YAML::Node node;
+  node["xyz"] = YAML::Load("[" +
+      std::to_string(T.getOrigin().x()) + " " +
+      std::to_string(T.getOrigin().y()) + " " +
+      std::to_string(T.getOrigin().z()) + "]");
+
+  tf2::Quaternion q = T.getRotation();
+  double r, p, y;
+  tf2::Matrix3x3(q).getRPY(r, p, y);
+
+  node["rpy"] = YAML::Load("[" +
+      std::to_string(r) + " " +
+      std::to_string(p) + " " +
+      std::to_string(y) + "]");
+
+  return node;
+}
+
+
 std::thread keyboard_thread_;
 
 class CalibrationNode
@@ -41,6 +68,12 @@ public:
     //     &CalibrationNode::depthCallback, this);
     keyboard_thread_ = std::thread(&CalibrationNode::keyboardLoop, this);
 
+    // 读取参数：用于指定保存 YAML 的路径
+    ros::NodeHandle pnh("~");
+    pnh.param<std::string>("results_yaml", results_yaml_path_,
+      std::string("/home/zhang/zlab_robots/src/zlab_robots_calibration/results/results.yaml"));
+    ROS_INFO_STREAM("Results YAML path: " << results_yaml_path_);
+
     ROS_INFO("CalibrationNode initialized.");
     ROS_INFO("Press 'c' to trigger calibration, 'r' to reset.");
   }
@@ -58,7 +91,6 @@ private:
   image_transport::Subscriber depth_sub_;
 
   bool trigger_calibration_ = false;
-  bool calibrated_once_ = false;
 
   cv::Mat latest_rgb_;
   cv::Mat latest_depth_;
@@ -73,73 +105,46 @@ private:
   tf2_ros::Buffer tf_buffer_;
   tf2_ros::TransformListener tf_listener_;
 
-  struct OnlineTfAverager
+  // 从参数服务器读取的 YAML 保存路径
+  std::string results_yaml_path_;
+
+  CalibrateAlgorithm calibrate_algorithm{200}; // 需要 200 帧数据进行标定
+
+  void saveResultToYaml(
+    const std::string& filename,
+    const tf2::Transform& T1,
+    const tf2::Transform& T2,
+    const tf2::Transform& T3)
   {
-    tf2::Vector3 p_avg;
-    tf2::Quaternion q_avg;
-    int k = 0;
-    bool initialized = false;
+    YAML::Node root;
 
-    void update(const tf2::Transform& T_meas)
+    // 如果文件存在，先读进来
+    std::ifstream fin(filename);
+    if (fin.good())
     {
-      k++;
+      root = YAML::LoadFile(filename);
+    }
+    fin.close();
 
-      tf2::Vector3 p = T_meas.getOrigin();
-      tf2::Quaternion q = T_meas.getRotation();
-      q.normalize();
-
-      if (!initialized)
-      {
-        p_avg = p;
-        q_avg = q;
-        initialized = true;
-        return;
-      }
-
-      // ---- translation: p_k = p_{k-1} + 1/k (p_meas - p_{k-1})
-      p_avg = p_avg + (p - p_avg) * (1.0 / k);
-
-      // ---- rotation: SO(3) exponential averaging
-      tf2::Quaternion dq = q_avg.inverse() * q;
-      dq.normalize();
-
-      double angle = dq.getAngle();
-      if (angle > M_PI)
-        angle -= 2 * M_PI;
-
-      tf2::Vector3 axis = dq.getAxis();
-      tf2::Vector3 delta = axis * angle;
-      delta *= (1.0 / k);
-
-      double theta = delta.length();
-      tf2::Quaternion dq_update;
-      if (theta < 1e-12)
-        dq_update.setRPY(0.0, 0.0, 0.0);
-      else
-        dq_update.setRotation(delta.normalized(), theta);
-
-      q_avg = q_avg * dq_update;
-      q_avg.normalize();
+    if (!root["calibrations"])
+    {
+      root["calibrations"] = YAML::Node(YAML::NodeType::Sequence);
     }
 
-    tf2::Transform get() const
-    {
-      tf2::Transform T;
-      T.setOrigin(p_avg);
-      T.setRotation(q_avg);
-      return T;
-    }
+    YAML::Node entry;
+    entry["time"] = ros::Time::now().toSec();
 
-    void reset()
-    {
-      initialized = false;
-      k = 0;
-    }
-  };
+    entry["T1"] = transformToYaml(T1);
+    entry["T2"] = transformToYaml(T2);
+    entry["T3"] = transformToYaml(T3);
 
-  OnlineTfAverager fr1_base_filter_;
-  OnlineTfAverager fr2_base_filter_;
-  int valid_count_ = 0;
+    root["calibrations"].push_back(entry);
+
+    std::ofstream fout(filename);
+    fout << root;
+    fout.close();
+  }
+
 
   void keyboardLoop()
   {
@@ -151,22 +156,17 @@ private:
       if (c == 'c')
       {
         trigger_calibration_ = true;
-        calibrated_once_ = false;
         ROS_WARN("Calibration triggered. Waiting for stable detection...");
       }
       else if (c == 'r')
       {
-        calibrated_once_ = false;
         trigger_calibration_ = false;
         ROS_WARN("Calibration reset.");
-        fr1_base_filter_.reset();
-        fr2_base_filter_.reset();
-        valid_count_ = 0;
       }
     }
   }
 
-  
+  int valid_count_ = 0;
   /* ================= Tag Callback ================= */
 
   void printTf(const std::string &name, const tf2::Transform &T) const
@@ -261,6 +261,7 @@ private:
       // --------------------------------------------------
       // 3. 从 TF 中获取 T_base_ee
       // --------------------------------------------------
+      // ros::Time stamp = msg->header.stamp;
       auto T_diana_base_ee_msg =
           tf_buffer_.lookupTransform("diana7_pedestal_link", "diana7_tcp", ros::Time(0));
       auto T_fr1_base_ee_msg =
@@ -298,25 +299,48 @@ private:
       tf2::Transform T_world_fr2_base =
           T_cam_diana_base.inverse() * T_cam_fr2_base;
 
-      tf2::Transform T_world_fr2_ee = 
-          T_diana_base_ee * T_cam_diana_ee.inverse() * T_cam_fr2_ee;
+      // tf2::Transform T_world_fr2_ee = 
+      //     T_diana_base_ee * T_cam_diana_ee.inverse() * T_cam_fr2_ee;
       
-      tf2::Transform T_world_fr1_ee = 
-          T_diana_base_ee * T_cam_diana_ee.inverse() * T_cam_fr1_ee;        
+      // tf2::Transform T_world_fr1_ee = 
+      //     T_diana_base_ee * T_cam_diana_ee.inverse() * T_cam_fr1_ee;        
 
       // --------------------------------------------------
-      // 6. 输出一次标定结果
+      // 6. 将本次回调的计算结果输入标定算法，进行一次标定
       // --------------------------------------------------
+      tf2::Transform T_world_diana_base;
+      T_world_diana_base.setIdentity();
 
-      // 将标定进行滤波
-      fr1_base_filter_.update(T_world_fr1_base);
-      fr2_base_filter_.update(T_world_fr2_base);
+      bool accepted = calibrate_algorithm.addSample(
+      T_world_fr1_base,
+      T_world_fr2_base,
+      T_world_diana_base);
 
-      tf2::Transform T_world_fr1_base_filt = fr1_base_filter_.get();
-      tf2::Transform T_world_fr2_base_filt = fr2_base_filter_.get();
+      if (!accepted)
+        return;
 
-      printTf("WORLD -> FR1_BASE", T_world_fr1_base_filt);
-      printTf("WORLD -> FR2_BASE", T_world_fr2_base_filt);
+      valid_count_++;
+      ROS_INFO_STREAM("Valid calibration count = " << valid_count_);
+
+      if (calibrate_algorithm.isReady())
+      {
+        // --------------------------------------------------
+        // 7. 标定完成，输出结果
+        // --------------------------------------------------
+        tf2::Transform FR1, FR2, DA;
+        calibrate_algorithm.getMedian(FR1, FR2, DA);
+        ROS_INFO("----- Calibration results: -----");
+        printTf("WORLD -> FR1_BASE", FR1);
+        printTf("WORLD -> FR2_BASE", FR2);
+        ROS_INFO("Calibration finished!");
+        // 用 FR1, FR2, DA 做最终标定
+        saveResultToYaml(results_yaml_path_, FR1, FR2, DA);
+
+        ROS_WARN("Stable calibration ready.");
+        trigger_calibration_ = false;
+        valid_count_ = 0;
+        calibrate_algorithm.reset();
+      }
 
       // Broadcast EE transforms
       // auto broadcastTf = [&](const tf2::Transform &T, const std::string &parent, const std::string &child) {
@@ -330,10 +354,6 @@ private:
 
       // broadcastTf(T_world_fr1_ee, "diana7_pedestal_link", "calib_fr1_ee");
       // broadcastTf(T_world_fr2_ee, "diana7_pedestal_link", "calib_fr2_ee");
-
-      
-      valid_count_++;
-      ROS_INFO_STREAM("Valid calibration count = " << valid_count_);
 
     }
     catch (tf2::TransformException &ex)

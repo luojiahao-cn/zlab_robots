@@ -6,6 +6,9 @@
   <!-- Control loop frequency -->
   <arg name="loop_hz" default="1000.0" doc="Control loop frequency (Hz)"/>
 
+  <!-- Show cycle time warning -->
+  <arg name="show_cycle_time_warn" default="true" doc="Whether to show control loop cycle time warning"/>
+
   <!-- Layout configuration -->
   <arg name="layout_config" default="$(find zlab_robots_bringup)/config/robot_layout.yaml" doc="Path to robot layout configuration YAML"/>
 
@@ -29,6 +32,7 @@
     <arg name="robot_ip" value="$(arg robot_ip)"/>
     <arg name="tool_name" value="$(arg tool_name)"/>
     <arg name="loop_hz" value="$(arg loop_hz)"/>
+    <arg name="show_cycle_time_warn" value="$(arg show_cycle_time_warn)"/>
     <arg name="prefix" value="$(arg prefix)"/>
     <arg name="layout_config" value="$(arg layout_config)"/>
     <arg name="xyz" value="$(arg xyz)"/>

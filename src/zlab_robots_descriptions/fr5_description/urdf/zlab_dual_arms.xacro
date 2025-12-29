@@ -65,7 +65,7 @@
     </xacro:unless>
 
     <!-- ========== 实例化 arm1 ========== -->
-    <xacro:fr 
+    <xacro:fr5 
         arm_id="arm1" 
         connected_to="world" 
         xyz="${arm1_xyz_final}"
@@ -80,7 +80,7 @@
     <xacro:gazebo-joint joint="arm1_joint_6" />
 
     <!-- ========== 实例化 arm2 ========== -->
-    <xacro:fr 
+    <xacro:fr5 
         arm_id="arm2" 
         connected_to="world" 
         xyz="${arm2_xyz_final}"

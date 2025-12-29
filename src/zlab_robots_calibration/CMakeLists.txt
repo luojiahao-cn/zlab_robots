@@ -15,7 +15,7 @@ find_package(catkin REQUIRED COMPONENTS
   cv_bridge
   apriltag_ros
 )
-
+find_package(yaml-cpp REQUIRED)
 find_package(OpenCV REQUIRED)
 
 catkin_package(
@@ -39,7 +39,7 @@ include_directories(
 
 add_executable(calibration_node
   src/calibration_node.cpp
-  src/calibrate_algorithm.cpp
+  # src/calibrate_algorithm.cpp
 )
 
 
@@ -47,6 +47,7 @@ add_executable(calibration_node
 target_link_libraries(calibration_node
   ${catkin_LIBRARIES}
   ${OpenCV_LIBRARIES}
+  yaml-cpp
 )
 
 

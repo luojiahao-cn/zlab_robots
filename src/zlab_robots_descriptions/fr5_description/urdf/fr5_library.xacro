@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<robot name="fr" xmlns:xacro="http://www.ros.org/wiki/xacro">
-    <xacro:macro name="fr"
+<robot name="fr5" xmlns:xacro="http://www.ros.org/wiki/xacro">
+    <xacro:macro name="fr5"
         params="arm_id:='fr1' connected_to:='' xyz:='0 0 0' rpy:='0 0 0' tool_name:='none'">
         <xacro:unless value="${not connected_to}">
             <joint name="${arm_id}_joint_world_to_pedestal" type="fixed">
@@ -215,23 +215,15 @@
                 k_velocity="10" />
         </joint>
 
-        <!-- Flange Link -->
-        <link name="${arm_id}_flange" />
-        <joint name="${arm_id}_joint_flange" type="fixed">
-            <parent link="${arm_id}_link_6" />
-            <child link="${arm_id}_flange" />
-            <origin xyz="0 0 0.1" rpy="0 0 0" />
-        </joint>
-
         <!-- Tool Loading -->
         <xacro:include filename="$(find zlab_tools_description)/urdf/zlab_tools.xacro" />
         
-        <!-- Always create ee_link as a reference point at the flange -->
+        <!-- Always create ee_link as a reference point at the end of link_6 -->
         <link name="${arm_id}_ee_link" />
         <joint name="${arm_id}_ee_joint" type="fixed">
-            <parent link="${arm_id}_flange" />
+            <parent link="${arm_id}_link_6" />
             <child link="${arm_id}_ee_link" />
-            <origin xyz="0 0 0" rpy="0 0 0" />
+            <origin xyz="0 0 0.1" rpy="0 0 0" />
         </joint>
 
         <xacro:unless value="${tool_name == 'none'}">

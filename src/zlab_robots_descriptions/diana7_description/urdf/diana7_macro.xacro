@@ -448,17 +448,10 @@
         velocity="3.14" />
     </joint>
 
-    <!-- Flange and EE -->
-    <link name="${prefix}flange" />
-    <joint name="${prefix}joint_flange" type="fixed">
-      <parent link="${prefix}link_7" />
-      <child link="${prefix}flange" />
-      <origin xyz="0 0 0" rpy="0 0 0" />
-    </joint>
-
+    <!-- End Effector Link -->
     <link name="${prefix}ee_link" />
     <joint name="${prefix}joint_ee" type="fixed">
-      <parent link="${prefix}flange" />
+      <parent link="${prefix}link_7" />
       <child link="${prefix}ee_link" />
       <origin xyz="0 0 0" rpy="0 0 0" />
     </joint>

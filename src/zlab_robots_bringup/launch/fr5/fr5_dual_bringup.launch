@@ -7,6 +7,9 @@
   <!-- Control loop frequency -->
   <arg name="loop_hz" default="60.0" doc="Control loop frequency (Hz)"/>
   
+  <!-- Show cycle time warning -->
+  <arg name="show_cycle_time_warn" default="true" doc="Whether to show control loop cycle time warning"/>
+  
   <!-- Tool parameters -->
   <arg name="arm1_tool" default="none" doc="Tool name for arm1"/>
   <arg name="arm2_tool" default="none" doc="Tool name for arm2"/>
@@ -40,6 +43,7 @@
     <arg name="arm_id" value="arm1"/>
     <arg name="robot_ip" value="$(arg arm1_ip)"/>
     <arg name="loop_hz" value="$(arg loop_hz)"/>
+    <arg name="show_cycle_time_warn" value="$(arg show_cycle_time_warn)"/>
     <arg name="tool_name" value="$(arg arm1_tool)"/>
     <arg name="load_robot_description" value="false"/>
     <arg name="publish_robot_state" value="false"/>
@@ -51,6 +55,7 @@
     <arg name="arm_id" value="arm2"/>
     <arg name="robot_ip" value="$(arg arm2_ip)"/>
     <arg name="loop_hz" value="$(arg loop_hz)"/>
+    <arg name="show_cycle_time_warn" value="$(arg show_cycle_time_warn)"/>
     <arg name="tool_name" value="$(arg arm2_tool)"/>
     <arg name="load_robot_description" value="false"/>
     <arg name="publish_robot_state" value="false"/>
