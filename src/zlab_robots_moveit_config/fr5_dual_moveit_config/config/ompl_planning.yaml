@@ -193,7 +193,7 @@ arm1:
     - AITstar
     - ABITstar
     - BITstar
-  projection_evaluator: joints(arm1_j1,arm1_j2)
+  projection_evaluator: joints(arm1_joint_1,arm1_joint_2)
   longest_valid_segment_fraction: 0.005
 arm2:
   planner_configs:
@@ -224,5 +224,5 @@ arm2:
     - AITstar
     - ABITstar
     - BITstar
-  projection_evaluator: joints(arm2_j1,arm2_j2)
+  projection_evaluator: joints(arm2_joint_1,arm2_joint_2)
   longest_valid_segment_fraction: 0.005
