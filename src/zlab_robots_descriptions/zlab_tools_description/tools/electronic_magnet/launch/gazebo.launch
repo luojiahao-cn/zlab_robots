@@ -10,7 +10,7 @@
     name="spawn_model"
     pkg="gazebo_ros"
     type="spawn_model"
-    args="-file $(find zlab_tools_description)/magnetic_sensor_bracket/urdf/bracket.urdf -urdf -model bracket"
+    args="-file $(find zlab_tools_description)/tools/electronic_magnet/urdf/electronic_magnet.urdf -urdf -model electronic_magnet"
     output="screen" />
   <node
     name="fake_joint_calibration"

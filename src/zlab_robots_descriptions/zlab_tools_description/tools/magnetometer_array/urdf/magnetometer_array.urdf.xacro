@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <robot name="magnetometer_array" xmlns:xacro="http://www.ros.org/wiki/xacro">
-  <xacro:include filename="$(find zlab_tools_description)/magnetometer_array/urdf/magnetometer_array_macro.xacro"/>
+  <xacro:include filename="$(find zlab_tools_description)/tools/magnetometer_array/urdf/magnetometer_array_macro.xacro"/>
   
   <link name="world"/>
   <xacro:magnetometer_array prefix="" parent="world"/>

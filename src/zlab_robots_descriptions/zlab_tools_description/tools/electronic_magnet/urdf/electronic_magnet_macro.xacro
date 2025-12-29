@@ -17,7 +17,7 @@
       <visual>
         <origin xyz="0 0 0" rpy="0 0 0" />
         <geometry>
-          <mesh filename="package://zlab_tools_description/electronic_magnet/meshes/visual/em_base_link.STL" />
+          <mesh filename="package://zlab_tools_description/tools/electronic_magnet/meshes/visual/em_base_link.STL" />
         </geometry>
         <material name="">
           <color rgba="1 0.94902 0.89804 1" />
@@ -26,7 +26,7 @@
       <collision>
         <origin xyz="0 0 0" rpy="0 0 0" />
         <geometry>
-          <mesh filename="package://zlab_tools_description/electronic_magnet/meshes/collision/em_base_link.STL" />
+          <mesh filename="package://zlab_tools_description/tools/electronic_magnet/meshes/collision/em_base_link.STL" />
         </geometry>
       </collision>
     </link>
@@ -40,7 +40,7 @@
       <visual>
         <origin xyz="0 0 0" rpy="0 0 0" />
         <geometry>
-          <mesh filename="package://zlab_tools_description/electronic_magnet/meshes/visual/em_tcp_link.STL" />
+          <mesh filename="package://zlab_tools_description/tools/electronic_magnet/meshes/visual/em_tcp_link.STL" />
         </geometry>
         <material name="">
           <color rgba="0.53725 0.34902 0.33725 1" />
@@ -49,7 +49,7 @@
       <collision>
         <origin xyz="0 0 0" rpy="0 0 0" />
         <geometry>
-          <mesh filename="package://zlab_tools_description/electronic_magnet/meshes/collision/em_tcp_link.STL" />
+          <mesh filename="package://zlab_tools_description/tools/electronic_magnet/meshes/collision/em_tcp_link.STL" />
         </geometry>
       </collision>
     </link>
@@ -69,7 +69,7 @@
       <visual>
         <origin xyz="0 0 0" rpy="0 0 0" />
         <geometry>
-          <mesh filename="package://zlab_tools_description/electronic_magnet/meshes/visual/em_ee_link.STL" />
+          <mesh filename="package://zlab_tools_description/tools/electronic_magnet/meshes/visual/em_ee_link.STL" />
         </geometry>
         <material name="">
           <color rgba="0.53725 0.34902 0.33725 1" />
@@ -78,7 +78,7 @@
       <collision>
         <origin xyz="0 0 0" rpy="0 0 0" />
         <geometry>
-          <mesh filename="package://zlab_tools_description/electronic_magnet/meshes/collision/em_ee_link.STL" />
+          <mesh filename="package://zlab_tools_description/tools/electronic_magnet/meshes/collision/em_ee_link.STL" />
         </geometry>
       </collision>
     </link>

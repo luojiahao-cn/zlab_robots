@@ -17,7 +17,7 @@
       <visual>
         <origin xyz="0 0 0" rpy="0 0 0" />
         <geometry>
-          <mesh filename="package://zlab_tools_description/permanent_magnet/meshes/visual/pm_base_link.STL" />
+          <mesh filename="package://zlab_tools_description/tools/permanent_magnet/meshes/visual/pm_base_link.STL" />
         </geometry>
         <material name="">
           <color rgba="1 1 1 1" />
@@ -26,7 +26,7 @@
       <collision>
         <origin xyz="0 0 0" rpy="0 0 0" />
         <geometry>
-          <mesh filename="package://zlab_tools_description/permanent_magnet/meshes/collision/pm_base_link.STL" />
+          <mesh filename="package://zlab_tools_description/tools/permanent_magnet/meshes/collision/pm_base_link.STL" />
         </geometry>
       </collision>
     </link>
@@ -40,7 +40,7 @@
       <visual>
         <origin xyz="0 0 0" rpy="0 0 0" />
         <geometry>
-          <mesh filename="package://zlab_tools_description/permanent_magnet/meshes/visual/pm_tcp_link.STL" />
+          <mesh filename="package://zlab_tools_description/tools/permanent_magnet/meshes/visual/pm_tcp_link.STL" />
         </geometry>
         <material name="">
           <color rgba="1 1 1 1" />
@@ -49,7 +49,7 @@
       <collision>
         <origin xyz="0 0 0" rpy="0 0 0" />
         <geometry>
-          <mesh filename="package://zlab_tools_description/permanent_magnet/meshes/collision/pm_tcp_link.STL" />
+          <mesh filename="package://zlab_tools_description/tools/permanent_magnet/meshes/collision/pm_tcp_link.STL" />
         </geometry>
       </collision>
     </link>

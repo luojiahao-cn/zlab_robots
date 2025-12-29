@@ -1,36 +1,32 @@
 <?xml version="1.0" encoding="utf-8"?>
 <robot xmlns:xacro="http://www.ros.org/wiki/xacro">
-  <!-- Include all tool macros -->
-  <xacro:include filename="$(find zlab_tools_description)/electronic_magnet/urdf/electronic_magnet_macro.xacro"/>
-  <xacro:include filename="$(find zlab_tools_description)/permanent_magnet/urdf/permanent_magnet_macro.xacro"/>
-  <xacro:include filename="$(find zlab_tools_description)/magnetic_sensor_bracket/urdf/bracket_macro.xacro"/>
-  <xacro:include filename="$(find zlab_tools_description)/magnetometer_array/urdf/magnetometer_array_macro.xacro"/>
+  <!-- 
+    工具加载系统 - 基于配置文件的动态加载
+    新增工具时，只需在工具目录下创建 config/tool.yaml 配置文件即可
+    无需修改此文件
+  -->
+  
+  <!-- 加载工具加载器 -->
+  <xacro:include filename="$(find zlab_tools_description)/urdf/tool_loader.xacro" />
 
   <!-- Main macro to load a tool based on name -->
+  <!-- 此宏从工具配置文件自动加载工具，支持动态扩展 -->
   <xacro:macro name="load_tool" params="tool_name prefix parent">
-    
-    <!-- Check for predefined tools -->
-    <xacro:if value="${tool_name == 'electronic_magnet'}">
-       <xacro:electronic_magnet prefix="${prefix}" parent="${parent}"/>
+    <xacro:if value="${tool_name == 'none'}">
+      <!-- No tool loaded -->
     </xacro:if>
     
-    <xacro:unless value="${tool_name == 'electronic_magnet'}">
-      <xacro:if value="${tool_name == 'permanent_magnet'}">
-         <xacro:permanent_magnet prefix="${prefix}" parent="${parent}"/>
-      </xacro:if>
+    <xacro:unless value="${tool_name == 'none'}">
+      <!-- 加载工具配置文件 -->
+      <xacro:property name="tool_config_file" value="$(find zlab_tools_description)/tools/${tool_name}/config/tool.yaml"/>
+      <xacro:property name="tool_config" value="${xacro.load_yaml(tool_config_file)}"/>
       
-      <xacro:unless value="${tool_name == 'permanent_magnet'}">
-        <xacro:if value="${tool_name == 'magnetic_sensor_bracket'}">
-           <xacro:magnetic_sensor_bracket prefix="${prefix}" parent="${parent}"/>
-        </xacro:if>
-        
-        <xacro:unless value="${tool_name == 'magnetic_sensor_bracket'}">
-          <xacro:if value="${tool_name == 'magnetometer_array'}">
-             <xacro:magnetometer_array prefix="${prefix}" parent="${parent}"/>
-          </xacro:if>
-        </xacro:unless>
-      </xacro:unless>
+      <!-- 使用配置加载工具 -->
+      <xacro:load_tool_from_config 
+          arm_id="${prefix}" 
+          tool_name="${tool_name}" 
+          tool_config="${tool_config}"
+          parent="${parent}" />
     </xacro:unless>
-    
   </xacro:macro>
 </robot>

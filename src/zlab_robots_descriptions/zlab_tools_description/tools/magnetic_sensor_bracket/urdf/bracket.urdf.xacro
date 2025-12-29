@@ -18,7 +18,7 @@
     <visual>
       <origin xyz="0 0 0" rpy="0 0 0" />
       <geometry>
-        <mesh filename="package://zlab_tools_description/magnetic_sensor_bracket/meshes/bracket_base_link.STL" />
+        <mesh filename="package://zlab_tools_description/tools/magnetic_sensor_bracket/meshes/bracket_base_link.STL" />
       </geometry>
       <material name="">
         <color rgba="0.792156862745098 0.819607843137255 0.933333333333333 1.0" />
@@ -27,7 +27,7 @@
     <collision>
       <origin xyz="0 0 0" rpy="0 0 0" />
       <geometry>
-        <mesh filename="package://zlab_tools_description/magnetic_sensor_bracket/meshes/bracket_base_link.STL" />
+        <mesh filename="package://zlab_tools_description/tools/magnetic_sensor_bracket/meshes/bracket_base_link.STL" />
       </geometry>
     </collision>
   </link>

@@ -17,7 +17,7 @@
       <visual>
         <origin xyz="0 0 0" rpy="0 0 0" />
         <geometry>
-          <mesh filename="package://zlab_tools_description/magnetometer_array/meshes/magnetometer_base_link.STL" />
+          <mesh filename="package://zlab_tools_description/tools/magnetometer_array/meshes/magnetometer_base_link.STL" />
         </geometry>
         <material name="">
           <color rgba="1 1 1 1" />
@@ -26,7 +26,7 @@
       <collision>
         <origin xyz="0 0 0" rpy="0 0 0" />
         <geometry>
-          <mesh filename="package://zlab_tools_description/magnetometer_array/meshes/magnetometer_base_link.STL" />
+          <mesh filename="package://zlab_tools_description/tools/magnetometer_array/meshes/magnetometer_base_link.STL" />
         </geometry>
       </collision>
     </link>
@@ -40,7 +40,7 @@
       <visual>
         <origin xyz="0 0 0" rpy="0 0 0" />
         <geometry>
-          <mesh filename="package://zlab_tools_description/magnetometer_array/meshes/magnetometer_tcp_link.STL" />
+          <mesh filename="package://zlab_tools_description/tools/magnetometer_array/meshes/magnetometer_tcp_link.STL" />
         </geometry>
         <material name="">
           <color rgba="0.75294 0.75294 0.75294 1" />
@@ -49,7 +49,7 @@
       <collision>
         <origin xyz="0 0 0" rpy="0 0 0" />
         <geometry>
-          <mesh filename="package://zlab_tools_description/magnetometer_array/meshes/magnetometer_tcp_link.STL" />
+          <mesh filename="package://zlab_tools_description/tools/magnetometer_array/meshes/magnetometer_tcp_link.STL" />
         </geometry>
       </collision>
     </link>

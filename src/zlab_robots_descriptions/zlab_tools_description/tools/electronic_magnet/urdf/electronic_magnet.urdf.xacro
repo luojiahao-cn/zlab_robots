@@ -29,7 +29,7 @@
         rpy="0 0 0" />
       <geometry>
         <mesh
-          filename="package://zlab_tools_description/electronic_magnet/meshes/visual/em_base_link.STL" />
+          filename="package://zlab_tools_description/tools/electronic_magnet/meshes/visual/em_base_link.STL" />
       </geometry>
       <material
         name="">
@@ -43,7 +43,7 @@
         rpy="0 0 0" />
       <geometry>
         <mesh
-          filename="package://zlab_tools_description/electronic_magnet/meshes/collision/em_base_link.STL" />
+          filename="package://zlab_tools_description/tools/electronic_magnet/meshes/collision/em_base_link.STL" />
       </geometry>
     </collision>
   </link>
@@ -68,7 +68,7 @@
         rpy="0 0 0" />
       <geometry>
         <mesh
-          filename="package://zlab_tools_description/electronic_magnet/meshes/visual/em_tcp_link.STL" />
+          filename="package://zlab_tools_description/tools/electronic_magnet/meshes/visual/em_tcp_link.STL" />
       </geometry>
       <material
         name="">
@@ -82,7 +82,7 @@
         rpy="0 0 0" />
       <geometry>
         <mesh
-          filename="package://zlab_tools_description/electronic_magnet/meshes/collision/em_tcp_link.STL" />
+          filename="package://zlab_tools_description/tools/electronic_magnet/meshes/collision/em_tcp_link.STL" />
       </geometry>
     </collision>
   </link>
@@ -118,7 +118,7 @@
         rpy="0 0 0" />
       <geometry>
         <mesh
-          filename="package://zlab_tools_description/electronic_magnet/meshes/visual/em_ee_link.STL" />
+          filename="package://zlab_tools_description/tools/electronic_magnet/meshes/visual/em_ee_link.STL" />
       </geometry>
       <material
         name="">
@@ -132,7 +132,7 @@
         rpy="0 0 0" />
       <geometry>
         <mesh
-          filename="package://zlab_tools_description/electronic_magnet/meshes/collision/em_ee_link.STL" />
+          filename="package://zlab_tools_description/tools/electronic_magnet/meshes/collision/em_ee_link.STL" />
       </geometry>
     </collision>
   </link>
