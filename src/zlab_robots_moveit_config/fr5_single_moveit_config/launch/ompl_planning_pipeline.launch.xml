@@ -24,6 +24,6 @@
   <rosparam command="load" file="$(find fr5_single_moveit_config)/config/ompl_planning.yaml"/>
   
   <!-- Override projection_evaluator with arm_id -->
-  <rosparam param="fr/projection_evaluator" subst_value="true">joints($(arg arm_id)_j1,$(arg arm_id)_j2)</rosparam>
+  <rosparam param="fr/projection_evaluator" subst_value="true">joints($(arg arm_id)_joint_1,$(arg arm_id)_joint_2)</rosparam>
 
 </launch>

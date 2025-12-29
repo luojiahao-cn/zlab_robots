@@ -17,7 +17,7 @@
   <!-- 默认使用 SRDF 的 ready 姿态：j1=0, j2=-1.4189, j3=-1.5152, j4=-0.0015, j5=1.6031, j6=0 -->
   <arg if="$(eval arg('initial_joint_positions') == '')" 
        name="actual_initial_joint_positions" 
-       value="-J $(arg arm_id)_j1 0 -J $(arg arm_id)_j2 -1.4189 -J $(arg arm_id)_j3 -1.5152 -J $(arg arm_id)_j4 -0.0015 -J $(arg arm_id)_j5 1.6031 -J $(arg arm_id)_j6 0"/>
+       value="-J $(arg arm_id)_joint_1 0 -J $(arg arm_id)_joint_2 -1.4189 -J $(arg arm_id)_joint_3 -1.5152 -J $(arg arm_id)_joint_4 -0.0015 -J $(arg arm_id)_joint_5 1.6031 -J $(arg arm_id)_joint_6 0"/>
   <arg unless="$(eval arg('initial_joint_positions') == '')" 
        name="actual_initial_joint_positions" 
        value="$(arg initial_joint_positions)"/>

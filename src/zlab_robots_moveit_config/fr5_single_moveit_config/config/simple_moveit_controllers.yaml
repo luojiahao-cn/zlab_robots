@@ -4,10 +4,10 @@ controller_list:
     type: FollowJointTrajectory
     default: True
     joints:
-      - $(arg arm_id)_j1
-      - $(arg arm_id)_j2
-      - $(arg arm_id)_j3
-      - $(arg arm_id)_j4
-      - $(arg arm_id)_j5
-      - $(arg arm_id)_j6
+      - $(arg arm_id)_joint_1
+      - $(arg arm_id)_joint_2
+      - $(arg arm_id)_joint_3
+      - $(arg arm_id)_joint_4
+      - $(arg arm_id)_joint_5
+      - $(arg arm_id)_joint_6
 

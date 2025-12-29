@@ -62,5 +62,5 @@ diana_arm:
     - TRRTkConfigDefault
     - PRMkConfigDefault
     - PRMstarkConfigDefault
-  projection_evaluator: joints(diana7_j1,diana7_j2)
+  projection_evaluator: joints(diana7_joint_1,diana7_joint_2)
   longest_valid_segment_fraction: 0.005
