@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<robot name="calibration_tool">
+
+  <!-- 1) 实体：只在一个 link 上保留 mesh/collision/inertial（这里选 base） -->
+  <link name="calibration_base_link">
+    <inertial>
+      <origin xyz="8.68737263231918E-11 0.0497527045553807 0.00249999998593278" rpy="0 0 0"/>
+      <mass value="0.031694702045305"/>
+      <inertia ixx="7.92231294487921E-05" ixy="3.02800948370523E-15" ixz="-4.01660599408829E-15"
+               iyy="1.01746769831227E-05" iyz="-6.07540568485497E-15" izz="8.28804530559537E-05"/>
+    </inertial>
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <mesh filename="package://zlab_tools_description/tools/calibration_tool/meshes/visual/calibration_base_link.STL"/>
+      </geometry>
+      <material name="">
+        <color rgba="1 1 1 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <mesh filename="package://zlab_tools_description/tools/calibration_tool/meshes/collision/calibration_base_link.STL"/>
+      </geometry>
+    </collision>
+  </link>
+
+  <!-- 2) frame-only：ee -->
+  <link name="calibration_ee_link"/>
+  <joint name="calibration_ee" type="fixed">
+    <origin xyz="0 0 0.005" rpy="0 0 0"/>
+    <parent link="calibration_base_link"/>
+    <child link="calibration_ee_link"/>
+  </joint>
+
+  <!-- 3) frame-only：tcp -->
+  <link name="calibration_tcp_link"/>
+  <joint name="calibration_tcp" type="fixed">
+    <origin xyz="0 0.0915 -0.0025" rpy="0 0 0"/>
+    <parent link="calibration_ee_link"/>
+    <child link="calibration_tcp_link"/>
+  </joint>
+
+  <!-- 五个tcp link -->
+  <!-- front_tag: z 朝前，与 tcp 同向 -->
+  <link name="front_tag"/>
+  <joint name="tcp_to_front_tag" type="fixed">
+    <origin xyz="0 0 0.02" rpy="0 0 0"/>
+    <parent link="calibration_tcp_link"/>
+    <child link="front_tag"/>
+  </joint>
+
+  <!-- back_tag: z 朝后，绕 y 轴转 pi -->
+  <link name="back_tag"/>
+  <joint name="tcp_to_back_tag" type="fixed">
+    <origin xyz="0 0 -0.02" rpy="0 3.141592653589793 0"/>
+    <parent link="calibration_tcp_link"/>
+    <child link="back_tag"/>
+  </joint>
+
+  <!-- left_tag: z 朝左（-x），绕 y 轴转 -pi/2 -->
+  <link name="left_tag"/>
+  <joint name="tcp_to_left_tag" type="fixed">
+    <origin xyz="-0.02 0 0" rpy="0 -1.5707963267948966 0"/>
+    <parent link="calibration_tcp_link"/>
+    <child link="left_tag"/>
+  </joint>
+
+  <!-- right_tag: z 朝右（+x），绕 y 轴转 +pi/2 -->
+  <link name="right_tag"/>
+  <joint name="tcp_to_right_tag" type="fixed">
+    <origin xyz="0.02 0 0" rpy="0 1.5707963267948966 0"/>
+    <parent link="calibration_tcp_link"/>
+    <child link="right_tag"/>
+  </joint>
+
+  <!-- top_tag: z 朝上（+y），绕 x 轴转 -pi/2 -->
+  <link name="top_tag"/>
+  <joint name="tcp_to_top_tag" type="fixed">
+    <origin xyz="0 0.02 0" rpy="-1.5707963267948966 0 0"/>
+    <parent link="calibration_tcp_link"/>
+    <child link="top_tag"/>
+  </joint>
+
+</robot>

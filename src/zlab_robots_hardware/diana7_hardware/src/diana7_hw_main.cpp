@@ -59,7 +59,7 @@ int main(int argc, char** argv)
     const double cycle_time_error = (elapsed_time - desired_update_period).toSec();
     if (show_cycle_time_warn && cycle_time_error > cycle_time_error_threshold)
     {
-      ROS_WARN_THROTTLE(5.0, "[%s] 控制循环未达到预期频率。预期耗时: %.4fs, 实际耗时: %.4fs, 超时: %.4fs。建议降低 loop_hz 参数。", 
+      ROS_WARN_THROTTLE(5.0, "[%s] Control loop missed its desired frequency. Expected: %.4fs, Actual: %.4fs, Overrun: %.4fs. Consider reducing the loop_hz parameter.", 
                         nh.getNamespace().c_str(), desired_update_period.toSec(), elapsed_time.toSec(), cycle_time_error);
     }
 

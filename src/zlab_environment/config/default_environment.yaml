@@ -9,8 +9,8 @@ collision_objects:
   - id: left_wall
     type: box
     frame_id: "{arm_id}_pedestal_link"  # 使用最底部的基座链接
-    position: [0.0, -0.7, 0.8]  # 墙中心在机器人后方 0.7m，高度中心 0.8m
-    orientation: [0, 0, 0, 1]   # quaternion (x, y, z, w)
+    position: [-0.35, -0.6062, 0.8]  # 墙中心在机器人后方 0.7m，高度中心 0.8m
+    orientation: [0, 0, -0.2588, 0.9659]   # quaternion (x, y, z, w)
     dimensions: [1.6, 0.05, 1.6]  # 长、厚、 高
     color: [0.6, 0.6, 0.6, 0.5]  # r,g,b,a
     
@@ -18,8 +18,8 @@ collision_objects:
   - id: back_wall
     type: box
     frame_id: "{arm_id}_pedestal_link"
-    position: [-0.7, 0.0, 0.8]       # 左侧 0.7m
-    orientation: [0, 0, 0, 1]
+    position: [-0.6062, 0.35, 0.8]       # 左侧 0.7m
+    orientation: [0, 0, -0.2588, 0.9659]
     dimensions: [0.05, 1.6, 1.6]     # 厚度 0.05m，高度 1.6m，宽度 1.6m
     color: [0.6, 0.6, 0.6, 0.5]
     
@@ -36,8 +36,8 @@ collision_objects:
   - id: right_wall
     type: box
     frame_id: "{arm_id}_pedestal_link"
-    position: [0.0, 0.7, 0.8]     # 前方 0.7m
-    orientation: [0, 0, 0, 1]
+    position: [0.35, 0.6062, 0.8]     # 前方 0.7m
+    orientation: [0, 0, -0.2588, 0.9659]
     dimensions: [1.6, 0.05, 1.6]
     color: [0.6, 0.6, 0.6, 0.5]
     
@@ -46,9 +46,33 @@ collision_objects:
     type: box
     frame_id: "{arm_id}_pedestal_link"
     position: [0.0, 0.0, -0.051]      # 厚度 0.1m，顶面与 base0 高度齐平
-    orientation: [0, 0, 0, 1]
+    orientation: [0, 0, -0.2588, 0.9659]
     dimensions: [1.6, 1.6, 0.1]
-    color: [0.5, 0.5, 0.5, 0.4]
+    color: [0.6, 0.6, 0.6, 0.5]
+
+  - id: table
+    type: box
+    frame_id: "{arm_id}_pedestal_link" 
+    position: [0.323, -0.438, 0.55]      # 修正中心点，使侧面位于末端前方 1cm
+    orientation: [0, 0, -0.368, 0.930]   # 旋转至 -43.2 度，使侧面法线与末端朝向对齐
+    dimensions: [0.6, 1.6, 0.4]     # 长、宽、高
+    color: [0.6, 0.6, 0.6, 0.5]
+
+  - id: table_2
+    type: box
+    frame_id: "{arm_id}_pedestal_link" 
+    position: [-0.656, 0.539, 0.729]      # 综合两个面的信息计算出的中心点
+    orientation: [0, 0, 0.404, 0.915]     # 旋转约 47.7 度以对齐第二个面
+    dimensions: [0.8, 0.8, 0.8]
+    color: [0.6, 0.6, 0.6, 0.5]
+
+  - id: ee_front_wall
+    type: box
+    frame_id: "{arm_id}_pedestal_link"
+    position: [-0.469, -0.254, 0.8]
+    orientation: [0.198, 0.675, -0.603, -0.376]
+    dimensions: [1.6, 1.6, 0.01]
+    color: [0.6, 0.6, 0.6, 0.5]
 
 # 双臂环境配置（使用world坐标系）
 dual_arm_collision_objects:
