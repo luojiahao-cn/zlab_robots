@@ -10,5 +10,5 @@ controller_list:
       - $(arg arm_id)_joint_6
 initial:  # Define initial robot poses per group
   - group: fr5
-    pose: zero
+    pose: ready
 

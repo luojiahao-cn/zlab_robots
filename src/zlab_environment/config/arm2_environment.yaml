@@ -1,0 +1,31 @@
+# arm2 环境障碍物配置
+# 坐标系：相对于机器人基座 arm2_pedestal_link
+# 单位：米
+
+collision_objects:
+  # 地面
+  - id: floor
+    type: box
+    frame_id: "{arm_id}_pedestal_link"
+    position: [0.0, 0.0, -0.051]
+    orientation: [0, 0, 0, 1]
+    dimensions: [2.0, 2.0, 0.1]
+    color: [0.6, 0.6, 0.6, 0.5]
+
+
+  - id: arm2_table
+    type: box
+    frame_id: "{arm_id}_pedestal_link"
+    position: [0.610, 0.164, 0.639]      # 恢复长度为 0.8m 的中心点
+    orientation: [0, 0, 0.227, 0.974]
+    dimensions: [0.8, 1.2, 0.4]          # 宽度从 0.8m 增加到 1.2m
+    color: [0.6, 0.6, 0.6, 0.5]
+
+  # 后墙：位于末端后方 1cm，竖直延伸至地面
+  - id: back_wall
+    type: box
+    frame_id: "{arm_id}_pedestal_link"
+    position: [-0.186, -0.742, 0.8]       # 根据新位姿更新，位于末端后方 1cm
+    orientation: [0, 0, -0.977, 0.213]    # 旋转约 -156.4 度以对齐末端后方
+    dimensions: [0.01, 1.6, 1.6]         # 厚度 1cm，高度 1.6m
+    color: [0.6, 0.6, 0.6, 0.5]

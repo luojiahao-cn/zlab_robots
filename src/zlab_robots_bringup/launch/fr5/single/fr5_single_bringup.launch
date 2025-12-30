@@ -17,9 +17,6 @@
   <arg name="use_rviz" default="true" doc="Start RViz"/>
   <arg name="debug" default="false" doc="Debug mode"/>
   
-  <!-- Layout configuration -->
-  <arg name="layout_config" default="$(find zlab_robots_bringup)/config/robot_layout.yaml" doc="Path to robot layout configuration YAML"/>
-
   <!-- Position parameters (optional, overrides layout_config) -->
   <arg name="xyz" default="0 0 0" doc="Position of robot (x y z)"/>
   <arg name="rpy" default="0 0 0" doc="Orientation of robot (roll pitch yaw)"/>
@@ -30,7 +27,6 @@
     <arg name="robot_ip" value="$(arg robot_ip)"/>
     <arg name="loop_hz" value="$(arg loop_hz)"/>
     <arg name="tool_name" value="$(arg tool_name)"/>
-    <arg name="layout_config" value="$(arg layout_config)"/>
     <arg name="xyz" value="$(arg xyz)"/>
     <arg name="rpy" value="$(arg rpy)"/>
     <arg name="load_robot_description" value="true"/>
