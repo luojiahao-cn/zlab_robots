@@ -19,7 +19,7 @@
 #include <tf2_geometry_msgs/tf2_geometry_msgs.h>
 
 #include <thread>
-
+// TODO: 滑窗法取中值作为可行解，结合均值滤波
 std::thread keyboard_thread_;
 
 class CalibrationNode

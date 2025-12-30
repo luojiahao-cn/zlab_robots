@@ -12,7 +12,7 @@ tool_type: "urdf_package"
 # URDF包配置
 urdf_package:
   # URDF文件路径（相对于工具包目录）
-  urdf_file: "urdf/permanent_magnet.urdf"
+  urdf_file: "urdf/permanent_magnet.urdf.xacro"
   # 工具根链接名称（在URDF中定义的链接名，连接到机械臂的ee_link）
   root_link_name: "pm_base_link"
   # TCP链接名称（URDF中已定义TCP链接）

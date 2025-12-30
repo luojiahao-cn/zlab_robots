@@ -1,12 +1,6 @@
 <?xml version="1.0"?>
 <robot xmlns:xacro="http://www.ros.org/wiki/xacro">
-  <xacro:macro name="tool_template" params="prefix parent">
-
-    <joint name="${prefix}tool_joint" type="fixed">
-      <parent link="${parent}"/>
-      <child link="${prefix}tool_base_link"/>
-      <origin xyz="0 0 0" rpy="0 0 0"/>
-    </joint>
+  <xacro:macro name="tool_template" params="prefix">
 
     <link name="${prefix}tool_base_link">
       <visual>

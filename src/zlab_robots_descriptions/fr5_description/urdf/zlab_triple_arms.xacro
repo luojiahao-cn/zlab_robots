@@ -50,7 +50,7 @@
 
     <!-- Instantiate Diana7 -->
     <xacro:diana7_robot 
-        prefix="diana7_" 
+        prefix="diana7" 
         parent="world"
         tool_name="$(arg diana7_tool)">
         <origin xyz="${diana7_xyz_final}" rpy="${diana7_rpy_final}"/>

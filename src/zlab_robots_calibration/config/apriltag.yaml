@@ -6,6 +6,11 @@ camera_frame: camera_color_optical_frame
 # 是否发布 TF
 publish_tf: true
 
+tag_decimate: 1.0        # 小tag别下采样太狠
+tag_blur: 0.0            # 先从0开始，噪声大再到0.5
+refine_edges: true       # 提升角点稳定性（若支持）
+nthreads: 4              # 提升实时性（若支持）
+
 # ===== 独立 AprilTag（推荐）=====
 standalone_tags:
   - id: 109

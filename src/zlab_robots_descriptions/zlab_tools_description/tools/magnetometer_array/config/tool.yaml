@@ -33,30 +33,19 @@ origin:
 
 # TCP配置（如果URDF中已有tcp_link，这个配置会被忽略）
 tcp:
-  xyz: [0, 0, 0]
+  xyz: [0, 0.00023753, 0.19309]
   rpy: [0, 0, 0]
 
 # 物理属性（如果URDF中已定义，这些会被忽略）
 physical_properties:
-  mass: 0.033205  # kg（从URDF中获取，magnetometer_base_link的质量）
+  mass: 0.0332054242847689
   inertia:
-    ixx: 5.6306E-05
-    ixy: 0.0
-    ixz: 0.0
-    iyy: 5.9694E-05
-    iyz: 0.0
-    izz: 1.1454E-05
+    ixx: 5.63055976294825E-05
+    ixy: 5.92198383565254E-12
+    ixz: 6.68013595190661E-10
+    iyy: 5.96936991935191E-05
+    iyz: -2.03045562894017E-06
+    izz: 1.14540668478137E-05
 
 moveit:
-  end_effector_link: "magnetometer_tcp_link"  # 使用URDF中定义的magnetometer_tcp_link作为末端执行器
-  planning_frame_offset: [0, 0, 0]
-
-# MoveIt碰撞禁用配置 - 定义工具内部链接之间需要禁用碰撞的链接对
-# 这些配置会被SRDF自动读取并应用
-collision_disable:
-  # 链接对列表，每个条目包含两个链接名称（相对于工具根链接，不需要arm_id前缀）
-  # SRDF会自动添加arm_id前缀
-  - link1: "magnetometer_base_link"
-    link2: "magnetometer_tcp_link"
-    reason: "Adjacent"
 

@@ -1,0 +1,37 @@
+# 工具包配置文件 - 标定工具
+tool_info:
+  name: "calibration_tool"
+  display_name: "标定工具"
+  description: "用于机器人标定的工具"
+  version: "1.0.0"
+
+tool_type: "urdf_package"
+
+urdf_package:
+  urdf_file: "urdf/calibration_tool.urdf.xacro"
+  root_link_name: "calibration_base_link"
+  tcp_link_name: "calibration_tcp_link"
+  mount_offset:
+    xyz: [0, 0, 0]
+    rpy: [0, 0, 0]
+
+visual_mesh: "meshes/visual/calibration_base_link.STL"
+collision_mesh: "meshes/collision/calibration_base_link.STL"
+
+origin:
+  xyz: [0, 0, 0]
+  rpy: [0, 0, 0]
+
+tcp:
+  xyz: [0, 0.0915, 0.0025]
+  rpy: [0, 0, 0]
+
+physical_properties:
+  mass: 0.031694702045305
+  inertia:
+    ixx: 7.92231294487921E-05
+    ixy: 3.02800948370523E-15
+    ixz: -4.01660599408829E-15
+    iyy: 1.01746769831227E-05
+    iyz: -6.07540568485497E-15
+    izz: 8.28804530559537E-05

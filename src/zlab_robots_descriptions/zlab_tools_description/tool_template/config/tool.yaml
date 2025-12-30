@@ -45,7 +45,7 @@ collision:
 # 以下配置仅在 tool_type == "urdf_package" 时使用
 urdf_package:
   # URDF文件路径（相对于工具包目录）
-  urdf_file: "urdf/tool.urdf.xacro"  # 或 "urdf/tool.urdf"
+  urdf_file: "urdf/tool_template.urdf.xacro"  # 或 "urdf/tool.urdf"
   # 工具根链接名称（在URDF中定义的链接名）
   root_link_name: "tool_base_link"
   # TCP链接名称（如果URDF中已定义TCP链接，否则使用tcp配置）

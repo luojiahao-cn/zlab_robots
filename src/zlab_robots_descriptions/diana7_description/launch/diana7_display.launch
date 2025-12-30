@@ -1,0 +1,24 @@
+<launch>
+  <!-- 机器人模型参数 -->
+  <arg name="model" default="$(find diana7_description)/urdf/diana7.urdf.xacro"/>
+  <arg name="gui" default="true"/>
+  <arg name="rvizconfig" default="$(find diana7_description)/rviz/diana7.rviz"/>
+  
+  <!-- 传递给 xacro 的参数 -->
+  <arg name="tool_name" default="none"/>
+  <arg name="xyz" default="0 0 0"/>
+  <arg name="rpy" default="0 0 0"/>
+
+  <!-- 加载机器人描述 -->
+  <param name="robot_description" command="$(find xacro)/xacro $(arg model) tool_name:=$(arg tool_name) xyz:='$(arg xyz)' rpy:='$(arg rpy)'"/>
+
+  <!-- 关节状态发布器 -->
+  <node if="$(arg gui)" name="joint_state_publisher_gui" pkg="joint_state_publisher_gui" type="joint_state_publisher_gui"/>
+  <node unless="$(arg gui)" name="joint_state_publisher" pkg="joint_state_publisher" type="joint_state_publisher"/>
+
+  <!-- 机器人状态发布器 -->
+  <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher"/>
+
+  <!-- RViz可视化 -->
+  <node name="rviz" pkg="rviz" type="rviz" args="-d $(arg rvizconfig)" required="true"/>
+</launch>

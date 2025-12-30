@@ -2,7 +2,7 @@
 <!-- ===================== -->
 <!-- 0. triple arm bringup -->
 <!-- ===================== -->
-<include file="$(find zlab_robots_bringup)/launch/triple_arm/triple_arm_bringup.launch"/>
+<!-- <include file="$(find zlab_robots_bringup)/launch/triple_arm/triple_arm_bringup.launch"/> -->
   <!-- tcp坐标系确定 -->
 <node pkg="tf2_ros" type="static_transform_publisher"
       name="diana7_tcp_tf"
@@ -39,8 +39,8 @@
     name="apriltag"
     output="screen">
 
-  <remap from="image_rect" to="/zed2i/zed_node/left_raw/image_raw_color"/>
-  <remap from="camera_info" to="/zed2i/zed_node/left_raw/camera_info"/>
+  <remap from="image_rect" to="/zed2i/zed_node/left/image_rect_gray"/>
+  <remap from="camera_info" to="/zed2i/zed_node/left/camera_info"/>
 
   <param name="publish_tf" value="true"/>
   <param name="publish_tag_detections_image" value="true"/>

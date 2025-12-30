@@ -3,7 +3,7 @@
     name="model" />
   <param
     name="robot_description"
-    command="$(find xacro)/xacro $(find zlab_tools_description)/tools/magnetometer_array/urdf/magnetometer_array.urdf.xacro" />
+    command="$(find xacro)/xacro $(find zlab_tools_description)/tools/magnetometer_array/urdf/magnetometer_array_standalone.urdf.xacro" />
   <node
     name="joint_state_publisher_gui"
     pkg="joint_state_publisher_gui"
