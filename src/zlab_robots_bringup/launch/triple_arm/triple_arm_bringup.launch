@@ -49,7 +49,7 @@
     <arg name="loop_hz" value="$(arg diana7_loop_hz)"/>
     <arg name="load_robot_description" value="false"/>
     <arg name="publish_robot_state" value="false"/>
-    <arg name="prefix" value="diana7_"/>
+    <arg name="prefix" value="diana7"/>
   </include>
 
   <!-- Arm1 hardware interface -->

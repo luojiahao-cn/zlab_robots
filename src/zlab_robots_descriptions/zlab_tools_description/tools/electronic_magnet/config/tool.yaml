@@ -15,9 +15,9 @@ urdf_package:
   # 优先使用.urdf.xacro文件（支持arm_id参数），如果不存在则使用.urdf文件
   urdf_file: "urdf/electronic_magnet.urdf.xacro"
   # 工具根链接名称（在URDF中定义的链接名，连接到机械臂的ee_link）
-  root_link_name: "em_base_link"
+  root_link_name: "electronic_magnet_base_link"
   # TCP链接名称（URDF中已定义TCP链接）
-  tcp_link_name: "em_tcp_link"
+  tcp_link_name: "electronic_magnet_tcp_link"
   # 工具相对于法兰的安装偏移（如果需要微调）
   mount_offset:
     xyz: [0, 0, 0]  # 根据实际安装位置调整
@@ -25,8 +25,8 @@ urdf_package:
 
 # 网格文件路径（相对于工具包目录，作为顶级配置项）
 # 注意：TCP链接不应该有可视化内容，只用于运动学计算
-visual_mesh: "meshes/visual/em_base_link.STL"
-collision_mesh: "meshes/collision/em_base_link.STL"
+visual_mesh: "meshes/visual/electronic_magnet_base_link.STL"
+collision_mesh: "meshes/collision/electronic_magnet_base_link.STL"
 
 # 工具相对于法兰的安装位置（如果需要在mount_offset基础上再调整）
 origin:
@@ -40,7 +40,7 @@ tcp:
 
 # 物理属性（如果URDF中已定义，这些会被忽略）
 physical_properties:
-  mass: 0.123  # kg（从URDF中获取，em_base_link的质量）
+  mass: 0.123  # kg（从URDF中获取，electronic_magnet_base_link的质量）
   inertia:
     ixx: 2.413E-05
     ixy: 0.0
@@ -50,7 +50,7 @@ physical_properties:
     izz: 3.9841E-05
 
 moveit:
-  end_effector_link: "em_tcp_link"  # 使用URDF中定义的em_tcp_link作为末端执行器
+  end_effector_link: "electronic_magnet_tcp_link"  # 使用URDF中定义的electronic_magnet_tcp_link作为末端执行器
   planning_frame_offset: [0, 0, 0]
 
 # MoveIt碰撞禁用配置 - 定义工具内部链接之间需要禁用碰撞的链接对
@@ -58,13 +58,13 @@ moveit:
 collision_disable:
   # 链接对列表，每个条目包含两个链接名称（相对于工具根链接，不需要arm_id前缀）
   # SRDF会自动添加arm_id前缀
-  - link1: "em_base_link"
-    link2: "em_tcp_link"
+  - link1: "electronic_magnet_base_link"
+    link2: "electronic_magnet_tcp_link"
     reason: "Adjacent"
-  - link1: "em_base_link"
-    link2: "em_ee_link"
+  - link1: "electronic_magnet_base_link"
+    link2: "electronic_magnet_ee_link"
     reason: "Adjacent"
-  - link1: "em_tcp_link"
-    link2: "em_ee_link"
+  - link1: "electronic_magnet_tcp_link"
+    link2: "electronic_magnet_ee_link"
     reason: "Adjacent"
 

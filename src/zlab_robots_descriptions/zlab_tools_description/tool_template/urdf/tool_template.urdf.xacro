@@ -1,5 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<robot name="tool_template" xmlns:xacro="http://www.ros.org/wiki/xacro">
-  <xacro:include filename="$(find zlab_tools_description)/tool_template/urdf/tool_template_macro.xacro"/>
-  <xacro:tool_template prefix="${tool_arm_id}_"/>
-</robot>

@@ -30,7 +30,10 @@
 
   <!-- The semantic description that corresponds to the URDF -->
   <param name="$(arg robot_description)_semantic" 
-         command="$(find xacro)/xacro '$(find triple_arm_moveit_config)/config/zlab_triple_arms.srdf.xacro'" />
+         command="$(find xacro)/xacro '$(find triple_arm_moveit_config)/config/zlab_triple_arms.srdf.xacro'
+                  arm1_tool:='$(arg arm1_tool)'
+                  arm2_tool:='$(arg arm2_tool)'
+                  diana7_tool:='$(arg diana7_tool)'" />
 
   <!-- Load updated joint limits (override information from URDF) -->
   <group ns="$(arg robot_description)_planning">

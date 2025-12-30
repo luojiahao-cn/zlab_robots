@@ -20,7 +20,7 @@
   <arg name="tool_name" default="none" doc="Tool name to use"/>
   
   <!-- Prefix for joints -->
-  <arg name="prefix" default="diana7_" doc="Prefix for joint names"/>
+  <arg name="prefix" default="diana7" doc="Prefix for joint names"/>
 
   <!-- MoveIt options -->
   <arg name="pipeline" default="ompl" doc="Planning pipeline to use with MoveIt"/>

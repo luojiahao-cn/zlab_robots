@@ -1,14 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <robot xmlns:xacro="http://www.ros.org/wiki/xacro">
-  <xacro:macro name="electronic_magnet" params="prefix parent">
-    
-    <joint name="${prefix}tool_joint" type="fixed">
-      <parent link="${parent}"/>
-      <child link="${prefix}em_base_link"/>
-      <origin xyz="0 0 0" rpy="0 0 0"/>
-    </joint>
-
-    <link name="${prefix}em_base_link">
+  <!-- Macro for Links and Internal Joints -->
+  <xacro:macro name="electronic_magnet_links" params="prefix">
+    <link name="${prefix}_electronic_magnet_base_link">
       <inertial>
         <origin xyz="-8.3267E-17 0.00012355 0.0077014" rpy="0 0 0" />
         <mass value="0.12279" />
@@ -17,7 +11,7 @@
       <visual>
         <origin xyz="0 0 0" rpy="0 0 0" />
         <geometry>
-          <mesh filename="package://zlab_tools_description/tools/electronic_magnet/meshes/visual/em_base_link.STL" />
+          <mesh filename="package://zlab_tools_description/tools/electronic_magnet/meshes/visual/electronic_magnet_base_link.STL" />
         </geometry>
         <material name="">
           <color rgba="1 0.94902 0.89804 1" />
@@ -26,12 +20,12 @@
       <collision>
         <origin xyz="0 0 0" rpy="0 0 0" />
         <geometry>
-          <mesh filename="package://zlab_tools_description/tools/electronic_magnet/meshes/collision/em_base_link.STL" />
+          <mesh filename="package://zlab_tools_description/tools/electronic_magnet/meshes/collision/electronic_magnet_base_link.STL" />
         </geometry>
       </collision>
     </link>
 
-    <link name="${prefix}em_tcp_link">
+    <link name="${prefix}_electronic_magnet_tcp_link">
       <inertial>
         <origin xyz="2.7756E-17 2.7756E-17 9.5087E-05" rpy="0 0 0" />
         <mass value="4.7133" />
@@ -40,7 +34,7 @@
       <visual>
         <origin xyz="0 0 0" rpy="0 0 0" />
         <geometry>
-          <mesh filename="package://zlab_tools_description/tools/electronic_magnet/meshes/visual/em_tcp_link.STL" />
+          <mesh filename="package://zlab_tools_description/tools/electronic_magnet/meshes/visual/electronic_magnet_tcp_link.STL" />
         </geometry>
         <material name="">
           <color rgba="0.53725 0.34902 0.33725 1" />
@@ -49,45 +43,35 @@
       <collision>
         <origin xyz="0 0 0" rpy="0 0 0" />
         <geometry>
-          <mesh filename="package://zlab_tools_description/tools/electronic_magnet/meshes/collision/em_tcp_link.STL" />
+          <mesh filename="package://zlab_tools_description/tools/electronic_magnet/meshes/collision/electronic_magnet_tcp_link.STL" />
         </geometry>
       </collision>
     </link>
 
-    <joint name="${prefix}em_tcp_joint" type="fixed">
+    <joint name="${prefix}_electronic_magnet_tcp_joint" type="fixed">
       <origin xyz="0 0.00023753 0.145" rpy="0 0 0" />
-      <parent link="${prefix}em_base_link" />
-      <child link="${prefix}em_tcp_link" />
+      <parent link="${prefix}_electronic_magnet_base_link" />
+      <child link="${prefix}_electronic_magnet_tcp_link" />
     </joint>
 
-    <link name="${prefix}em_ee_link">
-      <inertial>
-        <origin xyz="2.7756E-17 2.7756E-17 -0.1249" rpy="0 0 0" />
-        <mass value="4.7133" />
-        <inertia ixx="0.024838" ixy="0" ixz="-1.1723E-18" iyy="0.024838" iyz="2.1387E-19" izz="0.0017594" />
-      </inertial>
-      <visual>
-        <origin xyz="0 0 0" rpy="0 0 0" />
-        <geometry>
-          <mesh filename="package://zlab_tools_description/tools/electronic_magnet/meshes/visual/em_ee_link.STL" />
-        </geometry>
-        <material name="">
-          <color rgba="0.53725 0.34902 0.33725 1" />
-        </material>
-      </visual>
-      <collision>
-        <origin xyz="0 0 0" rpy="0 0 0" />
-        <geometry>
-          <mesh filename="package://zlab_tools_description/tools/electronic_magnet/meshes/collision/em_ee_link.STL" />
-        </geometry>
-      </collision>
+    <link name="${prefix}_electronic_magnet_ee_link">
     </link>
 
-    <joint name="${prefix}em_ee_joint" type="fixed">
+    <joint name="${prefix}_electronic_magnet_ee_joint" type="fixed">
       <origin xyz="0 0 0.125" rpy="0 0 0" />
-      <parent link="${prefix}em_tcp_link" />
-      <child link="${prefix}em_ee_link" />
+      <parent link="${prefix}_electronic_magnet_tcp_link" />
+      <child link="${prefix}_electronic_magnet_ee_link" />
+    </joint>
+  </xacro:macro>
+
+  <!-- Macro for Full Tool (includes joint to parent) -->
+  <xacro:macro name="electronic_magnet" params="prefix parent">
+    <joint name="${prefix}_tool_joint" type="fixed">
+      <parent link="${parent}"/>
+      <child link="${prefix}_electronic_magnet_base_link"/>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
     </joint>
 
+    <xacro:electronic_magnet_links prefix="${prefix}" />
   </xacro:macro>
 </robot>

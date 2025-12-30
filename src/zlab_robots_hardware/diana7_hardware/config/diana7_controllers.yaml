@@ -1,13 +1,13 @@
 # Hardware Interface Settings
 hardware_interface:
   joints:
-    - $(arg prefix)joint_1
-    - $(arg prefix)joint_2
-    - $(arg prefix)joint_3
-    - $(arg prefix)joint_4
-    - $(arg prefix)joint_5
-    - $(arg prefix)joint_6
-    - $(arg prefix)joint_7
+    - $(arg prefix)_joint_1
+    - $(arg prefix)_joint_2
+    - $(arg prefix)_joint_3
+    - $(arg prefix)_joint_4
+    - $(arg prefix)_joint_5
+    - $(arg prefix)_joint_6
+    - $(arg prefix)_joint_7
   ip_address: "192.168.31.200"
   loop_hz: 100.0
 
@@ -19,23 +19,23 @@ joint_state_controller:
 position_trajectory_controller:
   type: position_controllers/JointTrajectoryController
   joints:
-    - $(arg prefix)joint_1
-    - $(arg prefix)joint_2
-    - $(arg prefix)joint_3
-    - $(arg prefix)joint_4
-    - $(arg prefix)joint_5
-    - $(arg prefix)joint_6
-    - $(arg prefix)joint_7
+    - $(arg prefix)_joint_1
+    - $(arg prefix)_joint_2
+    - $(arg prefix)_joint_3
+    - $(arg prefix)_joint_4
+    - $(arg prefix)_joint_5
+    - $(arg prefix)_joint_6
+    - $(arg prefix)_joint_7
   constraints:
     goal_time: 2.0
     stopped_velocity_tolerance: 0.1
-    $(arg prefix)joint_1: {trajectory: 1.0, goal: 0.5}
-    $(arg prefix)joint_2: {trajectory: 1.0, goal: 0.5}
-    $(arg prefix)joint_3: {trajectory: 1.0, goal: 0.5}
-    $(arg prefix)joint_4: {trajectory: 1.0, goal: 0.5}
-    $(arg prefix)joint_5: {trajectory: 1.0, goal: 0.5}
-    $(arg prefix)joint_6: {trajectory: 1.0, goal: 0.5}
-    $(arg prefix)joint_7: {trajectory: 1.0, goal: 0.5}
+    $(arg prefix)_joint_1: {trajectory: 1.0, goal: 0.5}
+    $(arg prefix)_joint_2: {trajectory: 1.0, goal: 0.5}
+    $(arg prefix)_joint_3: {trajectory: 1.0, goal: 0.5}
+    $(arg prefix)_joint_4: {trajectory: 1.0, goal: 0.5}
+    $(arg prefix)_joint_5: {trajectory: 1.0, goal: 0.5}
+    $(arg prefix)_joint_6: {trajectory: 1.0, goal: 0.5}
+    $(arg prefix)_joint_7: {trajectory: 1.0, goal: 0.5}
   stop_trajectory_duration: 0.5
   state_publish_rate:  25
   action_monitor_rate: 10

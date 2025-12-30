@@ -9,11 +9,11 @@ tool_type: "urdf_package"
 
 urdf_package:
   urdf_file: "urdf/calibration_tool.urdf.xacro"
-  root_link_name: "calibration_base_link"
+  root_link_name: "calibration_tool_base_link"
   tcp_link_name: "calibration_tcp_link"
   mount_offset:
     xyz: [0, 0, 0]
-    rpy: [0, 0, 0]
+    rpy: [0, 0, 3.14159265359]
 
 visual_mesh: "meshes/visual/calibration_base_link.STL"
 collision_mesh: "meshes/collision/calibration_base_link.STL"

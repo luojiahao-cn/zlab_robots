@@ -453,7 +453,7 @@
     <joint name="${prefix}_joint_ee" type="fixed">
       <parent link="${prefix}_link_7" />
       <child link="${prefix}_ee_link" />
-      <origin xyz="0 0 0" rpy="3.1415926531795866 0 1.5707963266" />
+      <origin xyz="0 0 0" rpy="3.1415926531795866 0 -1.5707963266" />
     </joint>
 
     <!-- Tool Loading -->

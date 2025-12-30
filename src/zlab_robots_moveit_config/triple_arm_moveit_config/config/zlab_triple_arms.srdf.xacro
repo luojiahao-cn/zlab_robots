@@ -1,6 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <robot name="zlab_triple_arms" xmlns:xacro="http://www.ros.org/wiki/xacro">
 
+    <xacro:arg name="arm1_tool" default="none"/>
+    <xacro:arg name="arm2_tool" default="none"/>
+    <xacro:arg name="diana7_tool" default="none"/>
+
+    <xacro:property name="diana7_tool" value="$(arg diana7_tool)"/>
+
     <!-- GROUPS -->
     <group name="arm1">
         <chain base_link="arm1_base_link" tip_link="arm1_ee_link"/>
@@ -122,6 +128,8 @@
 
     <!-- Diana7 Internal -->
     <disable_collisions link1="diana7_pedestal_link" link2="diana7_base_link" reason="Adjacent" />
+    <disable_collisions link1="diana7_pedestal_link" link2="diana7_pedestal_flange_link" reason="Adjacent" />
+    <disable_collisions link1="diana7_pedestal_flange_link" link2="diana7_base_link" reason="Adjacent" />
     <disable_collisions link1="diana7_base_link" link2="diana7_link_1" reason="Adjacent" />
     <disable_collisions link1="diana7_link_1" link2="diana7_link_2" reason="Adjacent" />
     <disable_collisions link1="diana7_link_2" link2="diana7_link_3" reason="Adjacent" />
@@ -133,5 +141,17 @@
     <!-- Cross Collisions (Base links might be close, but usually safe to disable base-base if they are static) -->
     <!-- We leave cross-collisions enabled for safety, except maybe bases if they overlap in model but not reality -->
     <!-- Assuming bases are far enough apart (0.8m) -->
+
+    <!-- Tool Collisions -->
+    <xacro:macro name="disable_tool_collisions" params="prefix tool_name last_link ee_link">
+        <xacro:unless value="${tool_name == 'none'}">
+            <disable_collisions link1="${ee_link}" link2="${prefix}_${tool_name}_base_link" reason="Adjacent"/>
+            <disable_collisions link1="${last_link}" link2="${prefix}_${tool_name}_base_link" reason="Adjacent"/>
+        </xacro:unless>
+    </xacro:macro>
+
+    <xacro:disable_tool_collisions prefix="arm1" tool_name="$(arg arm1_tool)" last_link="arm1_link_6" ee_link="arm1_ee_link"/>
+    <xacro:disable_tool_collisions prefix="arm2" tool_name="$(arg arm2_tool)" last_link="arm2_link_6" ee_link="arm2_ee_link"/>
+    <xacro:disable_tool_collisions prefix="diana7" tool_name="$(arg diana7_tool)" last_link="diana7_link_7" ee_link="diana7_ee_link"/>
 
 </robot>

@@ -13,13 +13,13 @@ urdf_package:
   # URDF文件路径（相对于工具包目录）
   urdf_file: "urdf/magnetometer_array.urdf.xacro"
   # 工具根链接名称（在URDF中定义的链接名，连接到机械臂的ee_link）
-  root_link_name: "magnetometer_base_link"
+  root_link_name: "magnetometer_array_base_link"
   # TCP链接名称（URDF中已定义TCP链接）
   tcp_link_name: "magnetometer_tcp_link"
   # 工具相对于法兰的安装偏移（如果需要微调）
   mount_offset:
     xyz: [0, 0, 0]  # 根据实际安装位置调整
-    rpy: [0, 0, 0]
+    rpy: [0, 0, 3.14159265359]  # 根据实际安装方向调整
 
 # 网格文件路径（相对于工具包目录，作为顶级配置项）
 # 注意：TCP链接不应该有可视化内容，只用于运动学计算

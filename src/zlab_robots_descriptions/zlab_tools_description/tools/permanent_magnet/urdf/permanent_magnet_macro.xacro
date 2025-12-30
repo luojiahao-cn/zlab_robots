@@ -1,19 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <robot xmlns:xacro="http://www.ros.org/wiki/xacro">
-  <xacro:macro name="permanent_magnet" params="prefix parent">
-
-    <joint name="${prefix}tool_joint" type="fixed">
-      <parent link="${parent}"/>
-      <child link="${prefix}pm_base_link"/>
-      <origin xyz="0 0 0" rpy="0 0 0"/>
-    </joint>
-
-    <link name="${prefix}pm_base_link">
-      <inertial>
-        <origin xyz="-1.4589E-05 0.00097471 0.054744" rpy="0 0 0" />
-        <mass value="0.136" />
-        <inertia ixx="0.00022399" ixy="1.6941E-08" ixz="-9.6464E-09" iyy="0.00018815" iyz="1.4376E-05" izz="0.00010598" />
-      </inertial>
+  <!-- Macro for Links and Internal Joints -->
+  <xacro:macro name="permanent_magnet_links" params="prefix">
+    <link name="${prefix}_permanent_magnet_base_link">
       <visual>
         <origin xyz="0 0 0" rpy="0 0 0" />
         <geometry>
@@ -21,6 +10,16 @@
         </geometry>
         <material name="">
           <color rgba="1 1 1 1" />
+        </material>
+      </visual>
+      <!-- Moved TCP visual to base link to avoid self-collision issues -->
+      <visual>
+        <origin xyz="0 0 0.12" rpy="0 0 0" /> <!-- TODO: Verify this offset -->
+        <geometry>
+          <mesh filename="package://zlab_tools_description/tools/permanent_magnet/meshes/visual/pm_tcp_link.STL" />
+        </geometry>
+        <material name="">
+          <color rgba="0.8 0.8 0.8 1" />
         </material>
       </visual>
       <collision>
@@ -31,35 +30,22 @@
       </collision>
     </link>
 
-    <link name="${prefix}pm_tcp_link">
-      <inertial>
-        <origin xyz="-1.4589E-05 0.00097471 -0.026256" rpy="0 0 0" />
-        <mass value="0.136" />
-        <inertia ixx="0.00022399" ixy="1.6941E-08" ixz="-9.6464E-09" iyy="0.00018815" iyz="1.4376E-05" izz="0.00010598" />
-      </inertial>
-      <visual>
-        <origin xyz="0 0 0" rpy="0 0 0" />
-        <geometry>
-          <mesh filename="package://zlab_tools_description/tools/permanent_magnet/meshes/visual/pm_tcp_link.STL" />
-        </geometry>
-        <material name="">
-          <color rgba="1 1 1 1" />
-        </material>
-      </visual>
-      <collision>
-        <origin xyz="0 0 0" rpy="0 0 0" />
-        <geometry>
-          <mesh filename="package://zlab_tools_description/tools/permanent_magnet/meshes/collision/pm_tcp_link.STL" />
-        </geometry>
-      </collision>
-    </link>
+    <link name="${prefix}_permanent_magnet_tcp"/>
 
-    <joint name="${prefix}pm_tcp_joint" type="fixed">
-      <origin xyz="0 0 0.081" rpy="0 0 0" />
-      <parent link="${prefix}pm_base_link" />
-      <child link="${prefix}pm_tcp_link" />
-      <axis xyz="0 0 0" />
+    <joint name="${prefix}_permanent_magnet_tcp_joint" type="fixed">
+      <origin xyz="0 0 0.12" rpy="0 0 0" /> <!-- TODO: Verify this offset -->
+      <parent link="${prefix}_permanent_magnet_base_link" />
+      <child link="${prefix}_permanent_magnet_tcp" />
     </joint>
+  </xacro:macro>
 
+  <!-- Macro for Tool Instantiation -->
+  <xacro:macro name="permanent_magnet" params="prefix parent *origin">
+    <xacro:permanent_magnet_links prefix="${prefix}"/>
+    <joint name="${prefix}_permanent_magnet_joint" type="fixed">
+      <xacro:insert_block name="origin"/>
+      <parent link="${parent}"/>
+      <child link="${prefix}_permanent_magnet_base_link"/>
+    </joint>
   </xacro:macro>
 </robot>

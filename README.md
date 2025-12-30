@@ -57,7 +57,23 @@
 
 - **工具库**：位于 `zlab_tools_description/urdf/zlab_tools.xacro`。
 - **支持的工具**：`electronic_magnet`, `permanent_magnet`, `soft_finger`, `vacuum_gripper` 等。
-- **加载方式**：在启动文件或 Xacro 中设置 `tool_name` 参数即可，无需额外的配置文件。
+- **加载方式**：在启动文件或 Xacro 中设置 `tool_name` 参数即可。
+
+### 修改工具安装位姿
+
+若需调整工具相对于机械臂末端的安装角度（例如绕 Z 轴旋转 180 度），请修改对应工具目录下的配置文件：
+
+`src/zlab_robots_descriptions/zlab_tools_description/tools/[tool_name]/config/tool.yaml`
+
+找到 `mount_offset` 参数并修改 `rpy` 值：
+
+```yaml
+urdf_package:
+  # ...
+  mount_offset:
+    xyz: [0, 0, 0]
+    rpy: [0, 0, 3.1415926] # 修改此处 (Roll, Pitch, Yaw)
+```
 
 ## 特别说明：DianaApi
 

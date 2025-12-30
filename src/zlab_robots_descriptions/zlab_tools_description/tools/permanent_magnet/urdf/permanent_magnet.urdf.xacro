@@ -1,53 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <robot xmlns:xacro="http://www.ros.org/wiki/xacro" name="permanent_magnet">
-  <link name="${tool_arm_id}_pm_base_link">
-    <inertial>
-      <origin xyz="-1.4589E-05 0.00097471 0.054744" rpy="0 0 0" />
-      <mass value="0.136" />
-      <inertia ixx="0.00022399" ixy="1.6941E-08" ixz="-9.6464E-09" iyy="0.00018815" iyz="1.4376E-05" izz="0.00010598" />
-    </inertial>
-    <visual>
-      <origin xyz="0 0 0" rpy="0 0 0" />
-      <geometry>
-        <mesh filename="package://zlab_tools_description/tools/permanent_magnet/meshes/visual/pm_base_link.STL" />
-      </geometry>
-      <material name="">
-        <color rgba="1 1 1 1" />
-      </material>
-    </visual>
-    <collision>
-      <origin xyz="0 0 0" rpy="0 0 0" />
-      <geometry>
-        <mesh filename="package://zlab_tools_description/tools/permanent_magnet/meshes/collision/pm_base_link.STL" />
-      </geometry>
-    </collision>
-  </link>
-  <link name="${tool_arm_id}_pm_tcp_link">
-    <inertial>
-      <origin xyz="-1.4589E-05 0.00097471 -0.026256" rpy="0 0 0" />
-      <mass value="0.136" />
-      <inertia ixx="0.00022399" ixy="1.6941E-08" ixz="-9.6464E-09" iyy="0.00018815" iyz="1.4376E-05" izz="0.00010598" />
-    </inertial>
-    <visual>
-      <origin xyz="0 0 0" rpy="0 0 0" />
-      <geometry>
-        <mesh filename="package://zlab_tools_description/tools/permanent_magnet/meshes/visual/pm_tcp_link.STL" />
-      </geometry>
-      <material name="">
-        <color rgba="1 1 1 1" />
-      </material>
-    </visual>
-    <collision>
-      <origin xyz="0 0 0" rpy="0 0 0" />
-      <geometry>
-        <mesh filename="package://zlab_tools_description/tools/permanent_magnet/meshes/collision/pm_tcp_link.STL" />
-      </geometry>
-    </collision>
-  </link>
-  <joint name="${tool_arm_id}_permanent_magnet" type="fixed">
-    <origin xyz="0 0 0.081" rpy="0 0 0" />
-    <parent link="${tool_arm_id}_pm_base_link" />
-    <child link="${tool_arm_id}_pm_tcp_link" />
-    <axis xyz="0 0 0" />
-  </joint>
+  <xacro:arg name="prefix" default=""/>
+  <xacro:arg name="parent" default="tool0"/>
+
+  <xacro:include filename="$(find zlab_tools_description)/tools/permanent_magnet/urdf/permanent_magnet_macro.xacro"/>
+
+  <link name="$(arg parent)"/>
+
+  <xacro:permanent_magnet prefix="$(arg prefix)" parent="$(arg parent)">
+    <origin xyz="0 0 0" rpy="0 0 0"/>
+  </xacro:permanent_magnet>
 </robot>

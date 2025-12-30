@@ -8,5 +8,5 @@
   <xacro:include filename="$(find zlab_tools_description)/tools/magnetometer_array/urdf/magnetometer_array_macro.xacro"/>
   
   <!-- 实例化 Links，使用机械臂前缀 -->
-  <xacro:magnetometer_array_links prefix="${tool_arm_id}_" />
+  <xacro:magnetometer_array_links prefix="${tool_arm_id}" />
 </robot>
