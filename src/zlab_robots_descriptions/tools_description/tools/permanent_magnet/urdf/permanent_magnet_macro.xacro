@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro">
+  <!-- Macro for Links and Internal Joints -->
+  <xacro:macro name="permanent_magnet_links" params="prefix">
+    <link name="${prefix}_permanent_magnet_base_link">
+      <visual>
+        <origin xyz="0 0 0" rpy="0 0 0" />
+        <geometry>
+          <mesh filename="package://tools_description/tools/permanent_magnet/meshes/visual/pm_base_link.STL" />
+        </geometry>
+        <material name="">
+          <color rgba="1 1 1 1" />
+        </material>
+      </visual>
+      <!-- Moved TCP visual to base link to avoid self-collision issues -->
+      <visual>
+        <origin xyz="0 0 0.12" rpy="0 0 0" /> <!-- TODO: Verify this offset -->
+        <geometry>
+          <mesh filename="package://tools_description/tools/permanent_magnet/meshes/visual/pm_tcp_link.STL" />
+        </geometry>
+        <material name="">
+          <color rgba="0.8 0.8 0.8 1" />
+        </material>
+      </visual>
+      <collision>
+        <origin xyz="0 0 0" rpy="0 0 0" />
+        <geometry>
+          <mesh filename="package://tools_description/tools/permanent_magnet/meshes/collision/pm_base_link.STL" />
+        </geometry>
+      </collision>
+    </link>
+
+    <link name="${prefix}_permanent_magnet_tcp"/>
+
+    <joint name="${prefix}_permanent_magnet_tcp_joint" type="fixed">
+      <origin xyz="0 0 0.12" rpy="0 0 0" /> <!-- TODO: Verify this offset -->
+      <parent link="${prefix}_permanent_magnet_base_link" />
+      <child link="${prefix}_permanent_magnet_tcp" />
+    </joint>
+  </xacro:macro>
+
+  <!-- Macro for Tool Instantiation -->
+  <xacro:macro name="permanent_magnet" params="prefix parent *origin">
+    <xacro:permanent_magnet_links prefix="${prefix}"/>
+    <joint name="${prefix}_permanent_magnet_joint" type="fixed">
+      <xacro:insert_block name="origin"/>
+      <parent link="${parent}"/>
+      <child link="${prefix}_permanent_magnet_base_link"/>
+    </joint>
+  </xacro:macro>
+</robot>

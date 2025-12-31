@@ -20,7 +20,7 @@
 
   <!-- Load universal robot description format (URDF) -->
   <param if="$(arg load_robot_description)" name="$(arg robot_description)"
-         command="$(find xacro)/xacro '$(find fr5_description)/urdf/zlab_triple_arms.xacro'
+         command="$(find xacro)/xacro '$(find multi_arm_description)/urdf/zlab_triple_arms.xacro'
                  diana7_xyz:='$(arg diana7_xyz)' diana7_rpy:='$(arg diana7_rpy)'
                  arm1_xyz:='$(arg arm1_xyz)' arm1_rpy:='$(arg arm1_rpy)'
                  arm2_xyz:='$(arg arm2_xyz)' arm2_rpy:='$(arg arm2_rpy)'

@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<robot name="bracket" xmlns:xacro="http://www.ros.org/wiki/xacro">
+  <xacro:include filename="$(find tools_description)/tools/magnetic_sensor_bracket/urdf/bracket_macro.xacro"/>
+  
+  <!-- Instantiate Links using tool_arm_id prefix -->
+  <xacro:magnetic_sensor_bracket_links prefix="${tool_arm_id}" />
+</robot>

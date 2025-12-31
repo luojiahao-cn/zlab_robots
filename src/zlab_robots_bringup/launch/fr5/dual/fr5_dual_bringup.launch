@@ -28,7 +28,7 @@
   <!-- Load URDF -->
   <arg name="load_robot_description" default="true"/>
   <param if="$(arg load_robot_description)" name="robot_description"
-         command="$(find xacro)/xacro '$(find fr5_description)/urdf/zlab_dual_arms.xacro'
+         command="$(find xacro)/xacro '$(find multi_arm_description)/urdf/zlab_dual_arms.xacro'
                  layout_config:=$(arg layout_config)
                  arm1_xyz:='$(arg arm1_xyz)' arm1_rpy:='$(arg arm1_rpy)'
                  arm2_xyz:='$(arg arm2_xyz)' arm2_rpy:='$(arg arm2_rpy)'

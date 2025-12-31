@@ -28,7 +28,7 @@
 - **zlab_robots_descriptions**: 包含所有机器人的描述文件。
   - **fr5_description**: FR5 机器人描述文件（URDF/Xacro）。
   - **diana7_description**: Diana7 机器人描述文件。
-  - **zlab_tools_description**: 各种末端工具描述文件。
+  - **tools_description**: 各种末端工具描述文件。
 
 ### 3. 硬件接口包 (Hardware)
 - **zlab_robots_hardware**: 包含所有机器人的硬件接口。
@@ -55,7 +55,7 @@
 
 系统支持静态加载末端工具，通过 `tool_name` 参数指定。
 
-- **工具库**：位于 `zlab_tools_description/urdf/zlab_tools.xacro`。
+- **工具库**：位于 `tools_description/urdf/zlab_tools.xacro`。
 - **支持的工具**：`electronic_magnet`, `permanent_magnet`, `soft_finger`, `vacuum_gripper` 等。
 - **加载方式**：在启动文件或 Xacro 中设置 `tool_name` 参数即可。
 
@@ -63,7 +63,7 @@
 
 若需调整工具相对于机械臂末端的安装角度（例如绕 Z 轴旋转 180 度），请修改对应工具目录下的配置文件：
 
-`src/zlab_robots_descriptions/zlab_tools_description/tools/[tool_name]/config/tool.yaml`
+`src/zlab_robots_descriptions/tools_description/tools/[tool_name]/config/tool.yaml`
 
 找到 `mount_offset` 参数并修改 `rpy` 值：
 

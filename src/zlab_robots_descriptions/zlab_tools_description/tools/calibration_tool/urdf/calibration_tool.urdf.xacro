@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<robot name="calibration_tool" xmlns:xacro="http://www.ros.org/wiki/xacro">
-  <xacro:include filename="$(find zlab_tools_description)/tools/calibration_tool/urdf/calibration_tool_macro.xacro"/>
-  
-  <!-- Instantiate Links using tool_arm_id prefix -->
-  <xacro:calibration_tool_links prefix="${tool_arm_id}" />
-</robot>

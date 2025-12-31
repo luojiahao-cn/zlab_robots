@@ -244,7 +244,7 @@
         <!-- 如果工具名称不为none，加载工具 -->
         <xacro:unless value="${tool_name == 'none'}">
             <!-- 加载工具加载器 -->
-            <xacro:include filename="$(find zlab_tools_description)/urdf/tool_loader.xacro" />
+            <xacro:include filename="$(find tools_description)/urdf/tool_loader.xacro" />
             
             <!-- 检查是否使用工具包系统 -->
             <xacro:property name="use_tool_package" value="${'tool_type' in tool_config}"/>

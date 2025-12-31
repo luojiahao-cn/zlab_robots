@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro">
+  <!-- 仅定义 Links 的宏 -->
+  <xacro:macro name="magnetometer_array_links" params="prefix">
+    <link name="${prefix}_magnetometer_array_base_link">
+      <inertial>
+        <origin xyz="-2.07166456525017E-07 0.0021604655211999 0.0362476651991424" rpy="0 0 0" />
+        <mass value="0.0332054242847689" />
+        <inertia ixx="5.63055976294825E-05" ixy="5.92198383565254E-12" ixz="6.68013595190661E-10" iyy="5.96936991935191E-05" iyz="-2.03045562894017E-06" izz="1.14540668478137E-05" />
+      </inertial>
+      <visual>
+        <origin xyz="0 0 0" rpy="0 0 0" />
+        <geometry>
+          <mesh filename="package://tools_description/tools/magnetometer_array/meshes/magnetometer_base_link.STL" />
+        </geometry>
+        <material name="">
+          <color rgba="1 1 1 1" />
+        </material>
+      </visual>
+      <collision>
+        <origin xyz="0 0 0" rpy="0 0 0" />
+        <geometry>
+          <mesh filename="package://tools_description/tools/magnetometer_array/meshes/magnetometer_base_link.STL" />
+        </geometry>
+      </collision>
+      <!-- TCP Geometry moved to Base Link to avoid self-collision -->
+      <visual>
+        <origin xyz="0 0.00023753 0.19309" rpy="0 0 0" />
+        <geometry>
+          <mesh filename="package://tools_description/tools/magnetometer_array/meshes/magnetometer_tcp_link.STL" />
+        </geometry>
+        <material name="">
+          <color rgba="0.752941176470588 0.752941176470588 0.752941176470588 1" />
+        </material>
+      </visual>
+      <collision>
+        <origin xyz="0 0.00023753 0.19309" rpy="0 0 0" />
+        <geometry>
+          <mesh filename="package://tools_description/tools/magnetometer_array/meshes/magnetometer_tcp_link.STL" />
+        </geometry>
+      </collision>
+    </link>
+
+    <link name="${prefix}_magnetometer_array_tcp_link">
+      <inertial>
+        <origin xyz="-0.000190659438675016 0.00189080741259228 -0.0604428602463941" rpy="0 0 0" />
+        <mass value="0.00226226919267647" />
+        <inertia ixx="3.35022731202412E-07" ixy="6.2725681636899E-20" ixz="-6.82910069048886E-10" iyy="4.1094183087163E-07" iyz="1.82178739960353E-19" izz="8.71724385779425E-08" />
+      </inertial>
+      <!-- Visual and Collision moved to base_link -->
+    </link>
+
+    <joint name="${prefix}_magnetometer_array_tcp_joint" type="fixed">
+      <origin xyz="0 0.00023753 0.19309" rpy="0 0 0" />
+      <parent link="${prefix}_magnetometer_array_base_link" />
+      <child link="${prefix}_magnetometer_array_tcp_link" />
+      <axis xyz="0 0 0" />
+    </joint>
+  </xacro:macro>
+
+  <!-- 完整定义的宏（包含与 parent 的连接） -->
+  <xacro:macro name="magnetometer_array" params="prefix parent">
+    <joint name="${prefix}_tool_joint" type="fixed">
+      <parent link="${parent}"/>
+      <child link="${prefix}_magnetometer_array_base_link"/>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+    </joint>
+
+    <xacro:magnetometer_array_links prefix="${prefix}" />
+  </xacro:macro>
+</robot>

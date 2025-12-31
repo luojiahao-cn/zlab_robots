@@ -1,0 +1,23 @@
+<?xml version="1.0"?>
+<package format="2">
+  <name>multi_arm_description</name>
+  <version>0.0.1</version>
+  <description>The multi_arm_description package - Description files for multi-arm setups (Dual FR5, Triple Arm, etc.)</description>
+
+  <maintainer email="user@todo.todo">ZLab</maintainer>
+  <license>Apache 2.0</license>
+
+  <buildtool_depend>catkin</buildtool_depend>
+
+  <build_depend>urdf</build_depend>
+  <build_depend>xacro</build_depend>
+  
+  <exec_depend>urdf</exec_depend>
+  <exec_depend>xacro</exec_depend>
+  <exec_depend>fr5_description</exec_depend>
+  <exec_depend>diana7_description</exec_depend>
+  <exec_depend>tools_description</exec_depend>
+
+  <export>
+  </export>
+</package>

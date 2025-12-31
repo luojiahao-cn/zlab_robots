@@ -457,7 +457,7 @@
     </joint>
 
     <!-- Tool Loading -->
-    <xacro:include filename="$(find zlab_tools_description)/urdf/zlab_tools.xacro" />
+    <xacro:include filename="$(find tools_description)/urdf/zlab_tools.xacro" />
     
     <xacro:unless value="${tool_name == 'none'}">
         <xacro:load_tool 

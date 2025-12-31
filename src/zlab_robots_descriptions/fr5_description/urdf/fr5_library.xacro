@@ -216,7 +216,7 @@
         </joint>
 
         <!-- Tool Loading -->
-        <xacro:include filename="$(find zlab_tools_description)/urdf/zlab_tools.xacro" />
+        <xacro:include filename="$(find tools_description)/urdf/zlab_tools.xacro" />
         
         <!-- Always create ee_link as a reference point at the end of link_6 -->
         <link name="${arm_id}_ee_link" />

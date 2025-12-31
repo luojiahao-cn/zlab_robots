@@ -17,7 +17,7 @@
     <xacro:arg name="rpy" default="0 0 0"/>
 
     <!-- 加载工具库 -->
-    <xacro:include filename="$(find zlab_tools_description)/urdf/zlab_tools.xacro" />
+    <xacro:include filename="$(find tools_description)/urdf/zlab_tools.xacro" />
 
     <!-- 加载机械臂库 -->
     <xacro:include filename="$(find fr5_description)/urdf/fr5_library.xacro" />

@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<robot name="electronic_magnet" xmlns:xacro="http://www.ros.org/wiki/xacro">
+  <xacro:include filename="$(find tools_description)/tools/electronic_magnet/urdf/electronic_magnet_macro.xacro"/>
+  
+  <!-- Instantiate Links using tool_arm_id prefix -->
+  <xacro:electronic_magnet_links prefix="${tool_arm_id}" />
+</robot>
+

@@ -33,7 +33,7 @@
   <!-- Load URDF -->
   <arg name="load_robot_description" default="true"/>
   <param if="$(arg load_robot_description)" name="robot_description"
-         command="$(find xacro)/xacro '$(find fr5_description)/urdf/zlab_triple_arms.xacro'
+         command="$(find xacro)/xacro '$(find multi_arm_description)/urdf/zlab_triple_arms.xacro'
                  layout_config:=$(arg layout_config)
                  diana7_xyz:='$(arg diana7_xyz)' diana7_rpy:='$(arg diana7_rpy)'
                  arm1_xyz:='$(arg arm1_xyz)' arm1_rpy:='$(arg arm1_rpy)'
