@@ -1,0 +1,9 @@
+该工具是组合工具，由calibration_tool和magnetometer_array组合而成。用于机器人末端执行器的标定任务。
+ 
+ 该工具的TCP定义在calibration_tool子工具中，具体请参考calibration_tool的说明文档。
+ 
+ 在使用该工具进行标定任务时，请确保机器人末端执行器的安装偏移与calibration_tool中的mount_offset参数一致。
+ 
+ 该工具的URDF模型由calibration_tool和magnetometer_array两个子工具的URDF模型组合而成。请参考各自的说明文档了解详细信息。
+ 
+ 使用该工具时，请根据实际需求选择合适的标定方法和参数设置，以确保标定结果的准确性和可靠性。

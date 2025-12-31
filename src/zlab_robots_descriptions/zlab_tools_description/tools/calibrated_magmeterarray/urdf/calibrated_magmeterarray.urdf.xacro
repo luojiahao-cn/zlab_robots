@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<robot name="calibrated_magmeterarray" xmlns:xacro="http://www.ros.org/wiki/xacro">
+  
+  <!-- 1. 引用现有工具的宏文件 -->
+  <xacro:include filename="$(find zlab_tools_description)/tools/calibration_tool/urdf/calibration_tool_macro.xacro"/>
+  <xacro:include filename="$(find zlab_tools_description)/tools/magnetometer_array/urdf/magnetometer_array_macro.xacro"/>
+
+  <!-- 2. 实例化第一个工具 (标定板) -->
+  <!-- 传入 base_link_name，使其与工具名称一致，以便 SRDF 正确禁用碰撞 -->
+  <xacro:calibration_tool_links 
+      prefix="${tool_arm_id}" 
+      base_link_name="calibrated_magmeterarray_base_link" />
+
+  <!-- 3. 定义连接关节 (将磁力计阵列连到标定板的 ee_link 上) -->
+  <joint name="${tool_arm_id}_inter_tool_joint" type="fixed">
+      <parent link="${tool_arm_id}_calibration_tool_ee_link"/>
+      <child link="${tool_arm_id}_magnetometer_array_base_link"/>
+      <!-- 如果两个工具之间有物理转接件或旋转，在这里调整 xyz/rpy -->
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+  </joint>
+  
+  <!-- 4. 实例化第二个工具 (磁力计阵列) -->
+  <xacro:magnetometer_array_links prefix="${tool_arm_id}" />
+
+</robot>

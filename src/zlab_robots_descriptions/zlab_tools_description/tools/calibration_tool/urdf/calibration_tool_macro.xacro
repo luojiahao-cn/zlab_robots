@@ -1,43 +1,49 @@
 <?xml version="1.0" encoding="utf-8"?>
 <robot xmlns:xacro="http://www.ros.org/wiki/xacro">
   <!-- Macro for Links and Internal Joints -->
-  <xacro:macro name="calibration_tool_links" params="prefix">
-    <link name="${prefix}_calibration_tool_base_link">
+  <xacro:macro name="calibration_tool_links" params="prefix base_link_name:='calibration_tool_base_link'">
+    <link name="${prefix}_${base_link_name}">
       <inertial>
-        <origin xyz="8.68737263231918E-11 0.0497527045553807 0.00249999998593278" rpy="0 0 0"/>
-        <mass value="0.031694702045305"/>
-        <inertia ixx="7.92231294487921E-05" ixy="3.02800948370523E-15" ixz="-4.01660599408829E-15"
-                 iyy="1.01746769831227E-05" iyz="-6.07540568485497E-15" izz="8.28804530559537E-05"/>
+        <origin xyz="-8.60866897343458E-11 -0.0494052577648267 0.00249999998599524" rpy="0 0 0" />
+        <mass value="0.0318360737147166" />
+        <inertia ixx="7.93099753729281E-05" ixy="3.00159920491007E-15" ixz="4.01660599346743E-15"
+                 iyy="1.01752895936902E-05" iyz="6.02639813930279E-15" izz="8.29673225420347E-05" />
       </inertial>
       <visual>
-        <origin xyz="0 0 0" rpy="0 0 0"/>
+        <origin xyz="0 0 0" rpy="0 0 0" />
         <geometry>
-          <mesh filename="package://zlab_tools_description/tools/calibration_tool/meshes/visual/calibration_base_link.STL"/>
+          <mesh filename="package://zlab_tools_description/tools/calibration_tool/meshes/visual/calibration_tool_base_link.STL" />
         </geometry>
         <material name="">
-          <color rgba="1 1 1 1"/>
+          <color rgba="1 1 1 1" />
         </material>
       </visual>
       <collision>
-        <origin xyz="0 0 0" rpy="0 0 0"/>
+        <origin xyz="0 0 0" rpy="0 0 0" />
         <geometry>
-          <mesh filename="package://zlab_tools_description/tools/calibration_tool/meshes/collision/calibration_base_link.STL"/>
+          <mesh filename="package://zlab_tools_description/tools/calibration_tool/meshes/collision/calibration_tool_base_link.STL" />
         </geometry>
       </collision>
     </link>
 
-    <link name="${prefix}_calibration_tool_ee_link"/>
-    <joint name="${prefix}_calibration_ee" type="fixed">
-      <origin xyz="0 0 0.005" rpy="0 0 0"/>
-      <parent link="${prefix}_calibration_tool_base_link"/>
-      <child link="${prefix}_calibration_tool_ee_link"/>
+    <link name="${prefix}_calibration_tool_ee_link">
+    </link>
+
+    <joint name="${prefix}_calibration_tool_ee" type="fixed">
+      <origin xyz="0 0 0.005" rpy="0 0 0" />
+      <parent link="${prefix}_${base_link_name}" />
+      <child link="${prefix}_calibration_tool_ee_link" />
+      <axis xyz="0 0 0" />
     </joint>
 
-    <link name="${prefix}_calibration_tool_tcp_link"/>
-    <joint name="${prefix}_calibration_tcp" type="fixed">
-      <origin xyz="0 0.0915 -0.0025" rpy="0 0 0"/>
-      <parent link="${prefix}_calibration_tool_ee_link"/>
-      <child link="${prefix}_calibration_tool_tcp_link"/>
+    <link name="${prefix}_calibration_tool_tcp_link">
+    </link>
+
+    <joint name="${prefix}_calibration_tool_tcp" type="fixed">
+      <origin xyz="0 -0.091262 -0.0025" rpy="0 0 0" />
+      <parent link="${prefix}_calibration_tool_ee_link" />
+      <child link="${prefix}_calibration_tool_tcp_link" />
+      <axis xyz="0 0 0" />
     </joint>
 
     <!-- 五个tcp link -->
@@ -76,7 +82,7 @@
     <!-- top_tag: z 朝上（+y），绕 x 轴转 -pi/2 -->
     <link name="${prefix}_calibration_tool_top_tag"/>
     <joint name="${prefix}_tcp_to_top_tag" type="fixed">
-      <origin xyz="0 0.02 0" rpy="-1.5707963267948966 0 0"/>
+      <origin xyz="0 -0.02 0" rpy="1.5707963267948966 0 0"/>
       <parent link="${prefix}_calibration_tool_tcp_link"/>
       <child link="${prefix}_calibration_tool_top_tag"/>
     </joint>
@@ -85,9 +91,9 @@
   <!-- Macro for Full Tool (includes joint to parent) -->
   <xacro:macro name="calibration_tool" params="prefix parent">
     <joint name="${prefix}_tool_joint" type="fixed">
-      <parent link="${parent}"/>
-      <child link="${prefix}_calibration_tool_base_link"/>
-      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <parent link="${parent}" />
+      <child link="${prefix}_calibration_tool_base_link" />
+      <origin xyz="0 0 0" rpy="0 0 0" />
     </joint>
 
     <xacro:calibration_tool_links prefix="${prefix}" />

@@ -1,0 +1,25 @@
+tool_info:
+  name: "calibrated_magmeterarray"
+  display_name: "标定板+磁力计阵列组合"
+  description: "串联了标定工具和磁力计阵列末端执行器"
+  version: "1.0.0"
+
+tool_type: "urdf_package"
+
+urdf_package:
+  urdf_file: "urdf/calibrated_magmeterarray.urdf.xacro"
+  # 根链接是第一个工具的基座，注意这里只写后缀，tool_loader 会自动加上前缀
+  root_link_name: "calibrated_magmeterarray_base_link"
+  # TCP 是第二个工具的 TCP
+  tcp_link_name: "magnetometer_array_tcp_link"
+  mount_offset:
+    xyz: [0, 0, 0]
+    rpy: [0, 0, 0] # 根据实际安装角度调整
+
+# 以下参数用于简单的可视化预览（可选），不影响物理仿真
+origin:
+  xyz: [0, 0, 0]
+  rpy: [0, 0, 0]
+tcp:
+  xyz: [0, 0, 0.2] # 估算值，两个工具长度叠加
+  rpy: [0, 0, 0]
