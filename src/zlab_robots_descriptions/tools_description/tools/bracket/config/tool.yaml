@@ -1,0 +1,47 @@
+# 工具包配置文件 - 支架 (bracket)
+tool_info:
+  name: "bracket"
+  display_name: "支架"
+  description: "新增的支架工具"
+  version: "1.0.0"
+
+# 使用URDF包类型
+tool_type: "urdf_package"
+
+# URDF包配置
+urdf_package:
+  # URDF文件路径（相对于工具包目录）
+  urdf_file: "urdf/bracket.urdf.xacro"
+  # 工具根链接名称（在URDF中定义的链接名，连接到机械臂的ee_link）
+  root_link_name: "bracket_base_link"
+  # TCP链接名称
+  tcp_link_name: "bracket_ee_Link"
+  # 工具相对于法兰的安装偏移
+  mount_offset:
+    xyz: [0, 0, 0]
+    rpy: [0, 0, 0]
+
+# 网格文件路径（相对于工具包目录）
+visual_mesh: "meshes/bracket_base_link.STL"
+collision_mesh: "meshes/bracket_base_link.STL"
+
+# 物理属性
+physical_properties:
+  mass: 0.1416
+  inertia:
+    ixx: 0.000547
+    ixy: 0.0
+    ixz: 0.0
+    iyy: 0.000608
+    iyz: 0.0
+    izz: 0.000282
+
+moveit:
+  end_effector_link: "bracket_ee_Link"
+  planning_frame_offset: [0, 0, 0]
+
+# Collision disable
+collision_disable:
+  - link1: "bracket_base_link"
+    link2: "bracket_ee_Link"
+    reason: "Adjacent"

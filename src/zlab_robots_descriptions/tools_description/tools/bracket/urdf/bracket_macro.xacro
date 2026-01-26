@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro">
+  <!-- Macro for Links and Internal Joints -->
+  <xacro:macro name="bracket_links" params="prefix">
+    <link name="${prefix}_bracket_base_link">
+      <inertial>
+        <origin xyz="0.00574962810581257 -2.66467853806466E-05 0.125366551718823" rpy="0 0 0" />
+        <mass value="0.141621817014215" />
+        <inertia ixx="0.00054701503479822" ixy="-2.1698126970819E-08" ixz="-2.6200047489203E-05" iyy="0.000607565870760702" iyz="-4.63678856681915E-07" izz="0.000281581590128411" />
+      </inertial>
+      <visual>
+        <origin xyz="0 0 0" rpy="0 0 0" />
+        <geometry>
+          <mesh filename="package://tools_description/tools/bracket/meshes/bracket_base_link.STL" />
+        </geometry>
+        <material name="">
+          <color rgba="0.792156862745098 0.819607843137255 0.933333333333333 1" />
+        </material>
+      </visual>
+      <collision>
+        <origin xyz="0 0 0" rpy="0 0 0" />
+        <geometry>
+          <mesh filename="package://tools_description/tools/bracket/meshes/bracket_base_link.STL" />
+        </geometry>
+      </collision>
+    </link>
+
+    <link name="${prefix}_bracket_ee_Link">
+      <inertial>
+        <origin xyz="0.0057496 -2.6647E-05 -0.036233" rpy="0 0 0" />
+        <mass value="0.14162" />
+        <inertia ixx="0.00054702" ixy="-2.1698E-08" ixz="-2.62E-05" iyy="0.00060757" iyz="-4.6368E-07" izz="0.00028158" />
+      </inertial>
+      <visual>
+        <origin xyz="0 0 0" rpy="0 0 0" />
+        <geometry>
+          <mesh filename="package://tools_description/tools/bracket/meshes/bracket_ee_Link.STL" />
+        </geometry>
+        <material name="">
+          <color rgba="0.79216 0.81961 0.93333 1" />
+        </material>
+      </visual>
+      <collision>
+        <origin xyz="0 0 0" rpy="0 0 0" />
+        <geometry>
+          <mesh filename="package://tools_description/tools/bracket/meshes/bracket_ee_Link.STL" />
+        </geometry>
+      </collision>
+    </link>
+
+    <joint name="${prefix}_bracket_ee" type="fixed">
+      <origin xyz="0 0 0.1616" rpy="0 0 0" />
+      <parent link="${prefix}_bracket_base_link" />
+      <child link="${prefix}_bracket_ee_Link" />
+      <axis xyz="0 0 0" />
+    </joint>
+  </xacro:macro>
+
+  <!-- Macro for Full Tool (includes joint to parent) -->
+  <xacro:macro name="bracket" params="prefix parent">
+    <joint name="${prefix}_tool_joint" type="fixed">
+      <parent link="${parent}"/>
+      <child link="${prefix}_bracket_base_link"/>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+    </joint>
+
+    <xacro:bracket_links prefix="${prefix}" />
+  </xacro:macro>
+</robot>
