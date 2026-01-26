@@ -66,13 +66,13 @@ collision_objects:
     dimensions: [0.8, 0.8, 0.8]
     color: [0.6, 0.6, 0.6, 0.5]
 
-  - id: ee_front_wall
-    type: box
-    frame_id: "{arm_id}_pedestal_link"
-    position: [-0.469, -0.254, 0.8]
-    orientation: [0.198, 0.675, -0.603, -0.376]
-    dimensions: [1.6, 1.6, 0.01]
-    color: [0.6, 0.6, 0.6, 0.5]
+  # - id: ee_front_wall
+  #   type: box
+  #   frame_id: "{arm_id}_pedestal_link"
+  #   position: [-0.469, -0.254, 0.8]
+  #   orientation: [0.198, 0.675, -0.603, -0.376]
+  #   dimensions: [1.6, 1.6, 0.01]
+  #   color: [0.6, 0.6, 0.6, 0.5]
 
 # 双臂环境配置（使用world坐标系）
 dual_arm_collision_objects:
@@ -83,4 +83,3 @@ dual_arm_collision_objects:
   #   position: [0.25, 0.0, 0.5]
   #   orientation: [0, 0, 0, 1]
   #   dimensions: [0.1, 1.0, 2.0]
-

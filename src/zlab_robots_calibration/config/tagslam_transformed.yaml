@@ -1,0 +1,602 @@
+tagslam_parameters:
+  optimizer_mode: fast
+  minimum_viewing_angle: 5.0
+  minimum_tag_area: 1000
+  max_num_incremental_opt: 100
+  pixel_noise: 1.0
+  max_subgraph_error: 50.0
+  subgraph_abs_prior_position_noise: 0.1
+  subgraph_abs_prior_rotation_noise: 0.1
+  use_approximate_sync: false
+body_defaults:
+  position_noise: 0.05
+  rotation_noise: 0.01
+default_body: lab_table
+# bodies:
+# - lab_table:
+#     is_static: true
+#     default_tag_size: 0.032
+#     type: simple
+#     pose:
+#       position:
+#         x: 0.0
+#         y: 0.0
+#         z: 0.0
+#       rotation:
+#         x: 0.0
+#         y: 0.0
+#         z: 0.0
+#       position_noise:
+#         x: 0.0001
+#         y: 0.0001
+#         z: 0.0001
+#       rotation_noise:
+#         x: 1.0e-05
+#         y: 1.0e-05
+#         z: 1.0e-05
+#     tags:
+#     - id: 109
+#       size: 0.032
+#       pose:
+#         position:
+#           x: 0.0
+#           y: 0.0
+#           z: 0.0
+#         rotation:
+#           x: 0.0
+#           y: 0.0
+#           z: 0.0
+#         position_noise:
+#           x: 0.0001
+#           y: 0.0001
+#           z: 0.0001
+#         rotation_noise:
+#           x: 1.0e-05
+#           y: 1.0e-05
+#           z: 1.0e-05
+#     - id: 208
+#       size: 0.032
+#       pose:
+#         position:
+#           x: -0.14443387
+#           y: 0.00086122
+#           z: 0.00143186
+#         rotation:
+#           x: -0.0014175
+#           y: 0.00491006
+#           z: 0.01587856
+#         position_noise:
+#           x: 0.01
+#           y: 0.01
+#           z: 0.01
+#         rotation_noise:
+#           x: 0.05
+#           y: 0.05
+#           z: 0.05
+#     - id: 104
+#       size: 0.032
+#       pose:
+#         position:
+#           x: -0.00043298
+#           y: 0.0806796
+#           z: -3.581e-05
+#         rotation:
+#           x: 2.47e-05
+#           y: -0.00138834
+#           z: 0.00684763
+#         position_noise:
+#           x: 0.01
+#           y: 0.01
+#           z: 0.01
+#         rotation_noise:
+#           x: 0.05
+#           y: 0.05
+#           z: 0.05
+bodies:
+  - lab_table:
+      is_static: true
+      default_tag_size: 0.06185
+      type: simple
+      pose:
+        position:
+          x: 0.0
+          y: 0.0
+          z: 0.0
+        rotation:
+          x: 0.0
+          y: 0.0
+          z: 0.0
+        position_noise:
+          x: 1.0e-4
+          y: 1.0e-4
+          z: 1.0e-4
+        rotation_noise:
+          x: 1.0e-5
+          y: 1.0e-5
+          z: 1.0e-5
+      tags:
+        - id: 109
+          size: 0.06185
+          pose:
+            position:
+              x: 0.0
+              y: 0.0
+              z: 0.0
+            rotation:
+              x: 0.0
+              y: 0.0
+              z: 0.0
+            position_noise:
+              x: 0.0001
+              y: 0.0001
+              z: 0.0001
+            rotation_noise:
+              x: 1.0e-05
+              y: 1.0e-05
+              z: 1.0e-05
+
+        - id: 208
+          size: 0.06185
+          pose:
+            position:
+              x: 0.14708
+              y: 0.00086122
+              z: 0.00143186
+            rotation:
+              x: -0.00141750
+              y: 0.00491006
+              z: 0.01587856
+            position_noise:
+              x: 0.01
+              y: 0.01
+              z: 0.01
+            rotation_noise:
+              x: 0.05
+              y: 0.05
+              z: 0.05
+
+        - id: 104
+          size: 0.06185
+          pose:
+            position:
+              x: -0.00043298
+              y: 0.09995
+              z: -0.00003581
+            rotation:
+              x: 0.00002470
+              y: -0.00138834
+              z: 0.00684763
+            position_noise:
+              x: 0.01
+              y: 0.01
+              z: 0.01
+            rotation_noise:
+              x: 0.05
+              y: 0.05
+              z: 0.05
+
+        # - id: 586
+        #   size: 0.06185
+        #   pose:
+        #     position:
+        #       x: 0.14708
+        #       y: 0.09995
+        #       z: -0.00003581
+        #     rotation:
+        #       x: 0.00002470
+        #       y: -0.00138834
+        #       z: 0.00684763
+        #     position_noise:
+        #       x: 0.01
+        #       y: 0.01
+        #       z: 0.01
+        #     rotation_noise:
+        #       x: 0.05
+        #       y: 0.05
+        #       z: 0.05
+
+  - diana7_flange_calib:
+      is_static: false
+      default_tag_size: 0.032
+      type: simple
+      tags:
+        - id: 101
+          size: 0.032
+          pose:
+            position:
+              x: -0.0
+              y: -0.0915
+              z: 0.02
+            rotation:
+              x: 0.0
+              y: 0.0
+              z: 1.5707963267948966
+            position_noise:
+              x: 0.0001
+              y: 0.0001
+              z: 0.0001
+            rotation_noise:
+              x: 1.0e-05
+              y: 1.0e-05
+              z: 1.0e-05
+        - id: 100
+          size: 0.032
+          pose:
+            position:
+              x: -0.0015605
+              y: -0.11256754
+              z: 0.00115526
+            rotation:
+              x: 0.00158379
+              y: -1.57646362
+              z: 1.5651426767948966
+            position_noise:
+              x: 0.0008
+              y: 0.0008
+              z: 0.0006
+            rotation_noise:
+              x: 0.004
+              y: 0.004
+              z: 0.004
+        - id: 103
+          size: 0.032
+          pose:
+            position:
+              x: -0.02159403
+              y: -0.09232786
+              z: 0.00167887
+            rotation:
+              x: -1.57067416
+              y: 0.00981301
+              z: 1.5688636367948965
+            position_noise:
+              x: 0.0008
+              y: 0.0006
+              z: 0.0008
+            rotation_noise:
+              x: 0.004
+              y: 0.004
+              z: 0.004
+        - id: 102
+          size: 0.032
+          pose:
+            position:
+              x: 0.02
+              y: -0.091
+              z: -0.00807202
+            rotation:
+              x: 1.55626899
+              y: -0.02940149
+              z: 1.5708250567948965
+            position_noise:
+              x: 0.0008
+              y: 0.0005
+              z: 0.0008
+            rotation_noise:
+              x: 0.005
+              y: 0.005
+              z: 0.005
+        - id: 105
+          size: 0.032
+          pose:
+            position:
+              x: -0.00783414
+              y: -0.091
+              z: -0.02157346
+            rotation:
+              x: 3.13713011
+              y: -0.01160407
+              z: 1.5885313767948965
+            position_noise:
+              x: 0.0008
+              y: 0.0008
+              z: 0.0008
+            rotation_noise:
+              x: 0.005
+              y: 0.005
+              z: 0.005
+  - arm1_flange_calib:
+      is_static: false
+      default_tag_size: 0.032
+      type: simple
+      tags:
+        - id: 201
+          size: 0.032
+          pose:
+            position:
+              x: -0.0
+              y: -0.0915
+              z: 0.02
+            rotation:
+              x: 0.0
+              y: 0.0
+              z: 1.5707963267948966
+            position_noise:
+              x: 0.0001
+              y: 0.0001
+              z: 0.0001
+            rotation_noise:
+              x: 1.0e-05
+              y: 1.0e-05
+              z: 1.0e-05
+        - id: 200
+          size: 0.032
+          pose:
+            position:
+              x: -0.0
+              y: -0.1115
+              z: 0.0
+            rotation:
+              x: 0.0
+              y: -1.571
+              z: 1.5707963267948966
+            position_noise:
+              x: 0.001
+              y: 0.001
+              z: 0.001
+            rotation_noise:
+              x: 0.004
+              y: 0.004
+              z: 0.004
+        - id: 203
+          size: 0.032
+          pose:
+            position:
+              x: -0.02
+              y: -0.0915
+              z: 0.0
+            rotation:
+              x: -1.571
+              y: 0.0
+              z: 1.5707963267948966
+            position_noise:
+              x: 0.001
+              y: 0.001
+              z: 0.001
+            rotation_noise:
+              x: 0.004
+              y: 0.004
+              z: 0.004
+        - id: 202
+          size: 0.032
+          pose:
+            position:
+              x: 0.02
+              y: -0.0915
+              z: -0.0
+            rotation:
+              x: 1.571
+              y: 0.0
+              z: 1.5707963267948966
+            position_noise:
+              x: 0.001
+              y: 0.001
+              z: 0.001
+            rotation_noise:
+              x: 0.005
+              y: 0.005
+              z: 0.005
+        - id: 205
+          size: 0.032
+          pose:
+            position:
+              x: -0.0
+              y: -0.0915
+              z: -0.02
+            rotation:
+              x: 3.1416
+              y: 0.0
+              z: 1.5707963267948966
+            position_noise:
+              x: 0.001
+              y: 0.001
+              z: 0.001
+            rotation_noise:
+              x: 0.005
+              y: 0.005
+              z: 0.005
+  - arm2_flange_calib:
+      is_static: false
+      default_tag_size: 0.032
+      type: simple
+      tags:
+        - id: 206
+          size: 0.032
+          pose:
+            position:
+              x: -0.0
+              y: -0.0915
+              z: 0.02
+            rotation:
+              x: 0.0
+              y: 0.0
+              z: 1.5707963267948966
+            position_noise:
+              x: 0.0001
+              y: 0.0001
+              z: 0.0001
+            rotation_noise:
+              x: 1.0e-05
+              y: 1.0e-05
+              z: 1.0e-05
+        - id: 204
+          size: 0.032
+          pose:
+            position:
+              x: -0.0
+              y: -0.1115
+              z: 0.0
+            rotation:
+              x: 0.0
+              y: -1.571
+              z: 1.5707963267948966
+            position_noise:
+              x: 0.001
+              y: 0.001
+              z: 0.001
+            rotation_noise:
+              x: 0.004
+              y: 0.004
+              z: 0.004
+        - id: 209
+          size: 0.032
+          pose:
+            position:
+              x: -0.02
+              y: -0.0915
+              z: 0.0
+            rotation:
+              x: -1.571
+              y: 0.0
+              z: 1.5707963267948966
+            position_noise:
+              x: 0.001
+              y: 0.001
+              z: 0.001
+            rotation_noise:
+              x: 0.004
+              y: 0.004
+              z: 0.004
+        - id: 207
+          size: 0.032
+          pose:
+            position:
+              x: 0.02
+              y: -0.0915
+              z: -0.0
+            rotation:
+              x: 1.571
+              y: 0.0
+              z: 1.5707963267948966
+            position_noise:
+              x: 0.001
+              y: 0.001
+              z: 0.001
+            rotation_noise:
+              x: 0.005
+              y: 0.005
+              z: 0.005
+        - id: 108
+          size: 0.032
+          pose:
+            position:
+              x: -0.0
+              y: -0.0915
+              z: -0.02
+            rotation:
+              x: 3.1416
+              y: 0.0
+              z: 1.5707963267948966
+            position_noise:
+              x: 0.001
+              y: 0.001
+              z: 0.001
+            rotation_noise:
+              x: 0.005
+              y: 0.005
+              z: 0.005
+
+  - blue_flange_calib:
+      is_static: false
+      default_tag_size: 0.032
+      type: simple
+      tags:
+        - id: 1
+          size: 0.032
+          pose:
+            position:
+              x: -0.0
+              y: -0.0915
+              z: 0.02
+            rotation:
+              x: 0.0
+              y: 0.0
+              z: 1.5707963267948966
+            position_noise:
+              x: 0.0001
+              y: 0.0001
+              z: 0.0001
+            rotation_noise:
+              x: 1.0e-05
+              y: 1.0e-05
+              z: 1.0e-05
+        - id: 0
+          size: 0.032
+          pose:
+            position:
+              x: -0.0
+              y: -0.1115
+              z: 0.0
+            rotation:
+              x: 0.0
+              y: -1.571
+              z: 1.5707963267948966
+            position_noise:
+              x: 0.001
+              y: 0.001
+              z: 0.001
+            rotation_noise:
+              x: 0.004
+              y: 0.004
+              z: 0.004
+        - id: 3
+          size: 0.032
+          pose:
+            position:
+              x: -0.02
+              y: -0.0915
+              z: 0.0
+            rotation:
+              x: -1.571
+              y: 0.0
+              z: 1.5707963267948966
+            position_noise:
+              x: 0.001
+              y: 0.001
+              z: 0.001
+            rotation_noise:
+              x: 0.004
+              y: 0.004
+              z: 0.004
+        - id: 2
+          size: 0.032
+          pose:
+            position:
+              x: 0.02
+              y: -0.0915
+              z: -0.0
+            rotation:
+              x: 1.571
+              y: 0.0
+              z: 1.5707963267948966
+            position_noise:
+              x: 0.001
+              y: 0.001
+              z: 0.001
+            rotation_noise:
+              x: 0.005
+              y: 0.005
+              z: 0.005
+        - id: 5
+          size: 0.032
+          pose:
+            position:
+              x: -0.0
+              y: -0.0915
+              z: -0.02
+            rotation:
+              x: 3.1416
+              y: 0.0
+              z: 1.5707963267948966
+            position_noise:
+              x: 0.001
+              y: 0.001
+              z: 0.001
+            rotation_noise:
+              x: 0.005
+              y: 0.005
+              z: 0.005
+  - rig:
+      is_static: false
+      type: simple
+      odom_frame_id: body_rig

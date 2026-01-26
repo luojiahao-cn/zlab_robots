@@ -11,9 +11,12 @@
   <!-- 获取 arm_id 参数（如果存在） -->
   <arg name="arm_id" default="arm2" doc="Arm ID for frame_id replacement"/>
   
+  <!-- 节点名称参数 -->
+  <arg name="node_name" default="environment_loader" doc="Name of the node"/>
+
   <!-- 环境加载节点 -->
   <node if="$(arg load_environment)" 
-        name="environment_loader" 
+        name="$(arg node_name)" 
         pkg="zlab_environment" 
         type="environment_loader" 
         output="screen">

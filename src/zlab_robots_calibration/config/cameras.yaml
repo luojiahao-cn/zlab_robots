@@ -1,0 +1,10 @@
+cam0:
+  camera_model: pinhole
+  intrinsics: [1047.6868896484375, 1047.6868896484375, 1085.8057861328125, 623.4581298828125]
+  distortion_model: radtan
+  distortion_coeffs: [0.0, 0.0, 0.0, 0.0, 0.0]
+  resolution: [2208, 1242]
+  rostopic: /zed2i/zed_node/left/image_rect_gray
+  tagtopic: /detector/tags
+  rig_body: rig
+

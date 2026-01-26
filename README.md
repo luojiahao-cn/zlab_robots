@@ -208,7 +208,7 @@ roslaunch zlab_robots_hardware diana7_hardware.launch
 - `robot_ip`: 机械臂 IP 地址（单臂启动时使用）
 - `arm1_ip`: arm1 的 IP 地址，默认 192.168.31.201
 - `arm2_ip`: arm2 的 IP 地址，默认 192.168.31.202
-- `loop_hz`: 控制循环频率，默认 60.0 Hz
+- `loop_hz`: 控制循环频率，默认 30.0 Hz (FR5) / 50.0 Hz (Diana7)
 
 ## 标定后位姿修改
 

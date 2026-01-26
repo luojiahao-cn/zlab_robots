@@ -61,7 +61,7 @@ roslaunch zlab_robots_bringup fr5_dual_bringup.launch \
 
 ### 硬件接口参数
 - `robot_ip`: 机械臂 IP 地址（必需）
-- `loop_hz`: 控制循环频率，默认 60Hz
+- `loop_hz`: 控制循环频率，默认 30Hz
 - `acc`: 加速度参数
 - `vel`: 速度参数
 - `cmd_t`: 指令周期，默认 0.002s

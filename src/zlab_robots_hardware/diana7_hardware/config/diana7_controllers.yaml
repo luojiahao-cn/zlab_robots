@@ -9,7 +9,7 @@ hardware_interface:
     - $(arg prefix)_joint_6
     - $(arg prefix)_joint_7
   ip_address: "192.168.31.200"
-  loop_hz: 100.0
+  loop_hz: 50.0
 
 # Controller Settings
 joint_state_controller:

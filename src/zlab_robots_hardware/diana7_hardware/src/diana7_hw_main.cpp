@@ -23,9 +23,9 @@ int main(int argc, char** argv)
   controller_manager::ControllerManager cm(&diana7_hw, nh);
 
   // 3. Control Loop
-  // Diana API recommends 1000Hz for servoJ
-  double loop_hz = 1000.0;
-  robot_hw_nh.param<double>("loop_hz", loop_hz, 1000.0);
+  // Diana API recommends 1000Hz for servoJ, but we reduce it due to performance issues
+  double loop_hz = 50.0;
+  robot_hw_nh.param<double>("loop_hz", loop_hz, 50.0);
   ros::Duration desired_update_period(1.0 / loop_hz);
   
   double cycle_time_error_threshold;

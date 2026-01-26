@@ -137,13 +137,12 @@ void Diana7HWInterface::read(const ros::Time& time, const ros::Duration& period)
     ROS_WARN_THROTTLE(1.0, "Diana7HWInterface: getJointPos failed: %d", ret_read);
   }
 
-  // Read Velocity
-  getJointAngularVel(vels, ip_address_.c_str()); // Ignore errors for now to reduce log noise
-  for (int i = 0; i < 7; ++i) joint_velocity_[i] = vels[i];
+  // Read Velocity and Torque are commented out to reduce loop latency
+  // getJointAngularVel(vels, ip_address_.c_str()); 
+  // for (int i = 0; i < 7; ++i) joint_velocity_[i] = vels[i];
 
-  // Read Torque
-  getJointTorque(torques, ip_address_.c_str());
-  for (int i = 0; i < 7; ++i) joint_effort_[i] = torques[i];
+  // getJointTorque(torques, ip_address_.c_str());
+  // for (int i = 0; i < 7; ++i) joint_effort_[i] = torques[i];
 }
 
 void Diana7HWInterface::write(const ros::Time& time, const ros::Duration& period)

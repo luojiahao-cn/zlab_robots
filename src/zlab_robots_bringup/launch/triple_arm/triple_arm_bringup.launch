@@ -6,13 +6,13 @@
   <arg name="arm2_ip" default="192.168.31.202" doc="IP address of arm2"/>
   
   <!-- Control loop frequency -->
-  <arg name="fr5_loop_hz" default="60.0" doc="Control loop frequency for FR5 arms (Hz)"/>
-  <arg name="diana7_loop_hz" default="1000.0" doc="Control loop frequency for Diana7 (Hz)"/>
+  <arg name="fr5_loop_hz" default="30.0" doc="Control loop frequency for FR5 arms (Hz)"/>
+  <arg name="diana7_loop_hz" default="100.0" doc="Control loop frequency for Diana7 (Hz)"/>
   
   <!-- Tool parameters -->
-  <arg name="diana7_tool" default="none" doc="Tool name for diana7"/>
-  <arg name="arm1_tool" default="none" doc="Tool name for arm1"/>
-  <arg name="arm2_tool" default="none" doc="Tool name for arm2"/>
+  <arg name="diana7_tool" default="magnetometer_array" doc="Tool name for diana7"/>
+  <arg name="arm1_tool" default="electronic_magnet" doc="Tool name for arm1"/>
+  <arg name="arm2_tool" default="electronic_magnet" doc="Tool name for arm2"/>
   
   <!-- MoveIt options -->
   <arg name="pipeline" default="ompl" doc="Planning pipeline to use with MoveIt"/>

@@ -24,7 +24,7 @@ int main(int argc, char** argv)
 
   // Get control loop parameters
   double loop_hz;
-  private_nh.param("loop_hz", loop_hz, 60.0);
+  private_nh.param("loop_hz", loop_hz, 30.0);
   ros::Duration desired_update_period(1.0 / loop_hz);
   
   double cycle_time_error_threshold;

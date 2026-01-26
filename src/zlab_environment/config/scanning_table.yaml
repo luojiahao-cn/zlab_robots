@@ -1,0 +1,24 @@
+# 扫描任务环境配置
+# 包含一个位于世界坐标系中的桌子
+# 坐标系：world
+
+collision_objects:
+  # 扫描桌
+  # 长(Y): 1.2m, 宽(X): 0.6m, 高(Z): 0.05m
+  # 位置: X=0.83, Y=0, Z=0.725 (桌面高度0.75m，下方悬空70cm)
+  - id: scanning_table
+    type: box
+    frame_id: world
+    position: [0.83, 0.0, 0.725]
+    orientation: [0, 0, 0, 1]
+    dimensions: [0.6, 1.2, 0.05]
+    color: [0.6, 0.6, 0.6, 0.8]
+
+  # 地面
+  - id: floor
+    type: box
+    frame_id: world
+    position: [0.0, 0.0, -0.06] # 稍微降低 1cm，避免与机器人底座 (Z=0) 产生接触碰撞
+    orientation: [0, 0, 0, 1]
+    dimensions: [3.0, 3.0, 0.1]
+    color: [0.5, 0.5, 0.5, 0.5]

@@ -1,0 +1,106 @@
+tagslam_parameters:
+  optimizer_mode: slow
+  minimum_viewing_angle: 15.0
+  minimum_tag_area: 2000
+  max_num_incremental_opt: 100
+  pixel_noise: 1.0
+  max_subgraph_error: 50.0
+  subgraph_abs_prior_position_noise: 0.1
+  subgraph_abs_prior_rotation_noise: 0.1
+  use_approximate_sync: false
+
+body_defaults:
+  position_noise: 0.05
+  rotation_noise: 0.01
+
+default_body: grasp_lab
+
+bodies:
+  - grasp_lab:
+      is_static: true
+      default_tag_size: 0.032
+      type: simple
+
+      pose:
+        position:
+          x: 0.0
+          y: 0.0
+          z: 0.0
+        rotation:
+          x: 0.0
+          y: 0.0
+          z: 0.0
+        position_noise:
+          x: 1.0e-4
+          y: 1.0e-4
+          z: 1.0e-4
+        rotation_noise:
+          x: 1.0e-5
+          y: 1.0e-5
+          z: 1.0e-5
+
+      tags:
+        - id: 109
+          size: 0.032
+          pose:
+            position:
+              x: 0.0
+              y: 0.0
+              z: 0.0
+            rotation:
+              x: 0.0
+              y: 0.0
+              z: 0.0
+            position_noise:
+              x: 0.0001
+              y: 0.0001
+              z: 0.0001
+            rotation_noise:
+              x: 1.0e-05
+              y: 1.0e-05
+              z: 1.0e-05
+
+        - id: 208
+          size: 0.032
+          pose:
+            position:
+              x: -0.14443387
+              y: 0.00086122
+              z: 0.00143186
+            rotation:
+              x: -0.00141750
+              y: 0.00491006
+              z: 0.01587856
+            position_noise:
+              x: 0.01
+              y: 0.01
+              z: 0.01
+            rotation_noise:
+              x: 0.05
+              y: 0.05
+              z: 0.05
+
+        - id: 104
+          size: 0.032
+          pose:
+            position:
+              x: -0.00043298
+              y: 0.08067960
+              z: -0.00003581
+            rotation:
+              x: 0.00002470
+              y: -0.00138834
+              z: 0.00684763
+            position_noise:
+              x: 0.01
+              y: 0.01
+              z: 0.01
+            rotation_noise:
+              x: 0.05
+              y: 0.05
+              z: 0.05
+              
+  - rig:
+      is_static: false
+      type: simple
+      odom_frame_id: body_rig

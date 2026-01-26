@@ -1,0 +1,40 @@
+<launch>
+  <!-- 关键：在线模式不要用仿真时间 -->
+  <param name="use_sim_time" value="false"/>
+
+  <!-- ===================== -->
+  <!-- 1. ZED2i Camera -->
+  <!-- ===================== -->
+  <include file="$(find zed_wrapper)/launch/zed2i.launch"/>
+
+  <!-- ===================== -->
+  <!-- 2. AprilTag detector -->
+  <!-- ===================== -->
+  <include file="$(find tagslam)/launch/apriltag_detector_node.launch">
+    <arg name="image_topic" value="/zed2i/zed_node/left/image_rect_gray"/>
+    <arg name="transport" value="raw"/>
+  </include>
+
+  <!-- ===================== -->
+  <!-- 3. TagSLAM Node (ONLINE) -->
+  <!-- ===================== -->
+  <arg name="data_dir" default="$(find zlab_robots_calibration)/config/"/>
+  <arg name="tagslam_config_file" default="$(arg data_dir)/tagslam.yaml"/>
+  <arg name="calibration_file" default="$(arg data_dir)/cameras.yaml"/>
+  <arg name="camera_poses_file" default="$(arg data_dir)/camera_poses.yaml"/>
+
+  <node pkg="tagslam" type="tagslam_node" name="tagslam" clear_params="true" output="screen">
+    <!-- <env name="ROSCONSOLE_CONFIG_FILE" value="$(find zlab_robots_calibration)/config/rosconsole.config"/> -->
+    <rosparam param="cameras" command="load" file="$(arg calibration_file)"/>
+    <rosparam param="tagslam_config" command="load" file="$(arg tagslam_config_file)"/>
+    <rosparam param="camera_poses" command="load" file="$(arg camera_poses_file)"/>
+
+    <param name="has_compressed_images" value="false"/>
+
+    <!-- 这些回放参数在线模式不需要 -->
+    <!-- <param name="playback_rate" value="10.0"/> -->
+    <!-- <param name="max_number_of_frames" value="1000000"/> -->
+
+    <param name="output_directory" value="$(find zlab_robots_calibration)/result/"/>
+  </node>
+</launch>
