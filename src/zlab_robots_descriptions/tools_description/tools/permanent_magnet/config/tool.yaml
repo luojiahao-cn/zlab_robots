@@ -16,7 +16,7 @@ urdf_package:
   # 工具根链接名称（在URDF中定义的链接名，连接到机械臂的ee_link）
   root_link_name: "permanent_magnet_base_link"
   # TCP链接名称（URDF中已定义TCP链接）
-  tcp_link_name: "pm_tcp_link"
+  tcp_link_name: "permanent_magnet_tcp_link"
   # 工具相对于法兰的安装偏移（如果需要微调）
   mount_offset:
     xyz: [0, 0, 0]  # 根据实际安装位置调整

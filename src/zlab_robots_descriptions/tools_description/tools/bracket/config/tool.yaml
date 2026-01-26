@@ -15,7 +15,7 @@ urdf_package:
   # 工具根链接名称（在URDF中定义的链接名，连接到机械臂的ee_link）
   root_link_name: "bracket_base_link"
   # TCP链接名称
-  tcp_link_name: "bracket_ee_Link"
+  tcp_link_name: "bracket_tcp_link"
   # 工具相对于法兰的安装偏移
   mount_offset:
     xyz: [0, 0, 0]
@@ -37,11 +37,11 @@ physical_properties:
     izz: 0.000282
 
 moveit:
-  end_effector_link: "bracket_ee_Link"
+  end_effector_link: "bracket_tcp_link"
   planning_frame_offset: [0, 0, 0]
 
 # Collision disable
 collision_disable:
   - link1: "bracket_base_link"
-    link2: "bracket_ee_Link"
+    link2: "bracket_tcp_link"
     reason: "Adjacent"

@@ -25,7 +25,7 @@
       </collision>
     </link>
 
-    <link name="${prefix}_bracket_ee_Link">
+    <link name="${prefix}_bracket_tcp_link">
       <inertial>
         <origin xyz="0.0057496 -2.6647E-05 -0.036233" rpy="0 0 0" />
         <mass value="0.14162" />
@@ -51,7 +51,7 @@
     <joint name="${prefix}_bracket_ee" type="fixed">
       <origin xyz="0 0 0.1616" rpy="0 0 0" />
       <parent link="${prefix}_bracket_base_link" />
-      <child link="${prefix}_bracket_ee_Link" />
+      <child link="${prefix}_bracket_tcp_link" />
       <axis xyz="0 0 0" />
     </joint>
   </xacro:macro>

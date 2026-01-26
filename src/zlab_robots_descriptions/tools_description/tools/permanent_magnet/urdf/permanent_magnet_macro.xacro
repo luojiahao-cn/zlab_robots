@@ -30,12 +30,12 @@
       </collision>
     </link>
 
-    <link name="${prefix}_permanent_magnet_tcp"/>
+    <link name="${prefix}_permanent_magnet_tcp_link"/>
 
     <joint name="${prefix}_permanent_magnet_tcp_joint" type="fixed">
       <origin xyz="0 0 0.12" rpy="0 0 0" /> <!-- TODO: Verify this offset -->
       <parent link="${prefix}_permanent_magnet_base_link" />
-      <child link="${prefix}_permanent_magnet_tcp" />
+      <child link="${prefix}_permanent_magnet_tcp_link" />
     </joint>
   </xacro:macro>
 
