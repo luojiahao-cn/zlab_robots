@@ -1,8 +1,8 @@
 <?xml version="1.0"?>
 <launch>
   <!-- Tool parameters (optional, defaults to none) -->
-  <arg name="arm1_tool" default="none" doc="Tool name for arm1 (e.g., permanent_magnet, magnetic_sensor_bracket, electronic_magnet)"/>
-  <arg name="arm2_tool" default="none" doc="Tool name for arm2 (e.g., permanent_magnet, magnetic_sensor_bracket, electronic_magnet)"/>
+  <arg name="arm1_tool" default="none" doc="Tool name for arm1 (e.g., permanent_magnet, bracket, electronic_magnet)"/>
+  <arg name="arm2_tool" default="none" doc="Tool name for arm2 (e.g., permanent_magnet, bracket, electronic_magnet)"/>
   
   <!-- Arm position parameters (optional) -->
   <arg name="arm1_xyz" default="0 0 0" doc="Position of arm1 (x y z)"/>

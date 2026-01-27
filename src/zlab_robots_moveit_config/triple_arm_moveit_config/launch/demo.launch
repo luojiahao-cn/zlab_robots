@@ -1,8 +1,8 @@
 <launch>
 
   <!-- Tool parameters (optional, defaults to none) -->
-  <arg name="arm1_tool" default="none" doc="Tool name for arm1 (e.g., permanent_magnet, magnetic_sensor_bracket, electronic_magnet)"/>
-  <arg name="arm2_tool" default="none" doc="Tool name for arm2 (e.g., permanent_magnet, magnetic_sensor_bracket, electronic_magnet)"/>
+  <arg name="arm1_tool" default="none" doc="Tool name for arm1 (e.g., permanent_magnet, bracket, electronic_magnet)"/>
+  <arg name="arm2_tool" default="none" doc="Tool name for arm2 (e.g., permanent_magnet, bracket, electronic_magnet)"/>
   <arg name="diana7_tool" default="none" doc="Tool name for diana7"/>
 
   <!-- Arm position parameters (optional) -->

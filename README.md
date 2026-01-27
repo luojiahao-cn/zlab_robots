@@ -207,7 +207,7 @@ roslaunch triple_arm_moveit_config demo.launch \
 
 - `electronic_magnet` - 电磁铁
 - `permanent_magnet` - 永磁铁
-- `magnetic_sensor_bracket` - 磁传感器支架
+- `bracket` - 磁传感器支架
 - `magnetometer_array` - 磁力计阵列
 - `calibration_tool` - 标定工具
 - `calibrated_em` - 已标定电磁铁

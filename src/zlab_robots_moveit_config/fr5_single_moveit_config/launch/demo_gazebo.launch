@@ -4,7 +4,7 @@
   <arg name="arm_id" default="arm1" doc="Arm ID to use"/>
 
   <!-- Tool parameter (optional, defaults to none) -->
-  <arg name="tool_name" default="none" doc="Tool name to use (e.g., permanent_magnet, magnetic_sensor_bracket, electronic_magnet)"/>
+  <arg name="tool_name" default="none" doc="Tool name to use (e.g., permanent_magnet, bracket, electronic_magnet)"/>
 
   <!-- MoveIt options -->
   <arg name="pipeline" default="ompl" doc="Planning pipeline to use with MoveIt"/>
