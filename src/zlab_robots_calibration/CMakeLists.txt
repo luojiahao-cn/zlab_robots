@@ -11,6 +11,7 @@ find_package(catkin REQUIRED COMPONENTS
   std_msgs
   geometry_msgs
   tf2
+  tf2_ros
   image_transport
   cv_bridge
   apriltag_ros
@@ -26,6 +27,7 @@ catkin_package(
     std_msgs
     geometry_msgs
     tf2
+    tf2_ros
     image_transport
     cv_bridge
     apriltag_ros
