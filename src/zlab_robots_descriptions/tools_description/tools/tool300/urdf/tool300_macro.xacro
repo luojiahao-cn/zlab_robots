@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro">
+  <!-- Macro for Links and Internal Joints -->
+  <xacro:macro name="tool300_links" params="prefix">
+    <link name="${prefix}_tool300_base_link">
+      <inertial>
+        <origin xyz="5.55081669102832E-08 6.71052645449942E-08 0.0990520481974044" rpy="0 0 0" />
+        <mass value="0.0411382616642661" />
+        <inertia ixx="0.000431714811656251" ixy="6.9397790605106E-12" ixz="-2.16430244217904E-10" iyy="0.000431714827118983" iyz="-3.06544108134404E-10" izz="8.42436201440394E-06" />
+      </inertial>
+      <visual>
+        <origin xyz="0 0 0" rpy="0 0 0" />
+        <geometry>
+          <mesh filename="package://tools_description/tools/tool300/meshes/tool300_base_link.STL" />
+        </geometry>
+        <material name="">
+          <color rgba="0.62745 0.62745 0.62745 1" />
+        </material>
+      </visual>
+      <collision>
+        <origin xyz="0 0 0" rpy="0 0 0" />
+        <geometry>
+          <mesh filename="package://tools_description/tools/tool300/meshes/tool300_base_link.STL" />
+        </geometry>
+      </collision>
+    </link>
+
+    <link name="${prefix}_tool300_tcp_link">
+      <inertial>
+        <origin xyz="5.55081669102782E-08 6.71052645449942E-08 -0.200947951802596" rpy="0 0 0" />
+        <mass value="0.0411382616642661" />
+        <inertia ixx="0.000431714811656251" ixy="6.9397790605106E-12" ixz="-2.16430244217923E-10" iyy="0.000431714827118983" iyz="-3.06544108134334E-10" izz="8.42436201440394E-06" />
+      </inertial>
+       <!-- Visual/Collision omitted as mesh file is missing in directory listing -->
+    </link>
+
+    <joint name="${prefix}_tool300_tcp_joint" type="fixed">
+      <origin xyz="0 0 0.3" rpy="0 0 0" />
+      <parent link="${prefix}_tool300_base_link" />
+      <child link="${prefix}_tool300_tcp_link" />
+    </joint>
+
+    <link name="${prefix}_tool300_ee_link">
+    </link>
+
+    <joint name="${prefix}_tool300_ee_joint" type="fixed">
+       <!-- Assuming 0 offset for now as none specified -->
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <parent link="${prefix}_tool300_tcp_link" />
+      <child link="${prefix}_tool300_ee_link" />
+    </joint>
+  </xacro:macro>
+
+  <!-- Macro for Full Tool (includes joint to parent) -->
+  <xacro:macro name="tool300" params="prefix parent">
+    <joint name="${prefix}_tool_joint" type="fixed">
+      <parent link="${parent}"/>
+      <child link="${prefix}_tool300_base_link"/>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+    </joint>
+
+    <xacro:tool300_links prefix="${prefix}" />
+  </xacro:macro>
+</robot>

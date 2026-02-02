@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<robot name="tool300" xmlns:xacro="http://www.ros.org/wiki/xacro">
+  <xacro:include filename="$(find tools_description)/tools/tool300/urdf/tool300_macro.xacro"/>
+  
+  <xacro:tool300_links prefix="${tool_arm_id}" />
+</robot>

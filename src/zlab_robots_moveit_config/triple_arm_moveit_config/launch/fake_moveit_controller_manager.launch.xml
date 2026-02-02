@@ -8,6 +8,6 @@
 
   <!-- The rest of the params are specific to this plugin -->
   <!-- Load fake controller configuration with parameter substitution for fake_execution_type -->
-  <rosparam command="load" file="$(find fr5_dual_moveit_config)/config/fake_controllers.yaml" subst_value="true"/>
+  <rosparam command="load" file="$(find triple_arm_moveit_config)/config/fake_controllers.yaml" subst_value="true"/>
 
 </launch>

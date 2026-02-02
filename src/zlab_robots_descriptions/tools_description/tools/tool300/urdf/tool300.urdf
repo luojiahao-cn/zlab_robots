@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- This URDF was automatically created by SolidWorks to URDF Exporter! Originally created by Stephen Brawner (brawner@gmail.com) 
+     Commit Version: 1.6.0-4-g7f85cfe  Build Version: 1.6.7995.38578
+     For more information, please see http://wiki.ros.org/sw_urdf_exporter -->
+<robot
+  name="tool300">
+  <link
+    name="tool300_base_link">
+    <inertial>
+      <origin
+        xyz="5.55081669102832E-08 6.71052645449942E-08 0.0990520481974044"
+        rpy="0 0 0" />
+      <mass
+        value="0.0411382616642661" />
+      <inertia
+        ixx="0.000431714811656251"
+        ixy="6.9397790605106E-12"
+        ixz="-2.16430244217904E-10"
+        iyy="0.000431714827118983"
+        iyz="-3.06544108134404E-10"
+        izz="8.42436201440394E-06" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://tool300/meshes/tool300_base_link.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.627450980392157 0.627450980392157 0.627450980392157 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://tool300/meshes/tool300_base_link.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <link
+    name="tool300_tcp_link">
+    <inertial>
+      <origin
+        xyz="5.55081669102782E-08 6.71052645449942E-08 -0.200947951802596"
+        rpy="0 0 0" />
+      <mass
+        value="0.0411382616642661" />
+      <inertia
+        ixx="0.000431714811656251"
+        ixy="6.9397790605106E-12"
+        ixz="-2.16430244217923E-10"
+        iyy="0.000431714827118983"
+        iyz="-3.06544108134334E-10"
+        izz="8.42436201440394E-06" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://tool300/meshes/tool300_tcp_link.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="1 1 1 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://tool300/meshes/tool300_tcp_link.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="tool300"
+    type="fixed">
+    <origin
+      xyz="0 0 0.3"
+      rpy="0 0 0" />
+    <parent
+      link="tool300_base_link" />
+    <child
+      link="tool300_tcp_link" />
+    <axis
+      xyz="0 0 0" />
+  </joint>
+</robot>

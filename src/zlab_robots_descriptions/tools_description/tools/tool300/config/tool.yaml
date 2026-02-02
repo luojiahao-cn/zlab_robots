@@ -1,0 +1,48 @@
+# 工具包配置文件 - tool300
+tool_info:
+  name: "tool300"
+  display_name: "Tool 300"
+  description: "Tool 300 末端执行器"
+  version: "1.0.0"
+  author: "User"
+
+# 使用URDF包类型（从SolidWorks导出）
+tool_type: "urdf_package"
+
+# URDF包配置
+urdf_package:
+  # URDF文件路径（相对于工具包目录）
+  urdf_file: "urdf/tool300.urdf.xacro"
+  # 工具根链接名称
+  root_link_name: "tool300_base_link"
+  # TCP链接名称
+  tcp_link_name: "tool300_tcp_link"
+  # 工具相对于法兰的安装偏移
+  mount_offset:
+    xyz: [0, 0, 0]
+    rpy: [0, 0, 0]
+
+# 网格文件路径
+visual_mesh: "meshes/tool300_base_link.STL"
+collision_mesh: "meshes/tool300_base_link.STL"
+
+# 工具相对于法兰的安装位置
+origin:
+  xyz: [0, 0, 0]
+  rpy: [0, 0, 0]
+
+# TCP配置
+tcp:
+  xyz: [0, 0, 0.3]
+  rpy: [0, 0, 0]
+
+# 物理属性
+physical_properties:
+  mass: 0.041138
+  inertia:
+    ixx: 0.00043171
+    ixy: 0.0
+    ixz: -2.1643E-10
+    iyy: 0.00043171
+    iyz: -3.0654E-10
+    izz: 8.4243E-06
