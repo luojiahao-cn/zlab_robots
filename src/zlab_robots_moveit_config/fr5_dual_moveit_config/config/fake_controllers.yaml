@@ -19,9 +19,9 @@ controller_list:
       - arm2_joint_6
 initial:  # Define initial robot poses per group
   - group: arm1
-    pose: zero
+    pose: up
   - group: arm2
-    pose: zero
+    pose: up
   - group: dual_arms
     pose: zero
 

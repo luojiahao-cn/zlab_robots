@@ -29,8 +29,8 @@ controller_list:
       - diana7_joint_7
 initial:  # Define initial robot poses per group
   - group: arm1
-    pose: home
+    pose: up
   - group: arm2
-    pose: home
+    pose: up
   - group: diana7
     pose: home
