@@ -45,7 +45,7 @@ collision_objects:
     position: [1.86, -0.281, 1.5]
     orientation: [0, 0, 0, 1]
     dimensions: [0.01, 2.438, 3]
-    color: [0.6, 0.6, 0.6, 0.5]
+    color: [0.6, 0.6, 0.6, 0.1]
 
   # 工作地表：精确匹配四面墙围成的闭合范围
   - id: ground
@@ -61,13 +61,13 @@ collision_objects:
   # -------------------------------------------------------------
 
   # 扫描实验桌：桌面高度 0.75m，底部悬空 30cm (1.2m x 0.6m)
-  - id: scanning_table
-    type: box
-    frame_id: world
-    position: [0.83, 0.0, 0.725]
-    orientation: [0, 0, 0, 1]
-    dimensions: [0.6, 1.2, 0.05]
-    color: [0.6, 0.6, 0.6, 0.8]
+  # - id: scanning_table
+  #   type: box
+  #   frame_id: world
+  #   position: [0.83, 0.0, 0.725]
+  #   orientation: [0, 0, 0, 1]
+  #   dimensions: [0.6, 1.2, 0.05]
+  #   color: [0.6, 0.6, 0.6, 0.8]
 
   # 电源控制柜：高度 0.65m，与扫描桌右后侧相邻
   - id:   power_control_cabinet

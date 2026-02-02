@@ -27,15 +27,17 @@ position_trajectory_controller:
     - $(arg prefix)_joint_6
     - $(arg prefix)_joint_7
   constraints:
-    goal_time: 2.0
-    stopped_velocity_tolerance: 0.1
-    $(arg prefix)_joint_1: {trajectory: 1.0, goal: 0.5}
-    $(arg prefix)_joint_2: {trajectory: 1.0, goal: 0.5}
-    $(arg prefix)_joint_3: {trajectory: 1.0, goal: 0.5}
-    $(arg prefix)_joint_4: {trajectory: 1.0, goal: 0.5}
-    $(arg prefix)_joint_5: {trajectory: 1.0, goal: 0.5}
-    $(arg prefix)_joint_6: {trajectory: 1.0, goal: 0.5}
-    $(arg prefix)_joint_7: {trajectory: 1.0, goal: 0.5}
-  stop_trajectory_duration: 0.5
-  state_publish_rate:  25
-  action_monitor_rate: 10
+    goal_time: 2.0                  # 目标到达时间容差 (秒)
+    stopped_velocity_tolerance: 0.1 # 停止速度容差 (用于判断是否停止)
+    # trajectory: 轨迹执行过程中的位置误差容差 (弧度)
+    # goal: 到达目标点时的位置误差容差 (弧度)
+    $(arg prefix)_joint_1: {trajectory: 0.02, goal: 0.01}
+    $(arg prefix)_joint_2: {trajectory: 0.02, goal: 0.01}
+    $(arg prefix)_joint_3: {trajectory: 0.02, goal: 0.01}
+    $(arg prefix)_joint_4: {trajectory: 0.02, goal: 0.01}
+    $(arg prefix)_joint_5: {trajectory: 0.02, goal: 0.01}
+    $(arg prefix)_joint_6: {trajectory: 0.02, goal: 0.01}
+    $(arg prefix)_joint_7: {trajectory: 0.02, goal: 0.01}
+  stop_trajectory_duration: 0.5     # 轨迹结束后的保持时间 (秒)
+  state_publish_rate:  25           # 状态发布频率 (Hz)
+  action_monitor_rate: 10           # 动作监控频率 (Hz)
