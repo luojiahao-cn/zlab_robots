@@ -1,0 +1,205 @@
+tagslam_parameters:
+  optimizer_mode: fast
+  minimum_viewing_angle: 5.0
+  minimum_tag_area: 1000
+  max_num_incremental_opt: 500
+  pixel_noise: 1.0
+  max_subgraph_error: 50.0
+  subgraph_abs_prior_position_noise: 0.1
+  subgraph_abs_prior_rotation_noise: 0.1
+  use_approximate_sync: false
+
+body_defaults:
+  position_noise: 0.05
+  rotation_noise: 0.01
+
+default_body: lab_table
+
+bodies:
+
+  - lab_table:
+      is_static: true
+      default_tag_size: 0.06185
+      type: simple
+      pose:
+        position:
+          x: 0.0
+          y: 0.0
+          z: 0.0
+        rotation:
+          x: 0.0
+          y: 0.0
+          z: 0.0
+        position_noise:
+          x: 1.0e-4
+          y: 1.0e-4
+          z: 1.0e-4
+        rotation_noise:
+          x: 1.0e-5
+          y: 1.0e-5
+          z: 1.0e-5
+      tags:
+        - id: 109
+          size: 0.06185
+          pose:
+            position:
+              x: 0.0
+              y: 0.0
+              z: 0.0
+            rotation:
+              x: 0.0
+              y: 0.0
+              z: 0.0
+            position_noise:
+              x: 0.0001
+              y: 0.0001
+              z: 0.0001
+            rotation_noise:
+              x: 1.0e-05
+              y: 1.0e-05
+              z: 1.0e-05
+
+        - id: 208
+          size: 0.06185
+          pose:
+            position:
+              x: 0.14708
+              y: 0.00086122
+              z: 0.00143186
+            rotation:
+              x: -0.00141750
+              y: 0.00491006
+              z: 0.01587856
+            position_noise:
+              x: 0.01
+              y: 0.01
+              z: 0.01
+            rotation_noise:
+              x: 0.05
+              y: 0.05
+              z: 0.05
+
+        - id: 104
+          size: 0.06185
+          pose:
+            position:
+              x: -0.00043298
+              y: 0.09995
+              z: -0.00003581
+            rotation:
+              x: 0.00002470
+              y: -0.00138834
+              z: 0.00684763
+            position_noise:
+              x: 0.01
+              y: 0.01
+              z: 0.01
+            rotation_noise:
+              x: 0.05
+              y: 0.05
+              z: 0.05
+  - sensor_array:
+      type: simple
+      is_static: false
+      default_tag_size: 0.032
+      tags:
+        - id: 11
+          size: 0.03200000
+          pose:
+            position:
+              x: 0.03150000
+              y: 0.00000000
+              z: -0.21309000
+            rotation:
+              x: 0.00000000
+              y: 1.57079633
+              z: -0.00000000
+            position_noise:
+              x: 0.00010000
+              y: 0.00010000
+              z: 0.00010000
+            rotation_noise:
+              x: 0.00001000
+              y: 0.00001000
+              z: 0.00001000
+        - id: 17
+          size: 0.03200000
+          pose:
+            position:
+              x: -0.00039885
+              y: 0.03186016
+              z: -0.21269967
+            rotation:
+              x: -1.20645895
+              y: 1.22084328
+              z: 1.21653436
+            position_noise:
+              x: 0.00014949
+              y: 0.00013928
+              z: 0.00014242
+            rotation_noise:
+              x: 0.00314119
+              y: 0.00282262
+              z: 0.00274614
+        - id: 15
+          size: 0.03200000
+          pose:
+            position:
+              x: -0.03160785
+              y: 0.00040595
+              z: -0.21268422
+            rotation:
+              x: 2.21488376
+              y: -0.01356423
+              z: -2.21320807
+            position_noise:
+              x: 0.00018566
+              y: 0.00019306
+              z: 0.00013439
+            rotation_noise:
+              x: 0.00336749
+              y: 0.00339402
+              z: 0.00253339
+        - id: 12
+          size: 0.03200000
+          pose:
+            position:
+              x: -0.00032314
+              y: -0.03157484
+              z: -0.21237952
+            rotation:
+              x: 1.20302920
+              y: 1.20644009
+              z: -1.21043847
+            position_noise:
+              x: 0.00014323
+              y: 0.00014759
+              z: 0.00014151
+            rotation_noise:
+              x: 0.00299117
+              y: 0.00250345
+              z: 0.00267496
+        - id: 18
+          size: 0.03200000
+          pose:
+            position:
+              x: 0.00020164
+              y: -0.00004757
+              z: -0.23320581
+            rotation:
+              x: 0.00430372
+              y: -3.13517331
+              z: 0.01026303
+            position_noise:
+              x: 0.00012371
+              y: 0.00012963
+              z: 0.00013383
+            rotation_noise:
+              x: 0.00251383
+              y: 0.00290122
+              z: 0.00251879
+  - rig:
+      type: simple
+      is_static: false
+      default_tag_size: 0.00000000
+

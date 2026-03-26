@@ -24,7 +24,7 @@
   <arg name="camera_poses_file" default="$(arg data_dir)/camera_poses.yaml"/>
 
   <node pkg="tagslam" type="tagslam_node" name="tagslam" clear_params="true" output="screen">
-    <!-- <env name="ROSCONSOLE_CONFIG_FILE" value="$(find zlab_robots_calibration)/config/rosconsole.config"/> -->
+    <env name="ROSCONSOLE_CONFIG_FILE" value="$(find zlab_robots_calibration)/config/rosconsole.config"/>
     <rosparam param="cameras" command="load" file="$(arg calibration_file)"/>
     <rosparam param="tagslam_config" command="load" file="$(arg tagslam_config_file)"/>
     <rosparam param="camera_poses" command="load" file="$(arg camera_poses_file)"/>
@@ -36,5 +36,65 @@
     <!-- <param name="max_number_of_frames" value="1000000"/> -->
 
     <param name="output_directory" value="$(find zlab_robots_calibration)/result/"/>
+  </node>
+
+  <node pkg="tf2_ros" type="static_transform_publisher" name="diana7_flange_rect_publisher" 
+        args="0 0 0.1475 -1.57079632679 0 0 diana7_flange_calib diana7_em_tcp" />
+  <node pkg="tf2_ros" type="static_transform_publisher" name="arm1_flange_rect_publisher" 
+        args="0 0 0.1475 -1.57079632679 0 0 arm1_flange_calib arm1_em_tcp" />
+  <node pkg="tf2_ros" type="static_transform_publisher" name="arm2_flange_rect_publisher" 
+        args="0 0 0.1475 -1.57079632679 0 0 arm2_flange_calib arm2_em_tcp" />
+
+  <!-- ===================== -->
+  <!-- 4. Filter Node -->
+  <!-- ===================== -->
+  <arg name="common_window_size" default="15" />
+  <arg name="common_trans_jump" default="0.007" />
+  <arg name="common_rot_jump" default="0.04" />
+
+  <!-- 节点 1 -->
+  <node pkg="zlab_robots_calibration" type="filter_node" name="filter_1" args="diana7_em_tcp diana7_em_tcp_filt">
+      <param name="window_size" value="$(arg common_window_size)" />
+      <param name="max_translation_jump" value="$(arg common_trans_jump)" />
+      <param name="max_rotation_jump" value="$(arg common_rot_jump)" />
+  </node>
+
+  <!-- 节点 2 -->
+  <node pkg="zlab_robots_calibration" type="filter_node" name="filter_2" args="arm1_em_tcp arm1_em_tcp_filt">
+      <param name="window_size" value="$(arg common_window_size)" />
+      <param name="max_translation_jump" value="$(arg common_trans_jump)" />
+      <param name="max_rotation_jump" value="$(arg common_rot_jump)" />
+  </node>
+
+  <!-- 节点 3 -->
+  <node pkg="zlab_robots_calibration" type="filter_node" name="filter_3" args="arm2_em_tcp arm2_em_tcp_filt">
+      <param name="window_size" value="$(arg common_window_size)" />
+      <param name="max_translation_jump" value="$(arg common_trans_jump)" />
+      <param name="max_rotation_jump" value="$(arg common_rot_jump)" />
+  </node>
+
+  <!-- 节点 4 -->
+  <node pkg="zlab_robots_calibration" type="filter_node" name="filter_4" args="sensor_array sensor_array_filt">
+      <param name="window_size" value="$(arg common_window_size)" />
+      <param name="max_translation_jump" value="$(arg common_trans_jump)" />
+      <param name="max_rotation_jump" value="$(arg common_rot_jump)" />
+  </node>
+
+  <!-- ===================== -->
+  <!-- 5. Frame Reprojector Node -->
+  <!-- ===================== -->
+  <node pkg="zlab_robots_calibration" type="display.py" name="frame_reprojector_node" output="screen">
+      <param name="image_topic" value="/zed2i/zed_node/left/image_rect_gray" />
+      <param name="camera_info_topic" value="/zed2i/zed_node/left/camera_info" />
+      <param name="camera_frame" value="cam0" />
+      
+      <!-- 定义想要映射到图像上的TF坐标系列表 -->
+      <rosparam param="target_frames">
+            - {frame: 'diana7_em_tcp_filt', type: 'axes', length: 0.1}
+            - {frame: 'arm1_em_tcp_filt', type: 'axes', length: 0.1}
+            - {frame: 'arm2_em_tcp_filt', type: 'axes', length: 0.1}
+            - {frame: 'sensor_array_filt', type: 'point'}
+      </rosparam>
+      <param name="show_window" value="true" />
   </node>
 </launch>
