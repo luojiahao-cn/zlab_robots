@@ -95,6 +95,6 @@
             - {frame: 'arm2_em_tcp_filt', type: 'axes', length: 0.1}
             - {frame: 'sensor_array_filt', type: 'point'}
       </rosparam>
-      <param name="show_window" value="true" />
+      <param name="show_window" value="false" />
   </node>
 </launch>

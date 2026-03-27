@@ -1,0 +1,5 @@
+<launch>
+  <node name="fy8300_node" pkg="fy8300_ros" type="fy8300_node" output="screen">
+    <rosparam command="load" file="$(find fy8300_ros)/config/params.yaml" />
+  </node>
+</launch>
