@@ -1,6 +1,6 @@
 #include "signal_generator/fy8300_node.h"
 
-namespace fy8300_ros {
+namespace signal_generator {
 
 FY8300Node::FY8300Node(ros::NodeHandle& nh, ros::NodeHandle& pnh) : nh_(nh), pnh_(pnh), sync_output_(false), status_poll_rate_(1.0) {
     pnh_.param<int>("baudrate", baudrate_, 115200);
@@ -47,7 +47,7 @@ FY8300Node::FY8300Node(ros::NodeHandle& nh, ros::NodeHandle& pnh) : nh_(nh), pnh
             boost::bind(&FY8300Node::outputEnCb, this, _1, i)));
 
         // Status publisher for this channel
-        pub_status_.push_back(nh_.advertise<fy8300_ros::ChannelStatus>(ns + "status", 10));
+        pub_status_.push_back(nh_.advertise<signal_generator::ChannelStatus>(ns + "status", 10));
     }
 
     // Global Sync Topic: std_msgs/Bool
@@ -99,7 +99,7 @@ void FY8300Node::applyInitialConfig() {
     for (int i = 0; i < config_list.size(); ++i) {
         XmlRpc::XmlRpcValue& conf = config_list[i];
         
-        fy8300_ros::ChannelControl msg;
+        signal_generator::ChannelControl msg;
         
         auto getDouble = [&](const std::string& key, auto& val) {
             if (conf.hasMember(key)) {
@@ -134,7 +134,7 @@ void FY8300Node::applyInitialConfig() {
         // 更新掩码：1(波形)|2(频率)|4(幅度)|8(偏置)|16(相位) = 31
         msg.update_mask |= 31; 
 
-        fy8300_ros::ChannelControl::Ptr msg_ptr(new fy8300_ros::ChannelControl(msg));
+        signal_generator::ChannelControl::Ptr msg_ptr(new signal_generator::ChannelControl(msg));
         channelCallback(msg_ptr);
         
         ros::Duration(0.1).sleep(); 
@@ -150,12 +150,12 @@ void FY8300Node::applyInitialConfig() {
         if (sync_output_ && ch != 1) continue;
 
         if (conf.hasMember("output_en")) {
-            fy8300_ros::ChannelControl msg;
+            signal_generator::ChannelControl msg;
             msg.channel_index = ch;
             msg.output_en = static_cast<bool>(conf["output_en"]);
             msg.update_mask = 32; // 仅更新 output_en
 
-            fy8300_ros::ChannelControl::Ptr msg_ptr(new fy8300_ros::ChannelControl(msg));
+            signal_generator::ChannelControl::Ptr msg_ptr(new signal_generator::ChannelControl(msg));
             channelCallback(msg_ptr);
             ros::Duration(0.1).sleep();
         }
@@ -178,7 +178,7 @@ bool FY8300Node::autoConnect() {
     return false;
 }
 
-void FY8300Node::channelCallback(const fy8300_ros::ChannelControl::ConstPtr& msg) {
+void FY8300Node::channelCallback(const signal_generator::ChannelControl::ConstPtr& msg) {
     if (!driver_.isConnected()) {
         ROS_WARN("Attempted to control channel while driver is not connected.");
         return;
@@ -290,7 +290,7 @@ void FY8300Node::statusTimerCb(const ros::TimerEvent& event) {
 }
 
 void FY8300Node::publishChannelStatus(int channel) {
-    fy8300_ros::ChannelStatus status;
+    signal_generator::ChannelStatus status;
     status.channel_index = channel;
 
     uint8_t waveform;
@@ -328,4 +328,4 @@ void FY8300Node::publishChannelStatus(int channel) {
     pub_status_[channel - 1].publish(status);
 }
 
-} // namespace fy8300_ros
+} // namespace signal_generator

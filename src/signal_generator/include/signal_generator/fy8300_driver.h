@@ -6,7 +6,7 @@
 #include <vector>
 #include <mutex>
 
-namespace fy8300_ros {
+namespace signal_generator {
 
 class FY8300Driver {
 public:
@@ -49,6 +49,6 @@ private:
     bool connected_;
 };
 
-} // namespace fy8300_ros
+} // namespace signal_generator
 
 #endif // FY8300_DRIVER_H

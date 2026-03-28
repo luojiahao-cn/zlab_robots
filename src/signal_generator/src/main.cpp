@@ -6,7 +6,7 @@ int main(int argc, char** argv) {
     ros::NodeHandle nh;
     ros::NodeHandle pnh("~");
 
-    fy8300_ros::FY8300Node node(nh, pnh);
+    signal_generator::FY8300Node node(nh, pnh);
     
     if (!node.init()) {
         ROS_FATAL("Closing node due to connection failure.");

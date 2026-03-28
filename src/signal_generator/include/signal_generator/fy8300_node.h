@@ -10,7 +10,7 @@
 #include "signal_generator/ChannelControl.h"
 #include "signal_generator/ChannelStatus.h"
 
-namespace fy8300_ros {
+namespace signal_generator {
 
 class FY8300Node {
 public:
@@ -21,7 +21,7 @@ public:
 
 private:
     void applyInitialConfig();
-    void channelCallback(const fy8300_ros::ChannelControl::ConstPtr& msg);
+    void channelCallback(const signal_generator::ChannelControl::ConstPtr& msg);
     
     // Independent topic callbacks
     void waveformCb(const std_msgs::UInt8::ConstPtr& msg, int ch);
@@ -57,6 +57,6 @@ private:
     bool sync_output_;
 };
 
-} // namespace fy8300_ros
+} // namespace signal_generator
 
 #endif // FY8300_NODE_H

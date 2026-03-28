@@ -4,7 +4,7 @@
 #include <iomanip>
 #include <sstream>
 
-namespace fy8300_ros {
+namespace signal_generator {
 
 FY8300Driver::FY8300Driver() : connected_(false) {}
 
@@ -355,4 +355,4 @@ bool FY8300Driver::readChannelStatus(int channel, uint8_t& waveform, double& fre
            readOutputEnabled(channel, output_enabled);
 }
 
-} // namespace fy8300_ros
+} // namespace signal_generator
