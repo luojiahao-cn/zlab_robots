@@ -44,11 +44,13 @@
         args="0 0 0.1475 -1.57079632679 0 0 arm1_flange_calib arm1_em_tcp" />
   <node pkg="tf2_ros" type="static_transform_publisher" name="arm2_flange_rect_publisher" 
         args="0 0 0.1475 -1.57079632679 0 0 arm2_flange_calib arm2_em_tcp" />
+  <node pkg="tf2_ros" type="static_transform_publisher" name="sensor_array_flange_rect_publisher" 
+        args="0 0 0 -1.57079632679 0 0 sensor_array_calib sensor_array" />
 
   <!-- ===================== -->
   <!-- 4. Filter Node -->
   <!-- ===================== -->
-  <arg name="common_window_size" default="15" />
+  <arg name="common_window_size" default="7" />
   <arg name="common_trans_jump" default="0.007" />
   <arg name="common_rot_jump" default="0.04" />
 
@@ -93,8 +95,8 @@
             - {frame: 'diana7_em_tcp_filt', type: 'axes', length: 0.1}
             - {frame: 'arm1_em_tcp_filt', type: 'axes', length: 0.1}
             - {frame: 'arm2_em_tcp_filt', type: 'axes', length: 0.1}
-            - {frame: 'sensor_array_filt', type: 'point'}
+            - {frame: 'sensor_array_filt', type: 'axes', length: 0.1}
       </rosparam>
-      <param name="show_window" value="false" />
+      <param name="show_window" value="true" />
   </node>
 </launch>

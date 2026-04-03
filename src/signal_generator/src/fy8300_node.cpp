@@ -56,8 +56,12 @@ FY8300Node::FY8300Node(ros::NodeHandle& nh, ros::NodeHandle& pnh) : nh_(nh), pnh
 
 FY8300Node::~FY8300Node() {
     if (driver_.isConnected()) {
-        ROS_INFO("System shutting down, disabling all outputs...");
-        // 无论是否开启同步，分别关闭三个通道以确保安全
+        ROS_INFO("System shutting down, setting all frequencies to 0 and disabling outputs...");
+        // 先将三个通道的频率设置为0
+        driver_.setFrequency(1, 0.0);
+        driver_.setFrequency(2, 0.0);
+        driver_.setFrequency(3, 0.0);
+        // 再关闭三个通道的输出
         driver_.setOutputEnable(1, false);
         driver_.setOutputEnable(2, false);
         driver_.setOutputEnable(3, false);

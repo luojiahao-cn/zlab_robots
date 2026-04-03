@@ -32,16 +32,26 @@ private:
 
     std::string source_frame_;
     std::string target_frame_;
+    std::string reference_frame_;
 
     // Sliding window buffer
     std::deque<geometry_msgs::TransformStamped> window_;
     int window_size_;
-    
+
     // Thresholds to identify bad data (jitter)
     double max_translation_jump_;
     double max_rotation_jump_; // In radians
     geometry_msgs::TransformStamped last_valid_transform_;
     bool has_first_data_ = false;
+
+    // Timeout to reinitialize filter when vision data is lost and recovered
+    double reset_timeout_ms_;
+    ros::Time last_update_time_;
+    ros::Time last_tf_stamp_;
+    bool has_last_tf_stamp_ = false;
+
+    geometry_msgs::TransformStamped last_raw_transform_;
+    bool has_last_raw_transform_ = false;
 
 public:
     FilterNode(const std::string& source_frame, const std::string& target_frame)
@@ -54,23 +64,32 @@ public:
         nh_.param("window_size", window_size_, 5);
         nh_.param("max_translation_jump", max_translation_jump_, 0.5);
         nh_.param("max_rotation_jump", max_rotation_jump_, 0.5); // Default 0.5 rad (~28.6 degrees)
+        nh_.param("reset_timeout_ms", reset_timeout_ms_, 500.0); // Default 500ms
+        nh_.param<std::string>("reference_frame", reference_frame_, "lab_table");
     }
 
     void run() {
         ros::Rate rate(50.0); // 50 Hz loop
         while (ros::ok()) {
+            // Check for timeout - if no update within reset_timeout_ms_, reinitialize filter
+            if (has_first_data_) {
+                double elapsed_ms = (ros::Time::now() - last_update_time_).toSec() * 1000.0;
+                if (elapsed_ms > reset_timeout_ms_) {
+                    // ROS_WARN("FilterNode: No update for %.1f ms, reinitializing filter for frame %s.", elapsed_ms, source_frame_.c_str());
+                    resetFilter();
+                }
+            }
+
             try {
-                // Get the transform from parent of source_frame to source_frame
-                // To get the parent, we can just look up the transform from some consistent parent or just map/odom, 
-                // but the prompt says: "same parent node as the subscribed frame". 
-                // To do this, we lookup transform from source_frame's parent instead. 
-                // However, we can just ask tf2_ros for the parent of source_frame.
-                
-                std::string parent_frame;
-                bool has_parent = tf_buffer_._getParent(source_frame_, ros::Time(0), parent_frame);
-                
-                if (has_parent && !parent_frame.empty()) {
-                    geometry_msgs::TransformStamped transform = tf_buffer_.lookupTransform(parent_frame, source_frame_, ros::Time(0));
+                // Query source frame against a fixed dynamic reference frame.
+                geometry_msgs::TransformStamped transform =
+                    tf_buffer_.lookupTransform(reference_frame_, source_frame_, ros::Time(0));
+
+                if (isNewTransform(transform)) {
+                    last_tf_stamp_ = transform.header.stamp;
+                    has_last_tf_stamp_ = true;
+                    last_raw_transform_ = transform;
+                    has_last_raw_transform_ = true;
                     processTransform(transform);
                 }
             } catch (tf2::TransformException &ex) {
@@ -83,6 +102,14 @@ public:
     }
 
 private:
+    void resetFilter() {
+        window_.clear();
+        has_first_data_ = false;
+        has_last_tf_stamp_ = false;
+        has_last_raw_transform_ = false;
+        // last_valid_transform_ intentionally kept for reference
+    }
+
     void processTransform(const geometry_msgs::TransformStamped& current_transform) {
         // 1. Check for severe jitter (bad data)
         if (has_first_data_) {
@@ -109,6 +136,7 @@ private:
         }
 
         last_valid_transform_ = current_transform;
+        last_update_time_ = ros::Time::now();
 
         // 2. Add to sliding window
         window_.push_back(current_transform);
@@ -167,6 +195,30 @@ private:
         }
 
         tf_broadcaster_.sendTransform(filtered_transform);
+    }
+
+    bool isNewTransform(const geometry_msgs::TransformStamped& t) {
+        // 1) 时间戳判新（仅当上游给了有效非零时间）
+        // if (has_last_tf_stamp_ && !t.header.stamp.isZero() && t.header.stamp != last_tf_stamp_) {
+        //     return true;
+        // }
+
+        // 2) 时间戳不可用时，按位姿变化判新
+        if (!has_last_raw_transform_) return true;
+
+        double dx = t.transform.translation.x - last_raw_transform_.transform.translation.x;
+        double dy = t.transform.translation.y - last_raw_transform_.transform.translation.y;
+        double dz = t.transform.translation.z - last_raw_transform_.transform.translation.z;
+        double trans = std::sqrt(dx*dx + dy*dy + dz*dz);
+
+        tf2::Quaternion q1, q2;
+        tf2::fromMsg(t.transform.rotation, q1);
+        tf2::fromMsg(last_raw_transform_.transform.rotation, q2);
+        double rot = q1.angleShortestPath(q2);
+
+        const double eps_trans = 0; // 按噪声调
+        const double eps_rot   = 0; // rad
+        return trans > eps_trans || rot > eps_rot;
     }
 };
 

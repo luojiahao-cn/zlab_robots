@@ -2,7 +2,7 @@ tagslam_parameters:
   optimizer_mode: fast
   minimum_viewing_angle: 5.0
   minimum_tag_area: 1000
-  max_num_incremental_opt: 500
+  max_num_incremental_opt: 50000
   pixel_noise: 1.0
   max_subgraph_error: 50.0
   subgraph_abs_prior_position_noise: 0.1
@@ -421,7 +421,7 @@ bodies:
               y: 0.005
               z: 0.005
 
-  - sensor_array:
+  - sensor_array_calib:
       type: simple
       is_static: false
       default_tag_size: 0.032
@@ -521,6 +521,7 @@ bodies:
               x: 0.00251383
               y: 0.00290122
               z: 0.00251879
+              
   - rig:
       is_static: false
       type: simple
