@@ -1,5 +1,5 @@
 controller_list:
-  - name: fake_diana_arm_controller
+  - name: fake_diana7_controller
     type: interpolate
     joints:
       - diana7_joint_1
@@ -10,5 +10,5 @@ controller_list:
       - diana7_joint_6
       - diana7_joint_7
 initial:  # Define initial robot poses.
-  - group: diana_arm
+  - group: diana7
     pose: home

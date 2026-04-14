@@ -118,6 +118,109 @@ bodies:
         #       y: 0.05
         #       z: 0.05
 
+  ## 白色tag，编号100-105，安装在diana7法兰盘上
+  # - diana7_flange_calib:
+  #     is_static: false
+  #     default_tag_size: 0.032
+  #     type: simple
+  #     tags:
+  #       - id: 101
+  #         size: 0.032
+  #         pose:
+  #           position:
+  #             x: -0.0915
+  #             y: 0.0
+  #             z: 0.02
+  #           rotation:
+  #             x: 0.0
+  #             y: 0.0
+  #             z: 0.0
+  #           position_noise:
+  #             x: 0.0001
+  #             y: 0.0001
+  #             z: 0.0001
+  #           rotation_noise:
+  #             x: 1.0e-05
+  #             y: 1.0e-05
+  #             z: 1.0e-05
+  #       - id: 100
+  #         size: 0.03200000
+  #         pose:
+  #           position:
+  #             x: -0.11256754
+  #             y: 0.00156050
+  #             z: 0.00115526
+  #           rotation:
+  #             x: 0.00158379
+  #             y: -1.57646362
+  #             z: -0.00565365
+  #           position_noise:
+  #             x: 0.0008
+  #             y: 0.0008
+  #             z: 0.0006
+  #           rotation_noise:
+  #             x: 0.004
+  #             y: 0.004
+  #             z: 0.004
+  #       - id: 103
+  #         size: 0.03200000
+  #         pose:
+  #           position:
+  #             x: -0.09232786
+  #             y: 0.02159403
+  #             z: 0.00167887
+  #           rotation:
+  #             x: -1.57067416
+  #             y: 0.00981301
+  #             z: -0.00193269
+  #           position_noise:
+  #             x: 0.0006
+  #             y: 0.0008
+  #             z: 0.0008
+  #           rotation_noise:
+  #             x: 0.004
+  #             y: 0.004
+  #             z: 0.004
+  #       - id: 102
+  #         size: 0.03200000
+  #         pose:
+  #           position:
+  #             x: -0.091
+  #             y: -0.02
+  #             z: -0.00807202
+  #           rotation:
+  #             x: 1.55626899
+  #             y: -0.02940149
+  #             z: 0.00002873
+  #           position_noise:
+  #             x: 0.0005
+  #             y: 0.0008
+  #             z: 0.0008
+  #           rotation_noise:
+  #             x: 0.005
+  #             y: 0.005
+  #             z: 0.005
+  #       - id: 105
+  #         size: 0.03200000
+  #         pose:
+  #           position:
+  #             x: -0.091
+  #             y: 0.00783414
+  #             z: -0.02157346
+  #           rotation:
+  #             x: 3.13713011
+  #             y: -0.01160407
+  #             z: 0.01773505
+  #           position_noise:
+  #             x: 0.0008
+  #             y: 0.0008
+  #             z: 0.0008
+  #           rotation_noise:
+  #             x: 0.005
+  #             y: 0.005
+  #             z: 0.005
+
+## 蓝色tag，编号200-205，安装在diana7法兰盘上
   - diana7_flange_calib:
       is_static: false
       default_tag_size: 0.032
@@ -432,7 +535,7 @@ bodies:
             position:
               x: 0.03150000
               y: 0.00000000
-              z: -0.21309000
+              z: -0.16309000
             rotation:
               x: 0.00000000
               y: 1.57079633
@@ -451,7 +554,7 @@ bodies:
             position:
               x: -0.00039885
               y: 0.03186016
-              z: -0.21269967
+              z: -0.16269967
             rotation:
               x: -1.20645895
               y: 1.22084328
@@ -470,7 +573,7 @@ bodies:
             position:
               x: -0.03160785
               y: 0.00040595
-              z: -0.21268422
+              z: -0.16268422
             rotation:
               x: 2.21488376
               y: -0.01356423
@@ -489,7 +592,7 @@ bodies:
             position:
               x: -0.00032314
               y: -0.03157484
-              z: -0.21237952
+              z: -0.16237952
             rotation:
               x: 1.20302920
               y: 1.20644009
@@ -508,7 +611,7 @@ bodies:
             position:
               x: 0.00020164
               y: -0.00004757
-              z: -0.23320581
+              z: -0.18320581
             rotation:
               x: 0.00430372
               y: -3.13517331
@@ -527,103 +630,4 @@ bodies:
       type: simple
       odom_frame_id: body_rig
 
-  # - diana7_flange_calib:
-  #     is_static: false
-  #     default_tag_size: 0.032
-  #     type: simple
-  #     tags:
-  #       - id: 101
-  #         size: 0.032
-  #         pose:
-  #           position:
-  #             x: -0.0915
-  #             y: 0.0
-  #             z: 0.02
-  #           rotation:
-  #             x: 0.0
-  #             y: 0.0
-  #             z: 0.0
-  #           position_noise:
-  #             x: 0.0001
-  #             y: 0.0001
-  #             z: 0.0001
-  #           rotation_noise:
-  #             x: 1.0e-05
-  #             y: 1.0e-05
-  #             z: 1.0e-05
-  #       - id: 100
-  #         size: 0.03200000
-  #         pose:
-  #           position:
-  #             x: -0.11256754
-  #             y: 0.00156050
-  #             z: 0.00115526
-  #           rotation:
-  #             x: 0.00158379
-  #             y: -1.57646362
-  #             z: -0.00565365
-  #           position_noise:
-  #             x: 0.0008
-  #             y: 0.0008
-  #             z: 0.0006
-  #           rotation_noise:
-  #             x: 0.004
-  #             y: 0.004
-  #             z: 0.004
-  #       - id: 103
-  #         size: 0.03200000
-  #         pose:
-  #           position:
-  #             x: -0.09232786
-  #             y: 0.02159403
-  #             z: 0.00167887
-  #           rotation:
-  #             x: -1.57067416
-  #             y: 0.00981301
-  #             z: -0.00193269
-  #           position_noise:
-  #             x: 0.0006
-  #             y: 0.0008
-  #             z: 0.0008
-  #           rotation_noise:
-  #             x: 0.004
-  #             y: 0.004
-  #             z: 0.004
-  #       - id: 102
-  #         size: 0.03200000
-  #         pose:
-  #           position:
-  #             x: -0.091
-  #             y: -0.02
-  #             z: -0.00807202
-  #           rotation:
-  #             x: 1.55626899
-  #             y: -0.02940149
-  #             z: 0.00002873
-  #           position_noise:
-  #             x: 0.0005
-  #             y: 0.0008
-  #             z: 0.0008
-  #           rotation_noise:
-  #             x: 0.005
-  #             y: 0.005
-  #             z: 0.005
-  #       - id: 105
-  #         size: 0.03200000
-  #         pose:
-  #           position:
-  #             x: -0.091
-  #             y: 0.00783414
-  #             z: -0.02157346
-  #           rotation:
-  #             x: 3.13713011
-  #             y: -0.01160407
-  #             z: 0.01773505
-  #           position_noise:
-  #             x: 0.0008
-  #             y: 0.0008
-  #             z: 0.0008
-  #           rotation_noise:
-  #             x: 0.005
-  #             y: 0.005
-  #             z: 0.005
+

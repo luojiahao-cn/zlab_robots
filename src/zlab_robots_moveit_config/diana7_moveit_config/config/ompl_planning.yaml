@@ -49,7 +49,7 @@ planner_configs:
     max_nearest_neighbors: 10
   PRMstarkConfigDefault:
     type: geometric::PRMstar
-diana_arm:
+diana7:
   planner_configs:
     - SBLkConfigDefault
     - ESTkConfigDefault

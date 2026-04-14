@@ -40,6 +40,8 @@
 
   <node pkg="tf2_ros" type="static_transform_publisher" name="diana7_flange_rect_publisher" 
         args="0 0 0.1475 -1.57079632679 0 0 diana7_flange_calib diana7_em_tcp" />
+  <!-- <node pkg="tf2_ros" type="static_transform_publisher" name="diana7_flange_rect_publisher" 
+        args="0 0 0.1475 -1.57079632679 0 0 diana7_flange_calib diana7_em_tcp" /> -->
   <node pkg="tf2_ros" type="static_transform_publisher" name="arm1_flange_rect_publisher" 
         args="0 0 0.1475 -1.57079632679 0 0 arm1_flange_calib arm1_em_tcp" />
   <node pkg="tf2_ros" type="static_transform_publisher" name="arm2_flange_rect_publisher" 
