@@ -118,7 +118,7 @@ bodies:
         #       y: 0.05
         #       z: 0.05
 
-  ## 白色tag，编号100-105，安装在diana7法兰盘上
+  # 白色tag，编号100-105，安装在diana7法兰盘上
   # - diana7_flange_calib:
   #     is_static: false
   #     default_tag_size: 0.032

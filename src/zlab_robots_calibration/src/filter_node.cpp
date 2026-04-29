@@ -128,7 +128,7 @@ private:
             double angle_diff = q_curr.angleShortestPath(q_last);
 
             if (trans_dist > max_translation_jump_ || angle_diff > max_rotation_jump_) {
-                ROS_WARN_THROTTLE(1.0, "FilterNode: Severe jitter detected (trans: %f, rot: %f), dropping transform.", trans_dist, angle_diff);
+                // ROS_WARN_THROTTLE(1.0, "FilterNode: Severe jitter detected (trans: %f, rot: %f), dropping transform.", trans_dist, angle_diff);
                 return;
             }
         } else {

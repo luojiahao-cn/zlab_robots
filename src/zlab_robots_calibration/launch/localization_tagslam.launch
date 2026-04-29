@@ -23,7 +23,7 @@
   <arg name="calibration_file" default="$(arg data_dir)/cameras.yaml"/>
   <arg name="camera_poses_file" default="$(arg data_dir)/camera_poses.yaml"/>
 
-  <node pkg="tagslam" type="tagslam_node" name="tagslam" clear_params="true" output="screen">
+  <node pkg="tagslam" type="tagslam_node" name="tagslam" clear_params="true" output="log">
     <env name="ROSCONSOLE_CONFIG_FILE" value="$(find zlab_robots_calibration)/config/rosconsole.config"/>
     <rosparam param="cameras" command="load" file="$(arg calibration_file)"/>
     <rosparam param="tagslam_config" command="load" file="$(arg tagslam_config_file)"/>
@@ -41,7 +41,7 @@
   <node pkg="tf2_ros" type="static_transform_publisher" name="diana7_flange_rect_publisher" 
         args="0 0 0.1475 -1.57079632679 0 0 diana7_flange_calib diana7_em_tcp" />
   <!-- <node pkg="tf2_ros" type="static_transform_publisher" name="diana7_flange_rect_publisher" 
-        args="0 0 0.1475 -1.57079632679 0 0 diana7_flange_calib diana7_em_tcp" /> -->
+        args="0 0 0.081 -1.57079632679 0 0 diana7_flange_calib diana7_em_tcp" /> -->
   <node pkg="tf2_ros" type="static_transform_publisher" name="arm1_flange_rect_publisher" 
         args="0 0 0.1475 -1.57079632679 0 0 arm1_flange_calib arm1_em_tcp" />
   <node pkg="tf2_ros" type="static_transform_publisher" name="arm2_flange_rect_publisher" 
@@ -87,7 +87,7 @@
   <!-- ===================== -->
   <!-- 5. Frame Reprojector Node -->
   <!-- ===================== -->
-  <node pkg="zlab_robots_calibration" type="display.py" name="frame_reprojector_node" output="screen">
+  <node pkg="zlab_robots_calibration" type="display.py" name="frame_reprojector_node" output="log">
       <param name="image_topic" value="/zed2i/zed_node/left/image_rect_gray" />
       <param name="camera_info_topic" value="/zed2i/zed_node/left/camera_info" />
       <param name="camera_frame" value="cam0" />
