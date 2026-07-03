@@ -10,6 +10,7 @@
   <arg name="prefix" default="diana7" doc="Joint name prefix (default: diana7 for consistency with FR5)"/>
   <arg name="loop_hz" default="1000.0" doc="Control loop frequency (Hz)"/>
   <arg name="show_cycle_time_warn" default="true" doc="Whether to show control loop cycle time warning"/>
+  <arg name="node_output" default="screen" doc="Output target for background robot nodes: screen or log"/>
 
   <!-- Load Robot Description -->
   <group if="$(arg load_robot_description)">
@@ -29,7 +30,7 @@
     <rosparam file="$(find diana7_hardware)/config/diana7_controllers.yaml" command="load" subst_value="true"/>
 
     <!-- Start Hardware Interface Node -->
-    <node name="diana7_hardware" pkg="diana7_hardware" type="diana7_hw_main" output="screen">
+    <node name="diana7_hardware" pkg="diana7_hardware" type="diana7_hw_main" output="$(arg node_output)">
       <param name="ip_address" value="$(arg robot_ip)"/>
       <param name="loop_hz" value="$(arg loop_hz)"/>
       <param name="show_cycle_time_warn" value="$(arg show_cycle_time_warn)"/>
@@ -46,11 +47,11 @@
     </node>
 
     <!-- Load Controllers -->
-    <node name="controller_spawner" pkg="controller_manager" type="spawner" respawn="false" output="screen"
+    <node name="controller_spawner" pkg="controller_manager" type="spawner" respawn="false" output="$(arg node_output)"
           args="joint_state_controller position_trajectory_controller"/>
 
     <!-- Robot state publisher (only for single arm, multi-arm setups have their own) -->
-    <node if="$(arg publish_robot_state)" name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher" output="screen"/>
+    <node if="$(arg publish_robot_state)" name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher" output="$(arg node_output)"/>
   </group>
 
   <!-- Joint state publisher to merge joint_states from namespace (for single arm) -->
